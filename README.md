@@ -1,1 +1,1 @@
-# music_data_analytics
+# music-data-analytics
