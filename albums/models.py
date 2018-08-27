@@ -2,40 +2,45 @@ from django.db import models
 
 # Create your models here.
 class Artist(models.Model):
-    name = models.CharField()
+    name = models.CharField(
+        max_length=256,
+    )
 
 class PrimaryGenre(models.Model):
     name = models.CharField(
-        unique=True
+        max_length=256,
+        unique=True,
     )
 
 class SubGenre(models.Model):
     name = models.CharField(
-        unique=True
+        max_length=256,
+        unique=True,
     )
     
 class Rating(models.Model):
     score = models.IntegerField(
         null=True,
-        blank=True
+        blank=True,
     )
 
     listen = models.IntegerField(
         null=True,
-        blank=True
+        blank=True,
     )
 
     album = models.ForeignKey(
         to='Album',
         null=False,
         blank=False,
-        on_delete=models.PROTECT
+        on_delete=models.PROTECT,
     )
 
 class Album(models.Model):
     name = models.CharField(
+        max_length=256,
         blank=False,
-        null=False
+        null=False,
     )
 
     artist = models.ForeignKey(
@@ -43,55 +48,55 @@ class Album(models.Model):
         related_name="albums",
         blank=False,
         null=False,
-        on_delete=models.PROTECT
+        on_delete=models.PROTECT,
     )
 
     order = models.IntegerField(
         null=True,
-        blank=True
+        blank=True,
     )
 
     chart = models.IntegerField(
         null=True,
-        blank=True
+        blank=True,
     )
 
     row = models.IntegerField(
         null=True,
-        blank=True
+        blank=True,
     )
 
     date_finished = models.DateField(
         blank=True,
-        null=True
+        null=True,
     )
 
     primary_genre = models.ForeignKey(
         to='PrimaryGenre',
         blank=True,
         null=True,
-        on_delete=models.SET_NULL
+        on_delete=models.SET_NULL,
     )
 
     sub_genre = models.ManyToManyField(
         'SubGenre',
         blank=True,
-        null=True
+        null=True,
     )
 
     time_length = models.DurationField(
         null=True,
-        blank=True
+        blank=True,
     )
 
     release_date = models.DateField(
         null=True,
-        blank=True
+        blank=True,
     )
 
     album_art = models.URLField(
         null=True,
-        blank=True
+        blank=True,
     )
 
     def __eq__(self, other):
