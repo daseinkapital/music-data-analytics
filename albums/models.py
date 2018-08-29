@@ -48,7 +48,7 @@ class Rating(models.Model):
     )
 
     def __str__(self):
-        return self.album.name + " received a " + str(self.score) + " on the " +str(self.listen) + self.ending() + " listen."
+        return "{} received a {} on the {}{} listen.".format(self.album.name, str(self.score), str(self.listen), self.ending())
 
     def ending(self):
         if self.listen == 1:
@@ -76,6 +76,9 @@ class AlbumSubgenre(models.Model):
         blank=False,
         on_delete=models.CASCADE,
     )
+
+    class Meta:
+        ordering = ['album', '-subgenre']
 
 class Album(models.Model):
     name = models.CharField(
@@ -134,32 +137,55 @@ class Album(models.Model):
         blank=True,
     )
 
+    @property
+    def get_subgenres(self):
+        album_subgenres = AlbumSubgenre.objects.filter(album = self)
+        if album_subgenres:
+            if len(album_subgenres) == 1:
+                return album_subgenres.first().subgenre.name
+            else:
+                subgenre = album_subgenres.first().subgenre.name
+                for genre in album_subgenres[1:]:
+                    subgenre += ', {}'.format(genre.subgenre.name)
+                return subgenre
+        else:
+            return None
+
+    @property
+    def average_rating(self):
+        ratings = Rating.objects.filter(album=self)
+        sum = 0
+        count = ratings.count()
+        for rating in ratings:
+            sum += rating.score
+        return sum/count
+
     def __str__(self):
-        return self.name + " by " + self.artist.name
+        return "{} by {}".format(self.name, self.artist.name)
  
     def __eq__(self, other):
         return self.__dict__ == other.__dict__
 
     def time_check(self):
-        if self.time_length != "":
-            return False
-        else:
+        if self.time_length:
             return True
+        else:
+            return False
 
     def release_date_check(self):
-        if self.release_date != "":
-            return False
-        else:
+        if self.release_date:
             return True
+        else:
+            return False
 
     def album_art_check(self):
-        if self.album_art != "":
-            return False
-        else:
+        if self.album_art:
             return True
+        else:
+            return False
 
     def all_info_found(self):
-        if not self.album_art_check() and not self.release_date_check() and not self.time_length_check():
+        if self.album_art_check() and self.release_date_check() and self.time_check():
             return True
         else:
             return False
@@ -170,3 +196,5 @@ class Album(models.Model):
         else:
             return True
 
+    class Meta:
+        ordering = ['name', 'artist']
