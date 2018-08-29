@@ -6,22 +6,33 @@ class Artist(models.Model):
         max_length=256,
     )
 
+    def __str__(self):
+        self.name
+
 class PrimaryGenre(models.Model):
     name = models.CharField(
         max_length=256,
         unique=True,
     )
 
+    def __str__(self):
+        return self.name
+
 class SubGenre(models.Model):
     name = models.CharField(
         max_length=256,
         unique=True,
     )
+
+    def __str__(self):
+        return self.name
     
 class Rating(models.Model):
-    score = models.IntegerField(
+    score = models.DecimalField(
+        decimal_places=1,
+        max_digits=4,
         null=True,
-        blank=True,
+        blank=False,
     )
 
     listen = models.IntegerField(
@@ -34,6 +45,36 @@ class Rating(models.Model):
         null=False,
         blank=False,
         on_delete=models.PROTECT,
+    )
+
+    def __str__(self):
+        return self.album.name + " received a " + str(self.score) + " on the " +str(self.listen) + self.ending() + " listen."
+
+    def ending(self):
+        if self.listen == 1:
+            return "st"
+        elif self.listen == 2:
+            return "nd"
+        elif self.listen == 3:
+            return "rd"
+        else:
+            return "th"
+
+class AlbumSubgenre(models.Model):
+    album = models.ForeignKey(
+        to='Album',
+        related_name='subgenres',
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+    )
+
+    subgenre = models.ForeignKey(
+        to='SubGenre',
+        related_name='albums',
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
     )
 
 class Album(models.Model):
@@ -78,12 +119,6 @@ class Album(models.Model):
         on_delete=models.SET_NULL,
     )
 
-    sub_genre = models.ManyToManyField(
-        'SubGenre',
-        blank=True,
-        null=True,
-    )
-
     time_length = models.DurationField(
         null=True,
         blank=True,
@@ -99,6 +134,9 @@ class Album(models.Model):
         blank=True,
     )
 
+    def __str__(self):
+        return self.name + " by " + self.artist.name
+ 
     def __eq__(self, other):
         return self.__dict__ == other.__dict__
 
@@ -131,3 +169,4 @@ class Album(models.Model):
             return False
         else:
             return True
+
