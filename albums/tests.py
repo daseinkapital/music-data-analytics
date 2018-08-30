@@ -1,6 +1,6 @@
 from django.test import TestCase
 from .models import *
-from .management/commands import adddata
+from .management.commands import adddata
 
 import datetime as dt
 
@@ -146,7 +146,7 @@ class ModelsTests(TestCase):
         self.album2.album_art = "https://upload.wikimedia.org/wikipedia/en/thumb/7/74/Rubber_Soul.jpg/220px-Rubber_Soul.jpg"
         self.assertFalse(self.album2.all_info_found())
 
-class ManagementCommandTests(TestCase):
+class ScrapeDataEdgeCaseTests(TestCase):
     def setUp(self):
         self.artist1 = Artist.objects.create(
             name = "The Rolling Stones"
@@ -160,83 +160,158 @@ class ManagementCommandTests(TestCase):
             name = "Home"
         )
 
-    def test_adddata_album_on_wikipedia_time(self):
-        alb = Album.object.create("The Rolling Stones", "Let It Bleed")
-        scrape(alb)
+        self.artist4 = Artist.objects.create(
+            name = "runescape斯凱利"
+        )
+
+        self.artist5 = Artist.objects.create(
+            name = "Streetlamps for Spotlights"
+        )
+
+        self.artist6 = Artist.objects.create(
+            name = "2 8 1 4"
+        )
+
+        self.artist7 = Artist.objects.create(
+            name = "Taylor Davis"
+        )
+
+        self.album1 = Album.objects.create(
+            artist = self.artist1,
+            name = "Let It Bleed"
+        )
+
+        self.album2 = Album.objects.create(
+            artist = self.artist2,
+            name = "The Black Album"
+        )
+
+        self.album3 = Album.objects.create(
+            artist = self.artist3,
+            name = "Odyssey"
+        )
+
+        self.album4 = Album.objects.create(
+            artist = self.artist4,
+            name = "runescape​.​wav符文風景骨架"
+        )
+
+        self.album5 = Album.objects.create(
+            artist = self.artist5,
+            name = "Sound and Color"
+        )
+
+        self.album6 = Album.objects.create(
+            artist = self.artist6,
+            name = "新しい日の誕生"
+        )
+
+        self.album7 = Album.objects.create(
+            artist = self.artist7,
+            name = "Odyssey"
+        )
+
+    def test_album_on_wikipedia_time(self):
+        adddata.scrape(self.album1)
         time = dt.timedelta(minutes=42, seconds=21)
-        self.assertEqual(alb.time, time)
+        self.assertEqual(self.album1.time_length, time)
         
-    def test_adddata_album_on_wikipedia_release_date(self):
-        alb = make_album("The Rolling Stones", "Let It Bleed")
-        scrape(alb)
+    def test_album_on_wikipedia_release_date(self):
+        adddata.scrape(self.album1)
         date = dt.datetime.strptime('5 December 1969', '%d %B %Y')
-        self.assertEqual(alb.release_date, date)
+        self.assertEqual(self.album1.release_date, date)
     
-    def test_adddata_album_on_wikipedia_album_art(self):
-        alb = make_album("The Rolling Stones", "Let It Bleed")
-        scrape(alb)
+    def test_album_on_wikipedia_album_art(self):
+        adddata.scrape(self.album1)
         album_art = "//upload.wikimedia.org/wikipedia/en/thumb/c/c0/LetitbleedRS.jpg/220px-LetitbleedRS.jpg"
-        self.assertEqual(alb.album_art, album_art)
+        self.assertEqual(self.album1.album_art, album_art)
 
-    def test_adddata_album_on_wikipedia_by_different_artists(self):
-        alb1 = make_album("Jay-Z", "The Black Album")
-        scrape(alb1)
-        alb2 = make_album("Jay-Z", "The Black Album")
-        alb2.time = dt.timedelta(minutes=55, seconds=32)
-        alb2.release_date =  dt.datetime.strptime('November 14, 2003', '%B %d, %Y')
-        alb2.album_art = "//upload.wikimedia.org/wikipedia/en/thumb/0/0e/Jay-Z_-_The_Black_Album.png/220px-Jay-Z_-_The_Black_Album.png"
-        self.assertEqual(alb1, alb2)
+    def test_album_on_wikipedia_by_different_artists_time(self):
+        adddata.scrape(self.album2)
+        time = dt.timedelta(minutes=55, seconds=32)
+        self.assertEqual(self.album2.time_length, time)
 
-    def test_adddata_album_only_on_bandcamp_time(self):
-        alb = make_album("Home", "Odyssey")
-        scrape(alb)
+    def test_album_on_wikipedia_by_different_artists_release_date(self):
+        adddata.scrape(self.album2)
+        release_date =  dt.datetime.strptime('November 14, 2003', '%B %d, %Y')
+        self.assertEqual(self.album2.release_date, release_date)
+    
+    def test_album_on_wikipedia_by_different_artists_album_art(self):
+        adddata.scrape(self.album2)
+        album_art = "//upload.wikimedia.org/wikipedia/en/thumb/0/0e/Jay-Z_-_The_Black_Album.png/220px-Jay-Z_-_The_Black_Album.png"
+        self.assertEqual(self.album2.album_art, album_art)
+
+    def test_album_only_on_bandcamp_time(self):
+        adddata.scrape(self.album3)
         time = dt.timedelta(minutes=47, seconds=41)
-        self.assertEqual(alb.time, time)
+        self.assertEqual(self.album3.time_length, time)
         
-    def test_adddata_album_only_on_bandcamp_release_date(self):
-        alb = make_album("Home", "Odyssey")
-        scrape(alb)
-        date = dt.datetime.strptime('July 1, 2014', '%B %d, %Y')
-        self.assertEqual(alb.release_date, date)
+    def test_album_only_on_bandcamp_release_date(self):
+        adddata.scrape(self.album3)
+        release_date = dt.datetime.strptime('July 1, 2014', '%B %d, %Y')
+        self.assertEqual(self.album3.release_date, release_date)
         
-    def test_adddata_album_only_on_bandcamp_album_art(self):
-        alb = make_album("Home", "Odyssey")
-        scrape(alb)
+    def test_album_only_on_bandcamp_album_art(self):
+        adddata.scrape(self.album3)
         album_art = "https://f4.bcbits.com/img/a3321951232_16.jpg"
-        self.assertEqual(alb.album_art, album_art)
+        self.assertEqual(self.album3.album_art, album_art)
 
-    def test_adddata_album_that_uses_characters_from_different_language(self):
-        alb1 = make_album("runescape斯凱利", "runescape​.​wav符文風景骨架")
-        scrape(alb1)
-        alb2 = make_album("runescape斯凱利", "runescape​.​wav符文風景骨架")
-        alb2.time = dt.timedelta(minutes=54, seconds=44)
-        alb2.release_date = dt.datetime.strptime('January 22, 2018', '%B %d, %Y')
-        alb2.album_art = "https://f4.bcbits.com/img/a2793267385_16.jpg"
-        self.assertEqual(alb1, alb2)
+    def test_album_that_uses_characters_from_different_language_time(self):
+        adddata.scrape(self.album4)
+        time = dt.timedelta(minutes=54, seconds=44)
+        self.assertEqual(self.album4.time_length, time)
 
-    def test_adddata_album_on_bandcamp_with_name_that_is_also_on_wiki(self):
-        alb1 = make_album("Streetlamps for Spotlights", "Sound and Color")
-        scrape(alb1)
-        alb2 = make_album("Streetlamps for Spotlights", "Sound and Color")
-        alb2.time = dt.timedelta(minutes=33 , seconds=36)
-        alb2.release_date = dt.datetime.strptime('April 19, 2014', '%B %d, %Y')
-        alb2.album_art = "https://f4.bcbits.com/img/a3345060228_16.jpg"
-        self.assertEqual(alb1, alb2)
+    def test_album_that_uses_characters_from_different_language_release_date(self):
+        adddata.scrape(self.album4)
+        release_date = dt.datetime.strptime('January 22, 2018', '%B %d, %Y')
+        self.assertEqual(self.album4.release_date, release_date)
 
-    def test_adddata_album_completely_in_another_language(self):
-        alb1 = make_album("2 8 1 4","新しい日の誕生")
-        scrape(alb1)
-        alb2 = make_album("2 8 1 4","新しい日の誕生")
-        alb2.time = dt.timedelta(minutes=67 , seconds=23)
-        alb2.release_date = dt.datetime.strptime('January 21, 2015', '%B %d, %Y')
-        alb2.album_art = "https://f4.bcbits.com/img/a4099353330_16.jpg"
-        self.assertEqual(alb1, alb2)
+    def test_album_that_uses_characters_from_different_language_album_art(self):
+        adddata.scrape(self.album4)
+        album_art = "https://f4.bcbits.com/img/a2793267385_16.jpg"
+        self.assertEqual(self.album4.album_art, album_art)
 
-    def test_adddata_album_on_bandcamp_second_page(self):
-        alb1 = make_album("Taylor Davis", "Odyssey")
-        scrape(alb1)
-        alb2 = make_album("Taylor Davis", "Odyssey")
-        alb2.time = dt.timedelta(minutes=43 , seconds=44)
-        alb2.release_date = dt.datetime.strptime('October 28, 2016','%B %d, %Y')
-        alb2.album_art = "https://f4.bcbits.com/img/a2565743238_16.jpg"
-        self.assertEqual(alb1, alb2)
+    def test_album_on_bandcamp_with_name_that_is_also_on_wiki_time(self):
+        adddata.scrape(self.album5)
+        time = dt.timedelta(minutes=33 , seconds=36)
+        self.assertEqual(self.album5.time_length, time)
+
+    def test_album_on_bandcamp_with_name_that_is_also_on_wiki_release_date(self):
+        adddata.scrape(self.album5)
+        release_date = dt.datetime.strptime('April 19, 2014', '%B %d, %Y')
+        self.assertEqual(self.album5.release_date, release_date)
+
+    def test_album_on_bandcamp_with_name_that_is_also_on_wiki_album_art(self):
+        adddata.scrape(self.album5)
+        album_art = "https://f4.bcbits.com/img/a3345060228_16.jpg"
+        self.assertEqual(self.album5.album_art, album_art)
+
+    def test_album_completely_in_another_language_time(self):
+        adddata.scrape(self.album6)
+        time = dt.timedelta(minutes=67 , seconds=23)
+        self.assertEqual(self.album6.time_length, time)
+
+    def test_album_completely_in_another_language_release_date(self):
+        adddata.scrape(self.album6)
+        release_date = dt.datetime.strptime('January 21, 2015', '%B %d, %Y')
+        self.assertEqual(self.album6.release_date, release_date)
+
+    def test_album_completely_in_another_language_album_art(self):
+        adddata.scrape(self.album6)
+        album_art = "https://f4.bcbits.com/img/a4099353330_16.jpg"
+        self.assertEqual(self.album6.album_art, album_art)
+
+    def test_album_on_bandcamp_second_page_time(self):
+        adddata.scrape(self.album7)
+        time = dt.timedelta(minutes=43 , seconds=44)
+        self.assertEqual(self.album7.time_length, time)
+
+    def test_album_on_bandcamp_second_page_release_date(self):
+        adddata.scrape(self.album7)
+        release_date = dt.datetime.strptime('October 28, 2016','%B %d, %Y')
+        self.assertEqual(self.album7.release_date, release_date)
+
+    def test_album_on_bandcamp_second_page_album_art(self):
+        adddata.scrape(self.album7)
+        album_art = "https://f4.bcbits.com/img/a2565743238_16.jpg"
+        self.assertEqual(self.album7.album_art, album_art)

@@ -6,6 +6,10 @@ import urllib.request
 from bs4 import BeautifulSoup as bs
 import datetime as dt
 
+import os, ssl
+
+
+
 class Command(BaseCommand):
     help = 'Reads in data from the initial spreadsheet.'
 
@@ -211,14 +215,13 @@ def scrape_wiki(album):
         #print("Couldn't find Wikipedia page")
         return
     if wiki_artist_check(html, album):
-
-        if album.time_check():
-            album.time = wiki_full_length(html)
+        if not album.time_check():
+            album.time_length = wiki_full_length(html)
         
-        if album.release_date_check():
+        if not album.release_date_check():
             album.release_date = wiki_release_date(html)
         
-        if album.album_art_check():
+        if not album.album_art_check():
             album.album_art = wiki_album_art(html)
     
     return
@@ -233,18 +236,20 @@ def scrape_bc(album):
         print("Couldn't find bandcamp page")
         return
 
-    if album.time_check():
+    if not album.time_check():
         album.time_length = bc_full_length(html)
     
-    if album.release_date_check():
+    if not album.release_date_check():
         album.release_date = bc_release_date(html)
 
-    if album.album_art_check():
+    if not album.album_art_check():
         album.album_art = bc_album_art(html)
     
-    return album_object
+    return
         
 def scrape(album):
+    if (not os.environ.get('PYTHONHTTPSVERIFY', '') and getattr(ssl, '_create_unverified_context', None)): 
+        ssl._create_default_https_context = ssl._create_unverified_context
     # print("Checking Wikipedia")
     scrape_wiki(album)
     
