@@ -146,6 +146,46 @@ class ModelsTests(TestCase):
         self.album2.album_art = "https://upload.wikimedia.org/wikipedia/en/thumb/7/74/Rubber_Soul.jpg/220px-Rubber_Soul.jpg"
         self.assertFalse(self.album2.all_info_found())
 
+class ScrapeDataUnitTest(TestCase):
+    def test_find_wiki_url_plain_case(self):
+        artist = Artist.objects.create(
+            name = "The Rolling Stones"
+        )
+
+        album = Album.objects.create(
+            name = "Let It Bleed",
+            artist = artist
+        )
+
+        url = adddata.find_wiki_urls(album)
+        self.assertEqual(url, 'https://en.wikipedia.org/wiki/Let_It_Bleed')
+
+    def test_find_wiki_url_album(self):
+        artist = Artist.objects.create(
+            name = "Glass Animals"
+        )
+
+        album = Album.objects.create(
+            name = "Zaba",
+            artist = artist
+        )
+
+        url = adddata.find_wiki_urls(album)
+        self.assertEqual(url, 'https://en.wikipedia.org/wiki/Zaba_(album)')
+
+    def test_find_wiki_url_album_and_artist(self):
+        artist = Artist.objects.create(
+            name = "The National"
+        )
+
+        album = Album.objects.create(
+            name = "Alligator",
+            artist = artist
+        )
+
+        url = adddata.find_wiki_urls(album)
+        self.assertEqual(url, 'https://en.wikipedia.org/wiki/Alligator_(The_National_album)')
+
 class ScrapeDataEdgeCaseTests(TestCase):
     def setUp(self):
         self.artist1 = Artist.objects.create(
@@ -315,3 +355,18 @@ class ScrapeDataEdgeCaseTests(TestCase):
         adddata.scrape(self.album7)
         album_art = "https://f4.bcbits.com/img/a2565743238_16.jpg"
         self.assertEqual(self.album7.album_art, album_art)
+
+    # def test_album_on_wikipedia_self_titled_time(self):
+    #     adddata.scrape(self.album8)
+    #     time = dt.timedelta(minutes= , seconds= )
+    #     self.assertEqual(self.album8.time_length, time)
+
+    # def test_album_on_wikipedia_self_titled_released_date(self):
+    #     adddata.scrape(self.album8)
+    #     release_date = dt.datetime.strptime('', '%B %d, %Y')
+    #     self.assertEqual(self.album8.time_length, time)
+
+    # def test_album_on_wikipedia_self_titled_album_art(self):
+    #     adddata.scrape(self.album8)
+    #     time = dt.timedelta(minutes= , seconds= )
+    #     self.assertEqual(self.album8.time_length, time)

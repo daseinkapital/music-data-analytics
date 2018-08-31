@@ -23,41 +23,15 @@ class Command(BaseCommand):
             
             all_subgenres = split_subgenres(list(set(all_subgenres)))
 
-
-
             unique_artists = list(set(all_artists))
             unique_genres = list(set(all_genres))
             unique_subgenres = list(set(all_subgenres))
 
-            print(unique_subgenres)
-            for artist in unique_artists:
-                if artist == '':
-                    continue
-                else:
-                    if Artist.objects.filter(name=artist).first():
-                        continue
-                    else:
-                        Artist.objects.create(
-                            name = artist
-                        )
-            
-            for genre in unique_genres:
-                if genre != '':
-                    if PrimaryGenre.objects.filter(name=genre).first():
-                        continue
-                    else:
-                        PrimaryGenre.objects.create(
-                            name = genre
-                        )
+            save_objects(unique_artists, Artist)
+            save_objects(unique_genres, PrimaryGenre)
+            save_objects(unique_subgenres, SubGenre)
 
-            for genre in unique_subgenres:
-                if genre != '':
-                    if SubGenre.objects.filter(name=genre).first():
-                        continue
-                    else:
-                        SubGenre.objects.create(
-                            name = genre
-                        )
+        clean_up()
 
         with open(file, mode='r', encoding='utf-8') as csvfile:
             csv_reader = csv.DictReader(csvfile, delimiter=',')
@@ -65,7 +39,7 @@ class Command(BaseCommand):
                 print(row)
                 artist = Artist.objects.filter(name=row['Artist']).first()
                 primary_genre = PrimaryGenre.objects.filter(name=row['Primary Genre']).first()
-                album = Album.objects.filter(artist=artist, name=row['Album']).first()
+                album = Album.objects.filter(artist__name=row['Artist'], name=row['Album']).first()
                 if not album:
                     album = Album.objects.create(
                         name = row['Album'],
@@ -85,11 +59,13 @@ class Command(BaseCommand):
                         )
 
                     if row['Specific Genre']:
-                        if '/' in row['Specific Genre']:                
+                        if '/' in row['Specific Genre']:               
                             subgenres = row['Specific Genre'].split('/')
                             if album:
-                                for subgenre in subgenres:
-                                    subgenre = SubGenre.objects.filter(name=subgenre).first()
+                                for genre in subgenres:
+                                    subgenre = SubGenre.objects.filter(name=genre).first()
+                                    if genre and not subgenre:
+                                        subgenre = SubGenre.objects.create(name=genre)
                                     AlbumSubgenre.objects.create(
                                         album=album,
                                         subgenre=subgenre
@@ -103,15 +79,25 @@ class Command(BaseCommand):
                                     subgenre=subgenre
                                 )
 
+def save_objects(unique_set, model):
+    for item in unique_set:
+        if item != '':
+            if model.objects.filter(name=item).first():
+                continue
+            else:
+                model.objects.create(
+                    name = item
+                )
 
 def split_subgenres(subgenres):
     for row in subgenres:
         if "/" in row:
-            while row in subgenres:
-                subgenres.remove(row)        
             new_genres = row.split("/")
             for genre in new_genres:
                 subgenres.append(genre)
+            while row in subgenres:
+                subgenres.remove(row)        
+            
     return subgenres
 
 def convert_date(date_str):
@@ -119,3 +105,7 @@ def convert_date(date_str):
         return dt.datetime.strptime(date_str, '%m/%d/%Y')
     else:
         return None
+
+def clean_up():
+    for obj in SubGenre.objects.filter(name__contains="/"):
+        obj.delete()

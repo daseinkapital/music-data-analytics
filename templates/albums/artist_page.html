@@ -1,0 +1,9 @@
+<body>
+    <h1>{{artist.name}}</h1>
+    <h4>Albums:</h4>
+    <div>
+    {% for album in albums %}
+        <span style="display: inline-block; width:100px;"><img src="{{album.album_art}}" onerror="javascript:this.src='https://static1.squarespace.com/static/55a57011e4b09934ba12fd1a/5612b784e4b07c6a02988249/5612dd98e4b0e75bc4a61cc7/1444076954414/record.png?format=500w'" style="max-height: 100px; max-width: 100px; display: block; margin-left: auto; margin-right: auto;" title="{{album}}"></span>
+    {% endfor %}
+    </div>
+</body>

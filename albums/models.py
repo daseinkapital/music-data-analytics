@@ -120,9 +120,20 @@ class Album(models.Model):
 
     primary_genre = models.ForeignKey(
         to='PrimaryGenre',
+        related_name='albums',
         blank=True,
         null=True,
         on_delete=models.SET_NULL,
+    )
+
+    wiki_url = models.URLField(
+        null=True,
+        blank=True
+    )
+
+    bc_url = models.URLField(
+        null=True,
+        blank=True
     )
 
     time_length = models.DurationField(
@@ -138,6 +149,15 @@ class Album(models.Model):
     album_art = models.URLField(
         null=True,
         blank=True,
+        max_length=500,
+    )
+
+    vinyl = models.BooleanField(
+        default=False
+    )
+
+    cassette = models.BooleanField(
+        default=False
     )
 
     @property
@@ -198,6 +218,12 @@ class Album(models.Model):
             return False
         else:
             return True
+
+    def has_url(self):
+        if self.wiki_url or self.bc_url:
+            return True
+        else:
+            return False
 
     class Meta:
         ordering = ['name', 'artist']

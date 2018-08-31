@@ -1,9 +1,13 @@
 from django.core.management.base import BaseCommand, CommandError
+from django.db.utils import DataError
 from albums.models import Album
 
 from urllib.request import urlopen
+import urllib.parse
 import urllib.request
+from googlesearch import search
 from bs4 import BeautifulSoup as bs
+from time import sleep
 import datetime as dt
 
 import os, ssl
@@ -14,8 +18,11 @@ class Command(BaseCommand):
     help = 'Reads in data from the initial spreadsheet.'
 
     def handle(self, *args, **options):
-        albums = Album.objects.all()
+        albums = Album.objects.exclude(name__icontains="?")
+        albums = albums.exclude(artist__name__icontains="?")
+        albums = albums.exclude(name="")
         for album in albums:
+            print(album)
             scrape(album)
 
 
@@ -29,6 +36,30 @@ def fetch_url(url):
 
 #### Helper functions
 #### WIKIPEDIA HELPER FUNCTIONS
+def find_urls(album):
+    album_name = album.name
+    artist_name = album.artist.name
+    query = album_name + " " + artist_name
+
+    urls = {'wiki' : None, 'bc' : None}
+
+    for result in search(query, num=10, stop=10, pause=2):
+        if 'wikipedia' in result:
+            if urls['wiki'] == None:
+                urls.update({'wiki' : result})
+        if 'bandcamp' in result:
+            urls.update({'bc' : result})
+    
+    query = query + " wikipedia bandcamp"
+    for result in search(query, num=10, stop=10, pause=2):
+        if 'wikipedia' in result:
+            if urls['wiki'] == None:
+                urls.update({'wiki' : result})
+        if 'bandcamp' in result:
+            urls.update({'bc' : result})
+    
+    return urls
+
 #disambiguation check (multiple pages)
 def wiki_artist_check(soup, album):
     description = soup.find('th', {'class':'description'})
@@ -76,7 +107,7 @@ def wiki_full_length(soup):
         total_time = dt.timedelta(minutes=int(minutes), seconds=int(seconds))
         return total_time
     else:
-        return ""
+        return None
 
 #clean the wiki release date before parsing
 def wiki_clean_date(soup):
@@ -91,22 +122,29 @@ def wiki_release_date(soup):
     if span:
         wiki_clean_date(span)
         unparsed_date = span.getText().strip('\n')
+        if unparsed_date == '':
+            return None
         try:
             released = dt.datetime.strptime(unparsed_date, '%d %B %Y')
         except(ValueError):
-            released = dt.datetime.strptime(unparsed_date, '%B %d, %Y')
+            try:
+                released = dt.datetime.strptime(unparsed_date, '%B %d, %Y')
+            except(ValueError):
+                return None
         return released
     else:
-        return ""
+        return None
 
 #finds the album art from wikipedia
 def wiki_album_art(soup):
     sidebar = soup.find('table', {'class': 'infobox vevent haudio'})
     if sidebar:
-        img = sidebar.find('img')['src']
-        if img:
+        try:
+            img = sidebar.find('img')['src']
             return img
-    return ""
+        except(TypeError):
+            return None
+    return None
 
 
 #### BANDCAMP HELPER FUNCTIONS
@@ -133,7 +171,10 @@ def check_album(album):
     num = 1
     while num <= 5:
         url = 'https://bandcamp.com/search?page=' + str(num) + '&q=' + album.name.replace(" ", "%20")
-        html = fetch_url(url)
+        try:
+            html = fetch_url(url)
+        except(urllib.error.HTTPError):
+            return None
         search_term = "ALBUM"
         left_div = html.find('ul', {'class', 'result-items'})
         list_items = left_div.findAll('li')   
@@ -142,7 +183,7 @@ def check_album(album):
             return album_url
         else:
             num += 1
-    return ""
+    return None
 
 #check for artist instead of album
 def check_artist(album):
@@ -150,7 +191,7 @@ def check_artist(album):
     while num <= 5:
         url = 'https://bandcamp.com/search?page=' + str(num) + '&q=' + album.artist.name.replace(" ", "%20")
         if url == 'https://bandcamp.com/search?q=':
-            return
+            return None
         html = fetch_url(url)
         search_term = "ALBUM"
         left_div = html.find('ul', {'class', 'result-items'})
@@ -191,9 +232,13 @@ def bc_full_length(soup):
 #find the release date of the album on bandcamp
 def bc_release_date(soup):
     init_div = soup.find('div', {'class':'tralbumData tralbum-credits'})
-    unparsed_date = init_div.find('meta')['content']
-    release_date = dt.datetime.strptime(unparsed_date, '%Y%m%d')
-    return release_date
+    if init_div:
+        unparsed_date = init_div.find('meta')['content']
+        if unparsed_date:
+            release_date = dt.datetime.strptime(unparsed_date, '%Y%m%d')
+            return release_date
+    else:
+        return None
 
 def bc_album_art(soup):
     div = soup.find('div', {'id': 'tralbumArt'})
@@ -201,38 +246,46 @@ def bc_album_art(soup):
         img = div.find('img')['src']
         if img:
             return img
-    return ""    
+    return None   
 
 #### main functions
 
 #check wikipedia for the album
 def scrape_wiki(album):
-    url = disambiguation_check(album)
-    url = wiki_double_named_album(url, album)
     try:
-        html = fetch_url(url)
+        html = fetch_url(album.wiki_url)
     except(ValueError, urllib.error.HTTPError):
         #print("Couldn't find Wikipedia page")
         return
-    if wiki_artist_check(html, album):
-        if not album.time_check():
-            album.time_length = wiki_full_length(html)
-        
-        if not album.release_date_check():
-            album.release_date = wiki_release_date(html)
-        
-        if not album.album_art_check():
-            album.album_art = wiki_album_art(html)
+    # if wiki_artist_check(html, album):
+    if not album.time_check():
+        album.time_length = wiki_full_length(html)
     
+    if not album.release_date_check():
+        album.release_date = wiki_release_date(html)
+    
+    if not album.album_art_check():
+        album.album_art = wiki_album_art(html)
+    try:
+        album.save()
+    except(DataError):
+        album.album_art = None
+        album.save()
     return
         
 def scrape_bc(album):
-    url = bc_navigate_to_page(album)
+    if not album.bc_url:
+        try:
+            url = bc_navigate_to_page(album)
+        except(urllib.error.HTTPError):
+            return
+    else:
+        url = album.bc_url
     if url == "skip":
         return
     try:
         html = fetch_url(url)
-    except(ValueError):
+    except(ValueError, urllib.error.HTTPError):
         print("Couldn't find bandcamp page")
         return
 
@@ -244,21 +297,46 @@ def scrape_bc(album):
 
     if not album.album_art_check():
         album.album_art = bc_album_art(html)
-    
+    try:
+        album.save()
+    except(DataError):
+        album.album_art = None
+        album.save()
     return
         
 def scrape(album):
     if (not os.environ.get('PYTHONHTTPSVERIFY', '') and getattr(ssl, '_create_unverified_context', None)): 
         ssl._create_default_https_context = ssl._create_unverified_context
-    # print("Checking Wikipedia")
-    scrape_wiki(album)
-    
+    if album.all_info_found():
+        return
+
+    if album.has_url():
+        if album.wiki_url:
+            scrape_wiki(album)
+    else:
+        sleep(5)
+        urls = find_urls(album)
+        if urls['wiki']:
+            album.wiki_url = urls['wiki']
+        if urls['bc']:
+            album.bc_url = urls['bc']
+        try:
+            album.save()
+        except(DataError):
+            album.album_art = None
+            album.save()
+        
+        if album.wiki_url:
+            scrape_wiki(album)
+
+
     if album.all_info_found():
         return
     else:
         # print("Checking Bandcamp")
         scrape_bc(album)
-    
+
+
     if not album.time_check():
         print("Unable to find total length of album")
     if not album.release_date_check():
