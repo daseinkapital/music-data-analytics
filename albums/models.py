@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import URLValidator
 
 # Create your models here.
 class Artist(models.Model):
@@ -126,14 +127,16 @@ class Album(models.Model):
         on_delete=models.SET_NULL,
     )
 
-    wiki_url = models.URLField(
+    wiki_url = models.TextField(
         null=True,
-        blank=True
+        blank=True,
+        validators=[URLValidator()],
     )
 
-    bc_url = models.URLField(
+    bc_url = models.TextField(
         null=True,
-        blank=True
+        blank=True,
+        validators=[URLValidator()],
     )
 
     time_length = models.DurationField(
@@ -146,10 +149,11 @@ class Album(models.Model):
         blank=True,
     )
 
-    album_art = models.URLField(
+    album_art = models.TextField(
         null=True,
         blank=True,
         max_length=500,
+        validators=[URLValidator()],
     )
 
     vinyl = models.BooleanField(

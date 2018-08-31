@@ -266,11 +266,7 @@ def scrape_wiki(album):
     
     if not album.album_art_check():
         album.album_art = wiki_album_art(html)
-    try:
-        album.save()
-    except(DataError):
-        album.album_art = None
-        album.save()
+    album.save()
     return
         
 def scrape_bc(album):
@@ -297,11 +293,8 @@ def scrape_bc(album):
 
     if not album.album_art_check():
         album.album_art = bc_album_art(html)
-    try:
-        album.save()
-    except(DataError):
-        album.album_art = None
-        album.save()
+    album.save()
+
     return
         
 def scrape(album):
