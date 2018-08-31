@@ -1,1 +1,1 @@
-web: python website/manage.py runserver 0.0.0.0:$PORT
+web: python mysterious-peak-32161/manage.py runserver 0.0.0.0:$PORT
