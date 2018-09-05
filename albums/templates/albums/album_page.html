@@ -1,4 +1,4 @@
-{% include "albums/test.html" %}
+{% include "albums/header.html" %}
     <img src='{{album.album_art}}' onerror="javascript:this.src='https://static1.squarespace.com/static/55a57011e4b09934ba12fd1a/5612b784e4b07c6a02988249/5612dd98e4b0e75bc4a61cc7/1444076954414/record.png?format=500w'" style="max-height: 100px; max-width: 100px;" title="{{album}} Album Art">
     <h1>{{album.name}}</h1>
     <h2>an album by <a href="{% url 'artist-page' artist=album.artist.slug %}">{{album.artist.name}}</a></h2>
