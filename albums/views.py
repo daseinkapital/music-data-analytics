@@ -12,13 +12,13 @@ def main(request):
     return render(request, 'albums/main.html', context)
 
 def album_page(request, artist, album):
-    album = Album.objects.filter(name=album).filter(artist__name=artist).first()
+    album = Album.objects.filter(slug=album).filter(artist__slug=artist).first()
     context = {'album' : album}
     return render(request, 'albums/album_page.html', context)
 
 def artist_page(request, artist):
-    albums = Album.objects.filter(artist__name=artist)
-    artist = Artist.objects.filter(name=artist).first()
+    albums = Album.objects.filter(artist__slug=artist)
+    artist = Artist.objects.filter(slug=artist).first()
     context = {
         'albums' : albums,
         'artist' : artist

@@ -1,11 +1,18 @@
 from django.db import models
 from django.core.validators import URLValidator
+from django.utils.text import slugify
 
 # Create your models here.
 class Artist(models.Model):
     name = models.CharField(
         max_length=256,
     )
+
+    slug = models.SlugField()
+    
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name, allow_unicode=True)
+        super(Artist, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.name
@@ -163,6 +170,12 @@ class Album(models.Model):
     cassette = models.BooleanField(
         default=False
     )
+
+    slug = models.SlugField()
+    
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name, allow_unicode=True)[:50]
+        super(Album, self).save(*args, **kwargs)
 
     @property
     def get_subgenres(self):
