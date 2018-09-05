@@ -1,0 +1,92 @@
+{% load static %}
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> 
+<html class="no-js"> <!--<![endif]-->
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+  <title>Samuelson's Album Experiment</title>
+
+<!-- Mobile Specific Meta
+  ================================================== -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <!-- Favicon -->
+  <link rel="shortcut icon" type="image/x-icon" href="{% static 'albums/img/favicon.png' %}" />
+  
+  <!-- CSS
+  ================================================== -->
+  <!-- Themefisher Icon font -->
+  <link rel="stylesheet" href="{% static 'albums/plugins/themefisher-font/style.css' %}">
+  <!-- bootstrap.min css -->
+  <link rel="stylesheet" href="{% static 'albums/plugins/bootstrap/dist/css/bootstrap.min.css' %}">
+  <!-- Lightbox.min css -->
+  <link rel="stylesheet" href="{% static 'albums/plugins/lightbox2/dist/css/lightbox.min.css' %}">
+  <!-- Slick Carousel -->
+  <link rel="stylesheet" href="{% static 'albums/plugins/slick-carousel/slick/slick.css' %}">
+  <link rel="stylesheet" href="{% static 'albums/plugins/slick-carousel/slick/slick-theme.css' %}">
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="{% static 'albums/css/style.css' %}">
+
+
+  <!-- Colors -->
+  <!-- <link rel="stylesheet" type="text/css" href="css/colors/green.css" title="green">
+  <link rel="stylesheet" type="text/css" href="css/colors/red.css" title="light-red">
+  <link rel="stylesheet" type="text/css" href="css/colors/light-blue.css" title="light-blue">
+  <link rel="stylesheet" type="text/css" href="css/colors/yellow.css" title="yellow">
+  <link rel="stylesheet" type="text/css" href="css/colors/light-green.css" title="light-green">
+  <link rel="stylesheet" type="text/css" href="css/colors/blue.css" title="blue"> -->
+  
+
+</head>
+
+<body id="body">
+
+
+<!--
+Fixed Navigation
+==================================== -->
+<section class="header  navigation">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <nav class="navbar navbar-expand-md">
+          <a class="navbar-brand" href="index.html">
+            <img src="{% static 'albums/img/logo.png' %}" alt="logo">
+          </a>  
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="tf-ion-android-menu"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item active">
+                <a class="nav-link" href="{% url 'homepage' %}">Home <span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'about' %}">About</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'statistics' %}">Statistics</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="">Genres</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="">Contact</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pages</a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item" href="">404 Page</a>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+    </div>
+  </div>
+</section>

@@ -26,7 +26,6 @@ def artist_page(request, artist):
     return render(request, 'albums/artist_page.html', context)
 
 def statistics(request):
-    print("Hello")
     albums = Album.objects.all()
     total_subgenres_num = SubGenre.objects.all().count()
     total_album_num = albums.count()
@@ -43,3 +42,9 @@ def statistics(request):
     print(context)
 
     return render(request, 'albums/statistics.html', context)
+
+def about(request):
+    return render(request, 'albums/about.html')
+
+def htmltest(request):
+    return render(request, 'albums/test.html')

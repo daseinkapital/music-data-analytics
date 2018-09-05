@@ -11,7 +11,7 @@ class Artist(models.Model):
     slug = models.SlugField()
     
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.name, allow_unicode=True)
+        self.slug = slugify(self.name, allow_unicode=True)[:50]
         super(Artist, self).save(*args, **kwargs)
 
     def __str__(self):
