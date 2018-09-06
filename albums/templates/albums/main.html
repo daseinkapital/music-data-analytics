@@ -2,7 +2,22 @@
 <section>
     <div class="container">
         <div class="row" style="padding: 10px;">
-            <input type="text" placeholder="Search..." id="search-bar" name="term">
+            <form action="{% url 'homepage' %}" method=POST> {% csrf_token %}
+                <input type="text" placeholder="Search..." id="search-bar" name="search">
+                <select onchange=this.form.submit() name="order">
+                    <option value="" disabled selected>Order By...</option>
+                    <option value="name">Alphabetical (Album)</option>
+                    <option value="artist">Alphabetical (Artist)</option>
+                    <option value="time">Album Length</option>
+                    <option value="listen_date">Chronological</option>
+                    <option value="rating">Rating</option>
+                    <option value="release">Release Date</option>
+                </select>
+                <select onchange=this.form.submit() name="direction">
+                    <option value="up">Ascending</option>
+                    <option value="down">Descending</option>
+                </select>
+            </form>
         </div>
     </div>
 </section>
@@ -16,6 +31,12 @@
 
 
 <script>
+$( document ).ready(function(){
+    $("#search-bar").val("{{search}}")
+    $("select[name='order']").val("{{order}}")
+    $("select[name='direction']").val("{{direction}}")
+});
+
 $("#search-bar").on("input", function(e) {
     var h1s = $("#albums").find("img");
     var q = $( this ).val().toLowerCase();

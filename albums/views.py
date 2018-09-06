@@ -7,13 +7,51 @@ import datetime as dt
 # Create your views here.
 def main(request):
     context = {}
-    term = request.GET.get('term')
-    print(request.GET)
-    if term:
-        albums = Album.objects.filter(Q(name__iexact=term) | Q(artist__name__iexact=term))
+    if request.POST:
+        search = request.POST.get('search')
+        order_post = request.POST.get('order')
+        direction = request.POST.get('direction')
     else:
-        albums = Album.objects.all()
+        search = ''
+        order_post = ''
+        direction = 'up'
+
+    if search == None:
+        search == ''
+
+    if direction == "down":
+        add = "-"
+    else:
+        add = ""
+
+    if order_post:
+        orders = {
+            'name' : 'name',
+            'artist' : 'artist__name',
+            'time' : 'time_length',
+            'listen_date' : 'date_finished',
+            'rating' : 'rating',
+            'release' : 'release_date'
+        }
+
+        order_term = orders[order_post]
+
+        if order_term == 'rating':
+            albums = Album.objects.all()
+        elif order_term == 'date_finished':
+            albums = Album.objects.all().order_by(add+order_term, add+'order')
+        else:
+            albums = Album.objects.all().order_by(add + order_term)
+    
+    else:
+        albums = Album.objects.all().order_by(add + 'name')
+    
     context.update({'albums': albums})
+    context.update({
+        'search' : search,
+        'order' : order_post,
+        'direction' : direction
+    })
     return render(request, 'albums/main.html', context)
 
 def album_page(request, artist, album):
