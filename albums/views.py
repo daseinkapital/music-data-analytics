@@ -1,13 +1,18 @@
 from django.shortcuts import render
 from albums.models import *
+from django.db.models import Q
 
 import datetime as dt
 
 # Create your views here.
 def main(request):
-    print("Hello")
     context = {}
-    albums = Album.objects.all()
+    term = request.GET.get('term')
+    print(request.GET)
+    if term:
+        albums = Album.objects.filter(Q(name__iexact=term) | Q(artist__name__iexact=term))
+    else:
+        albums = Album.objects.all()
     context.update({'albums': albums})
     return render(request, 'albums/main.html', context)
 
@@ -39,7 +44,6 @@ def statistics(request):
         'total_subgenres_num' : total_subgenres_num,
         'total_time' : total_time
     }
-    print(context)
 
     return render(request, 'albums/statistics.html', context)
 
@@ -48,3 +52,10 @@ def about(request):
 
 def htmltest(request):
     return render(request, 'albums/test.html')
+
+def search(request):
+    term = request.GET.get('term')
+    print("Term: " + term)
+    if term:
+        albums = Album.objects.filter(Q(name__iexact=term) | Q(artist__name__iexact=term))
+    return albums

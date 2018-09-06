@@ -1,5 +1,32 @@
 {% include "albums/header.html" %}
-    {% for album in albums %}
-<span style="display: inline-block; width:100px;"><a href="{% url 'album-page' artist=album.artist.slug album=album.slug %}"><img src="{{album.album_art}}" onerror="javascript:this.src='https://static1.squarespace.com/static/55a57011e4b09934ba12fd1a/5612b784e4b07c6a02988249/5612dd98e4b0e75bc4a61cc7/1444076954414/record.png?format=500w'" style="max-height: 100px; max-width: 100px; display: block; margin-left: auto; margin-right: auto;" title="{{album}}"></a></span>
-    {% endfor %}
-</body>
+<section>
+    <div class="container">
+        <div class="row" style="padding: 10px;">
+            <input type="text" placeholder="Search..." id="search-bar" name="term">
+        </div>
+    </div>
+</section>
+<section>
+    <div id="albums">
+            {% for album in albums %}
+        <a href="{% url 'album-page' artist=album.artist.slug album=album.slug %}"><img src="{{album.album_art}}" name="{{album.slug}}" onerror="javascript:this.src='https://static1.squarespace.com/static/55a57011e4b09934ba12fd1a/5612b784e4b07c6a02988249/5612dd98e4b0e75bc4a61cc7/1444076954414/record.png?format=500w'" style="max-height: 100px; max-width: 100px; width: 100px; display: inline-block; margin-left: auto; margin-right: auto;" title="{{album}}"></a>
+            {% endfor %}
+    </div>
+</section>
+
+
+<script>
+$("#search-bar").on("input", function(e) {
+    var h1s = $("#albums").find("img");
+    var q = $( this ).val().toLowerCase();
+    $.each(h1s, function(id, value) {
+        var contains = value.title.toLowerCase();
+        if (contains.indexOf(q) === -1) {
+            $("img[name='"+value.name+"']").css('display', 'none');
+        } else {
+            $("img[name='"+value.name+"']").css('display', 'inline-block');
+        };
+    });
+});
+$("#search-bar").trigger("input");
+</script>

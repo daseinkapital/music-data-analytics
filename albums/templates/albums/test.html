@@ -1,0 +1,32 @@
+{% include 'albums/header.html' %}
+
+<input type="text" placeholder="Search.." id="search-bar" name="term">
+
+<div id="h1s">
+        <a href="/artist/george-clanton/100-electronica/"><img src="https://f4.bcbits.com/img/a1229717139_16.jpg" onerror="javascript:this.src='https://static1.squarespace.com/static/55a57011e4b09934ba12fd1a/5612b784e4b07c6a02988249/5612dd98e4b0e75bc4a61cc7/1444076954414/record.png?format=500w'" style="max-height: 100px; max-width: 100px; width: 100px; display: inline-block; margin-left: auto; margin-right: auto;" title="100% Electronica by George Clanton"></a>
+        <a href="/artist/randy-newman/12-songs/"><img src="http://upload.wikimedia.org/wikipedia/en/d/d3/RandyNewman12Songs.jpg" onerror="javascript:this.src='https://static1.squarespace.com/static/55a57011e4b09934ba12fd1a/5612b784e4b07c6a02988249/5612dd98e4b0e75bc4a61cc7/1444076954414/record.png?format=500w'" style="max-height: 100px; max-width: 100px; width: 100px; display: inline-block; margin-left: auto; margin-right: auto;" title="12 Songs by Randy Newman"></a>
+        <a href="/artist/blur/13/"><img src="//upload.wikimedia.org/wikipedia/en/4/4c/13_%28Blur_album_-_cover_art%29.jpg" onerror="javascript:this.src='https://static1.squarespace.com/static/55a57011e4b09934ba12fd1a/5612b784e4b07c6a02988249/5612dd98e4b0e75bc4a61cc7/1444076954414/record.png?format=500w'" style="max-height: 100px; max-width: 100px; width: 100px; display: inline-block; margin-left: auto; margin-right: auto;" title="13 by Blur"></a>
+        <a href="/artist/xxxtentacion/17/"><img src="//upload.wikimedia.org/wikipedia/en/thumb/e/eb/17_by_XXXTentacion_cover.jpg/220px-17_by_XXXTentacion_cover.jpg" onerror="javascript:this.src='https://static1.squarespace.com/static/55a57011e4b09934ba12fd1a/5612b784e4b07c6a02988249/5612dd98e4b0e75bc4a61cc7/1444076954414/record.png?format=500w'" style="max-height: 100px; max-width: 100px; width: 100px; display: inline-block; margin-left: auto; margin-right: auto;" title="17 by XXXtentacion"></a>
+        <h1 id="Hello">Hello</h1>
+    <h1 id="This">This</h1>
+    <h1 id="Is">Is</h1>
+    <h1 id="A">A</h1>
+    <h1 id="Test">Test</h1>
+</div>
+
+
+<script>
+$("#search-bar").on("input", function(e) {
+    var h1s = $("#albums").find("img");
+    var q = $( this ).val().toLowerCase();
+    $.each(h1s, function(id, value) {
+        var contains = value.title.toLowerCase();
+        if (contains.indexOf(q) === -1) {
+            $("img[title='"+value.title+"']").css('display', 'none');
+        } else {
+            $("img[title='"+value.title+"']").css('display', 'inline-block');
+        };
+    });
+});
+$("#search-bar").trigger("input");
+</script>
