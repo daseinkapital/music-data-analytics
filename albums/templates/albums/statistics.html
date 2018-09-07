@@ -6,4 +6,11 @@
         <li>Total Subgenres Listened: {{total_subgenres_num}}</li>
         <li>Total Time Listened: {{total_time}}</li>
     </ul>
+
+    <h3>Primary Genre Statistics</h3>
+    <ul>
+    {% for item in genre_count %}
+        <li>{{item.genre}}: {{item.count}}</li>
+    {% endfor %}
+    </ul>
 </body>

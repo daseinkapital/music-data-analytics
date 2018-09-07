@@ -70,20 +70,48 @@ def artist_page(request, artist):
 
 def statistics(request):
     albums = Album.objects.all()
+    context = {}
+
+    #count how many subgenres listened to
     total_subgenres_num = SubGenre.objects.all().count()
+
+    #count the total number of albums
     total_album_num = albums.count()
+
+    #determine the total amount of time of all albums (that have time data)
     total_time = dt.timedelta(seconds=0)
     for album in albums:
         if album.time_length:
             total_time += album.time_length
-    
-    context = {
+
+    #count the number of albums listened in each primary genre
+    genre_count = []
+    for genre in PrimaryGenre.objects.all():
+        count = Album.objects.filter(primary_genre=genre).count()
+        genre_count.append({'genre' : genre, 'count': count})
+
+
+    #collect all the statistics
+    context.update({
         'total_album_num' : total_album_num,
         'total_subgenres_num' : total_subgenres_num,
-        'total_time' : total_time
-    }
+        'total_time' : total_time,
+        'genre_count' : genre_count
+    })
 
     return render(request, 'albums/statistics.html', context)
+
+def primary_genre(request, genre):
+    primary_genre = PrimaryGenre.objects.filter(name__iexact=genre).first()
+    albums = Album.objects.filter(primary_genre=primary_genre)
+    context = {'genre' : primary_genre, 'albums' : albums}
+    return render(request, 'albums/primarygenre.html', context)
+
+def secondary_genre(request,genre):
+    sub_genre = SubGenre.objects.filter(name__iexact=genre).first()
+    albums = Album.objects.filter(subgenres__subgenre__name_iexact=genre)
+    context = {'genre' : sub_genre, 'albums' : albums}
+    return render(request, 'albums/subgenre.html', context)
 
 def about(request):
     return render(request, 'albums/about.html')

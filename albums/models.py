@@ -17,6 +17,9 @@ class Artist(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        ordering = ['name']
+
 class PrimaryGenre(models.Model):
     name = models.CharField(
         max_length=256,
@@ -25,6 +28,9 @@ class PrimaryGenre(models.Model):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        ordering = ['name']
 
 class SubGenre(models.Model):
     name = models.CharField(
@@ -35,6 +41,9 @@ class SubGenre(models.Model):
     def __str__(self):
         return self.name
     
+    class Meta:
+        ordering = ['name']
+
 class Rating(models.Model):
     score = models.DecimalField(
         decimal_places=1,

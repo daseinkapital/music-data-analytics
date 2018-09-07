@@ -64,6 +64,7 @@ Fixed Navigation
     <div class="row">
       <div class="col-md-12">
         <nav class="navbar navbar-expand-md">
+          <span style="color:wheat">Brought to you by:</span>
           <a class="navbar-brand" href="">
             <img src="{% static 'albums/img/new_logo.png' %}" alt="logo">
           </a>  
@@ -73,7 +74,7 @@ Fixed Navigation
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ml-auto">
               <li class="nav-item active">
-                <a class="nav-link" href="{% url 'homepage' %}">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="{% url 'albums' %}">Home <span class="sr-only">(current)</span></a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="{% url 'about' %}">About</a>
@@ -82,7 +83,7 @@ Fixed Navigation
                 <a class="nav-link" href="{% url 'statistics' %}">Statistics</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="">Genres (Coming Soon)</a>
+                <a class="nav-link" href="">Discover (Coming Soon)</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="">Suggest an Album (Coming Soon)</a>
