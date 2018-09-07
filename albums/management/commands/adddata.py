@@ -15,7 +15,7 @@ import os, ssl
 
 
 class Command(BaseCommand):
-    help = 'Reads in data from the initial spreadsheet.'
+    help = 'Adds additional data that needs to be webscraped.'
 
     def handle(self, *args, **options):
         albums = Album.objects.exclude(name__icontains="?")
