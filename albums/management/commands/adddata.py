@@ -53,13 +53,13 @@ def find_urls(album):
                 if urls['bc'] == None:
                     urls.update({'bc' : result})
     
-    query = query + " wikipedia bandcamp"
-    for result in search(query, num=10, stop=10, pause=2):
-        if 'wikipedia' in result:
-            if urls['wiki'] == None:
+    if (urls['wiki'] == None) and (urls['bc'] == None):
+        query = query + " wikipedia bandcamp"
+        for result in search(query, num=10, stop=10, pause=2):
+            if 'wikipedia' in result:
                 urls.update({'wiki' : result})
-        if 'bandcamp' in result:
-            urls.update({'bc' : result})
+            if 'bandcamp' in result:
+                urls.update({'bc' : result})
     
     return urls
 
