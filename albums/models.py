@@ -232,9 +232,12 @@ class Album(models.Model):
         ratings = Rating.objects.filter(album=self)
         sum = 0
         count = ratings.count()
-        for rating in ratings:
-            sum += rating.score
-        return sum/count
+        if count != 0:
+            for rating in ratings:
+                sum += rating.score
+            return sum/count
+        else:
+            return None
 
     def __str__(self):
         return "{} by {}".format(self.name, self.artist.name)

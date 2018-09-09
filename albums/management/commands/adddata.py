@@ -10,7 +10,7 @@ from bs4 import BeautifulSoup as bs
 from time import sleep
 import datetime as dt
 
-import os, ssl
+import os, ssl, re
 
 
 
@@ -121,25 +121,25 @@ def wiki_clean_date(soup):
 #parse the date from wikipedia
 def wiki_parse_date(unparsed_date):
     date_format = None
-        #handles all possible date_strings
-        patterns = [
-            {'re' : '\d{1,2}\s\w{3,12}\s\d{4}', 'date_string' : '%d %B %Y'},
-            {'re' : '\w{3,12}\s\d{1,2}\S\s\d{4}', 'date_string' : '%B %d, %Y'},
-            {'re' : '\w{3,12}\s\d{1,2}\s\d{4}', 'date_string' : '%B %d %Y'},
-            {'re' : '\w{3,12}\s\d{4}', 'date_string' : '%B %Y'},
-            {'re' : '\d{4}', 'date_string' : '%Y'}
-        ]
+    #handles all possible date_strings (order of string is important)
+    patterns = [
+        {'re' : r'\d{1,2}\s\w{3,12}\s\d{4}', 'date_string' : '%d %B %Y'},
+        {'re' : r'\w{3,12}\s\d{1,2}\s\d{4}', 'date_string' : '%B %d %Y'},
+        {'re' : r'\w{3,12}\s\d{1,2}\S\s\d{4}', 'date_string' : '%B %d, %Y'},
+        {'re' : r'\w{3,12}\s\d{4}', 'date_string' : '%B %Y'},
+        {'re' : r'\d{4}', 'date_string' : '%Y'}
+    ]
 
-        for pattern in patterns:
-            match = re.match(pattern['re'], unparsed_date)
-            if match:
-                date_format = pattern['date_string']
-                break
-        if date_format:
-            return dt.datetime.strptime(unparsed_date, date_format)
-        else:
-            print('Unrecognized pattern: ' + unparsed_date)
-            return None
+    for pattern in patterns:
+        match = re.search(pattern['re'], unparsed_date)
+        if match:
+            date_format = pattern['date_string']
+            break
+    if date_format:
+        return dt.datetime.strptime(match.group(0), date_format)
+    else:
+        print('Unrecognized pattern: ' + unparsed_date)
+        return None
 
 #finds the release date of the album
 def wiki_release_date(soup):

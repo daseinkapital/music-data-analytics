@@ -188,28 +188,33 @@ class ScrapeDataUnitTest(TestCase):
 
     def test_wiki_parse_date_day_month_year(self):
         date_str = '10 January 1996'
-        return_str = adddata.wiki_parse_date(date_str)
-        self.assertEqual('%d %B %Y', return_str)
+        return_date = adddata.wiki_parse_date(date_str)
+        correct_date = dt.datetime.strptime(date_str, '%d %B %Y')
+        self.assertEqual(correct_date, return_date)
     
     def test_wiki_parse_date_month_day_year_comma(self):
         date_str = 'January 10, 1996'
-        return_str = adddata.wiki_parse_date(date_str)
-        self.assertEqual('%B %d, %Y', return_str)
+        return_date = adddata.wiki_parse_date(date_str)
+        correct_date = dt.datetime.strptime(date_str, '%B %d, %Y')
+        self.assertEqual(correct_date, return_date)
 
     def test_wiki_parse_date_month_day_year_no_comma(self):
         date_str = 'January 10 1996'
-        return_str = adddata.wiki_parse_date(date_str)
-        self.assertEqual('%B %d %Y', return_str)
+        return_date = adddata.wiki_parse_date(date_str)
+        correct_date = dt.datetime.strptime(date_str, '%B %d %Y')
+        self.assertEqual(correct_date, return_date)
 
     def test_wiki_parse_date_month_year(self):
         date_str = 'January 1996'
-        return_str = adddata.wiki_parse_date(date_str)
-        self.assertEqual('%B %Y', return_str)
+        return_date = adddata.wiki_parse_date(date_str)
+        correct_date = dt.datetime.strptime(date_str, '%B %Y')
+        self.assertEqual(correct_date, return_date)
 
     def test_wiki_parse_date_year(self):
         date_str = '1996'
-        return_str = adddata.wiki_parse_date(date_str)
-        self.assertEqual('%Y', return_str)
+        return_date = adddata.wiki_parse_date(date_str)
+        correct_date = dt.datetime.strptime(date_str, '%Y')
+        self.assertEqual(correct_date, return_date)
 
     def test_wiki_parse_date_none(self):
         date_str = ''
@@ -217,7 +222,7 @@ class ScrapeDataUnitTest(TestCase):
         self.assertFalse(return_str)
 
     def test_wiki_parse_date_unrecognized_pattern(self):
-        date_str = '1996 10 January'
+        date_str = '10 January 96'
         return_str = adddata.wiki_parse_date(date_str)
         self.assertFalse(return_str)
 
@@ -390,18 +395,3 @@ class ScrapeDataEdgeCaseTests(TestCase):
         adddata.scrape(self.album7)
         album_art = "https://f4.bcbits.com/img/a2565743238_16.jpg"
         self.assertEqual(self.album7.album_art, album_art)
-
-    # def test_album_on_wikipedia_self_titled_time(self):
-    #     adddata.scrape(self.album8)
-    #     time = dt.timedelta(minutes= , seconds= )
-    #     self.assertEqual(self.album8.time_length, time)
-
-    # def test_album_on_wikipedia_self_titled_released_date(self):
-    #     adddata.scrape(self.album8)
-    #     release_date = dt.datetime.strptime('', '%B %d, %Y')
-    #     self.assertEqual(self.album8.time_length, time)
-
-    # def test_album_on_wikipedia_self_titled_album_art(self):
-    #     adddata.scrape(self.album8)
-    #     time = dt.timedelta(minutes= , seconds= )
-    #     self.assertEqual(self.album8.time_length, time)
