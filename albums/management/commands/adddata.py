@@ -44,11 +44,13 @@ def find_urls(album):
     urls = {'wiki' : None, 'bc' : None}
 
     for result in search(query, num=10, stop=10, pause=2):
-        if 'wikipedia' in result:
-            if urls['wiki'] == None:
-                urls.update({'wiki' : result})
-        if 'bandcamp' in result:
-            urls.update({'bc' : result})
+        if 'wikipedia.org' in result:
+            if 'song' not in result:
+                if urls['wiki'] == None:
+                    urls.update({'wiki' : result})
+        if 'bandcamp.com' in result:
+            if 'track' not in result:
+                urls.update({'bc' : result})
     
     query = query + " wikipedia bandcamp"
     for result in search(query, num=10, stop=10, pause=2):
@@ -116,6 +118,29 @@ def wiki_clean_date(soup):
     for child in soup.find_all("sup"):
         child.decompose()
 
+#parse the date from wikipedia
+def wiki_parse_date(unparsed_date):
+    date_format = None
+        #handles all possible date_strings
+        patterns = [
+            {'re' : '\d{1,2}\s\w{3,12}\s\d{4}', 'date_string' : '%d %B %Y'},
+            {'re' : '\w{3,12}\s\d{1,2}\S\s\d{4}', 'date_string' : '%B %d, %Y'},
+            {'re' : '\w{3,12}\s\d{1,2}\s\d{4}', 'date_string' : '%B %d %Y'},
+            {'re' : '\w{3,12}\s\d{4}', 'date_string' : '%B %Y'},
+            {'re' : '\d{4}', 'date_string' : '%Y'}
+        ]
+
+        for pattern in patterns:
+            match = re.match(pattern['re'], unparsed_date)
+            if match:
+                date_format = pattern['date_string']
+                break
+        if date_format:
+            return dt.datetime.strptime(unparsed_date, date_format)
+        else:
+            print('Unrecognized pattern: ' + unparsed_date)
+            return None
+
 #finds the release date of the album
 def wiki_release_date(soup):
     span = soup.find('td', {'class':'published'})
@@ -124,13 +149,15 @@ def wiki_release_date(soup):
         unparsed_date = span.getText().strip('\n')
         if unparsed_date == '':
             return None
-        try:
-            released = dt.datetime.strptime(unparsed_date, '%d %B %Y')
-        except(ValueError):
-            try:
-                released = dt.datetime.strptime(unparsed_date, '%B %d, %Y')
-            except(ValueError):
-                return None
+        else:
+            released = wiki_parse_date(unparsed_date)
+        # try:
+        #     released = dt.datetime.strptime(unparsed_date, '%d %B %Y')
+        # except(ValueError):
+        #     try:
+        #         released = dt.datetime.strptime(unparsed_date, '%B %d, %Y')
+        #     except(ValueError):
+        #         return None
         return released
     else:
         return None

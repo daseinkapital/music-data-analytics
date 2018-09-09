@@ -26,6 +26,12 @@ class PrimaryGenre(models.Model):
         unique=True,
     )
 
+    spotify_playlist = models.TextField(
+        null=True,
+        blank=True,
+        validators=[URLValidator()],
+    )
+
     def __str__(self):
         return self.name
 
@@ -38,6 +44,12 @@ class SubGenre(models.Model):
         unique=True,
     )
 
+    spotify_playlist = models.TextField(
+        null=True,
+        blank=True,
+        validators=[URLValidator()],
+    )
+
     def __str__(self):
         return self.name
     
@@ -47,7 +59,7 @@ class SubGenre(models.Model):
 class Rating(models.Model):
     score = models.DecimalField(
         decimal_places=1,
-        max_digits=4,
+        max_digits=3,
         null=True,
         blank=False,
     )
@@ -101,6 +113,7 @@ class AlbumSubgenre(models.Model):
         ordering = ['album', '-subgenre']
 
 class Album(models.Model):
+
     name = models.CharField(
         max_length=256,
         blank=False,
@@ -155,6 +168,12 @@ class Album(models.Model):
         validators=[URLValidator()],
     )
 
+    amazon_url = models.TextField(
+        null=True,
+        blank=True,
+        validators=[URLValidator()],
+    )
+
     time_length = models.DurationField(
         null=True,
         blank=True,
@@ -182,8 +201,16 @@ class Album(models.Model):
 
     slug = models.SlugField()
     
+    current_rating = models.DecimalField(
+        decimal_places=4,
+        max_digits=6,
+        null=True,
+        blank=False,
+    )
+
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name, allow_unicode=True)[:50]
+        self.current_rating = self.average_rating
         super(Album, self).save(*args, **kwargs)
 
     @property
@@ -253,3 +280,30 @@ class Album(models.Model):
 
     class Meta:
         ordering = ['name', 'artist']
+
+class Group(models.Model):
+    name = models.CharField(
+        max_length=250,
+        null=False,
+        blank=False
+    )
+
+    class Meta:
+        ordering = ['name']
+
+class AlbumGroup(models.Model):
+    album = models.ForeignKey(
+        to='Album',
+        related_name='lists',
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+    )
+
+    group = models.ForeignKey(
+        to='Group',
+        related_name='lists',
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+    )

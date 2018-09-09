@@ -186,6 +186,41 @@ class ScrapeDataUnitTest(TestCase):
         url = adddata.find_wiki_urls(album)
         self.assertEqual(url, 'https://en.wikipedia.org/wiki/Alligator_(The_National_album)')
 
+    def test_wiki_parse_date_day_month_year(self):
+        date_str = '10 January 1996'
+        return_str = adddata.wiki_parse_date(date_str)
+        self.assertEqual('%d %B %Y', return_str)
+    
+    def test_wiki_parse_date_month_day_year_comma(self):
+        date_str = 'January 10, 1996'
+        return_str = adddata.wiki_parse_date(date_str)
+        self.assertEqual('%B %d, %Y', return_str)
+
+    def test_wiki_parse_date_month_day_year_no_comma(self):
+        date_str = 'January 10 1996'
+        return_str = adddata.wiki_parse_date(date_str)
+        self.assertEqual('%B %d %Y', return_str)
+
+    def test_wiki_parse_date_month_year(self):
+        date_str = 'January 1996'
+        return_str = adddata.wiki_parse_date(date_str)
+        self.assertEqual('%B %Y', return_str)
+
+    def test_wiki_parse_date_year(self):
+        date_str = '1996'
+        return_str = adddata.wiki_parse_date(date_str)
+        self.assertEqual('%Y', return_str)
+
+    def test_wiki_parse_date_none(self):
+        date_str = ''
+        return_str = adddata.wiki_parse_date(date_str)
+        self.assertFalse(return_str)
+
+    def test_wiki_parse_date_unrecognized_pattern(self):
+        date_str = '1996 10 January'
+        return_str = adddata.wiki_parse_date(date_str)
+        self.assertFalse(return_str)
+
 class ScrapeDataEdgeCaseTests(TestCase):
     def setUp(self):
         self.artist1 = Artist.objects.create(
