@@ -1,9 +1,8 @@
-{% load static %}
 {% include "albums/header.html" %}
 <section>
         <div class="container">
             <div class="row" style="padding: 10px;">
-            <form action="{% url 'albums' %}" method=POST> {% csrf_token %}
+            <form action="{% url 'secondary-genre' genre=genre %}" method=POST> {% csrf_token %}
                 <input type="text" placeholder="Search..." id="search-bar" name="search">
                 <select onchange=this.form.submit() name="order">
                     <option value="" disabled selected>Order By...</option>
@@ -23,7 +22,6 @@
     </div>
 </section>
 {% include "albums/album_displays.html" %}
-
 <footer>
     <script>
 $( document ).ready(function(){

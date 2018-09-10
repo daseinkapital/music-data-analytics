@@ -10,6 +10,5 @@ urlpatterns = [
     path('genre/primary/<genre>/', views.primary_genre, name="primary-genre"),
     path('genre/secondary/<genre>/', views.secondary_genre, name="secondary-genre"),
     path('about', views.about, name="about"),
-    path('search', views.search, name="search"),
     path('htmltest', views.htmltest, name='htmltest'),
 ]

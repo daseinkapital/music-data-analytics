@@ -49,8 +49,9 @@ def find_urls(album):
                 if urls['wiki'] == None:
                     urls.update({'wiki' : result})
         if 'bandcamp.com' in result:
-            if 'track' not in result:
-                urls.update({'bc' : result})
+            if 'album' in result:
+                if urls['bc'] == None:
+                    urls.update({'bc' : result})
     
     query = query + " wikipedia bandcamp"
     for result in search(query, num=10, stop=10, pause=2):
@@ -136,7 +137,11 @@ def wiki_parse_date(unparsed_date):
             date_format = pattern['date_string']
             break
     if date_format:
-        return dt.datetime.strptime(match.group(0), date_format)
+        try:
+            return dt.datetime.strptime(match.group(0), date_format)
+        except(ValueError):
+            print("Problem with " + match.group(0))
+            return None
     else:
         print('Unrecognized pattern: ' + unparsed_date)
         return None

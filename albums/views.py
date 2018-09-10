@@ -7,44 +7,8 @@ import datetime as dt
 # Create your views here.
 def main(request):
     context = {}
-    if request.POST:
-        search = request.POST.get('search')
-        order_post = request.POST.get('order')
-        direction = request.POST.get('direction')
-    else:
-        search = ''
-        order_post = ''
-        direction = 'up'
-
-    if search == None:
-        search == ''
-
-    if direction == "down":
-        add = "-"
-    else:
-        add = ""
-
-    if order_post:
-        orders = {
-            'name' : 'name',
-            'artist' : 'artist__name',
-            'time' : 'time_length',
-            'listen_date' : 'date_finished',
-            'rating' : 'rating',
-            'release' : 'release_date'
-        }
-
-        order_term = orders[order_post]
-
-        if order_term == 'rating':
-            albums = Album.objects.all()
-        elif order_term == 'date_finished':
-            albums = Album.objects.all().order_by(add+order_term, add+'order')
-        else:
-            albums = Album.objects.all().order_by(add + order_term)
-    
-    else:
-        albums = Album.objects.all().order_by(add + 'name')
+    albums = Album.objects.all()
+    albums, search, order_post, direction = search_albums(request.POST, albums)
     
     context.update({'albums': albums})
     context.update({
@@ -60,7 +24,7 @@ def album_page(request, artist, album):
     return render(request, 'albums/album_page.html', context)
 
 def artist_page(request, artist):
-    albums = Album.objects.filter(artist__slug=artist)
+    albums = Album.objects.filter(artist__slug=artist).order_by('release_date')
     artist = Artist.objects.filter(slug=artist).first()
     context = {
         'albums' : albums,
@@ -104,13 +68,17 @@ def statistics(request):
 def primary_genre(request, genre):
     primary_genre = PrimaryGenre.objects.filter(name__iexact=genre).first()
     albums = Album.objects.filter(primary_genre=primary_genre)
+    albums, search, order_post, direction = search_albums(request.POST, albums)
     context = {'genre' : primary_genre, 'albums' : albums}
-    return render(request, 'albums/primarygenre.html', context)
+    context.update({'search' : search, 'order' : order_post, 'direction' : direction})
+    return render(request, 'albums/primary_genre.html', context)
 
 def secondary_genre(request,genre):
     sub_genre = SubGenre.objects.filter(name__iexact=genre).first()
-    albums = Album.objects.filter(subgenres__subgenre__name_iexact=genre)
+    albums = Album.objects.filter(subgenres__subgenre__name__iexact=genre)
+    albums, search, order_post, direction = search_albums(request.POST, albums)
     context = {'genre' : sub_genre, 'albums' : albums}
+    context.update({'search' : search, 'order' : order_post, 'direction' : direction})
     return render(request, 'albums/subgenre.html', context)
 
 def about(request):
@@ -119,9 +87,40 @@ def about(request):
 def htmltest(request):
     return render(request, 'albums/test.html')
 
-def search(request):
-    term = request.GET.get('term')
-    print("Term: " + term)
-    if term:
-        albums = Album.objects.filter(Q(name__iexact=term) | Q(artist__name__iexact=term))
-    return albums
+
+########## NON-RENDER FUNCTIONS ###########
+def search_albums(request, albums):
+    if request:
+        search = request.get('search')
+        order_post = request.get('order')
+        direction = request.get('direction')
+
+        if search == None:
+            search == ''
+
+        add = ""
+        if direction == "down":
+            add = "-"
+
+        if order_post:
+            orders = {
+                'name' : 'name',
+                'artist' : 'artist__name',
+                'time' : 'time_length',
+                'listen_date' : 'date_finished',
+                'rating' : 'current_rating',
+                'release' : 'release_date'
+            }
+
+            order_term = add + orders[order_post]
+
+            print(order_term)
+            if order_term == 'date_finished':
+                albums = albums.order_by(order_term, add + 'order')
+            else:
+                albums = albums.order_by(order_term)
+    else:
+        search = ''
+        order_post = ''
+        direction = 'up'
+    return albums, search, order_post, direction
