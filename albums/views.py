@@ -7,7 +7,7 @@ import datetime as dt
 # Create your views here.
 def main(request):
     context = {}
-    albums = Album.objects.all()
+    albums = Album.objects.exclude(date_finished=None)
     albums, search, order_post, direction = search_albums(request.POST, albums)
     
     context.update({'albums': albums})
@@ -67,7 +67,7 @@ def statistics(request):
 
 def primary_genre(request, genre):
     primary_genre = PrimaryGenre.objects.filter(name__iexact=genre).first()
-    albums = Album.objects.filter(primary_genre=primary_genre)
+    albums = Album.objects.filter(primary_genre=primary_genre).exclude(date_finished=None)
     albums, search, order_post, direction = search_albums(request.POST, albums)
     context = {'genre' : primary_genre, 'albums' : albums}
     context.update({'search' : search, 'order' : order_post, 'direction' : direction})
@@ -75,11 +75,34 @@ def primary_genre(request, genre):
 
 def secondary_genre(request,genre):
     sub_genre = SubGenre.objects.filter(name__iexact=genre).first()
-    albums = Album.objects.filter(subgenres__subgenre__name__iexact=genre)
+    albums = Album.objects.filter(subgenres__subgenre__name__iexact=genre).exclude(date_finished=None)
     albums, search, order_post, direction = search_albums(request.POST, albums)
     context = {'genre' : sub_genre, 'albums' : albums}
     context.update({'search' : search, 'order' : order_post, 'direction' : direction})
     return render(request, 'albums/subgenre.html', context)
+
+def group(request, group):
+    if group == "queue":
+        albums = Album.objects.filter(date_finished=None).order_by('order')
+    else:
+        albums = Album.objects.filter(groups__group__name__iexact=group)
+    albums, search, order_post, direction = search_albums(request.POST, albums)
+    context = {'group' : group, 'albums' : albums}
+    context.update({'search' : search, 'order' : order_post, 'direction' : direction})
+    return render(request, 'albums/groups.html', context)
+
+def chart_landing(request):
+    num_of_charts = Album.objects.all().order_by('-chart').first().chart
+    nums = range(1, num_of_charts)
+    context = {'charts': nums}
+    return render(request, 'albums/chart_main.html', context)
+
+def chart(request, chart_num):
+    albums = Album.objects.filter(chart=chart_num).order_by('order')
+    albums, search, order_post, direction = search_albums(request.POST, albums)
+    context = {'chart_num' : chart_num, 'albums' : albums}
+    context.update({'search' : search, 'order' : order_post, 'direction' : direction})
+    return render(request, 'albums/charts.html', context)
 
 def about(request):
     return render(request, 'albums/about.html')

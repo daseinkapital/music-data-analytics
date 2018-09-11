@@ -2,6 +2,8 @@ from django.db import models
 from django.core.validators import URLValidator
 from django.utils.text import slugify
 
+from .management.commands.scrape import scrape
+
 # Create your models here.
 class Artist(models.Model):
     name = models.CharField(
@@ -205,12 +207,13 @@ class Album(models.Model):
         decimal_places=4,
         max_digits=6,
         null=True,
-        blank=False,
+        blank=True,
     )
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name, allow_unicode=True)[:50]
         self.current_rating = self.average_rating
+        scrape(self)
         super(Album, self).save(*args, **kwargs)
 
     @property

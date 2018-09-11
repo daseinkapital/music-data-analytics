@@ -84,18 +84,22 @@ Fixed Navigation
               <li class="nav-item">
                 <a class="nav-link" href="{% url 'statistics' %}">Statistics</a>
               </li>
-              <li class="nav-item">
-                <a class="nav-link" href="">Discover (Coming Soon)</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="">Suggest an Album (Coming Soon)</a>
-              </li>
-              <!--<li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pages</a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <a class="dropdown-item" href="">404 Page</a>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Discover</a>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item" href="{% url 'chart-main' %}">Charts</a>
+                  <a class="dropdown-item" href="{% url 'group' group='queue' %}">Queue</a>
                 </div>
-              </li>-->
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item" href="">Suggest An Album</a>
+                  {% if user.is_superuser %}
+                  <a class="dropdown-item" href="">Add Albums</a>
+                  {% endif %}
+                </div>
+              </li>
             </ul>
           </div>
         </nav>

@@ -1,7 +1,7 @@
 <section>
-    <div id="albums">
-            {% for album in albums %}
+    <div id="albums" class="center">
+    {% for album in albums %}
         <a href="{% url 'album-page' artist=album.artist.slug album=album.slug %}"><img src="{{album.album_art}}" name="{{album.slug}}" onerror="javascript:this.src='https://static1.squarespace.com/static/55a57011e4b09934ba12fd1a/5612b784e4b07c6a02988249/5612dd98e4b0e75bc4a61cc7/1444076954414/record.png?format=500w'" style="max-height: 100px; max-width: 100px; width: 100px; display: inline-block; margin-left: auto; margin-right: auto;" title="{{album}}"></a>
-            {% endfor %}
+    {% endfor %}
     </div>
 </section>
