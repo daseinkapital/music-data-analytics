@@ -87,6 +87,10 @@ def secondary_genre(request,genre):
 def group(request, group):
     if group == "queue":
         albums = Album.objects.filter(date_finished=None).order_by('order')
+    elif group == "vinyl":
+        albums = Album.objects.filter(vinyl=True).order_by('order')
+    elif group == "cassette":
+        albums = Album.objects.filter(cassette=True).order_by('order')
     else:
         albums = Album.objects.filter(groups__group__name__iexact=group)
     albums, search, order_post, direction = search_albums(request.POST, albums)

@@ -313,8 +313,7 @@ def scrape_bc(album):
     return album
         
 def scrape(album):
-    if (not os.environ.get('PYTHONHTTPSVERIFY', '') and getattr(ssl, '_create_unverified_context', None)): 
-        ssl._create_default_https_context = ssl._create_unverified_context
+    screw_the_rules()
 
     if album.all_info_found():
         return
@@ -355,3 +354,7 @@ def scrape(album):
         print("Unable to find album publish date")
     if not album.album_art_check():
         print("Unable to find album art")
+
+def screw_the_rules():
+    if (not os.environ.get('PYTHONHTTPSVERIFY', '') and getattr(ssl, '_create_unverified_context', None)): 
+        ssl._create_default_https_context = ssl._create_unverified_context

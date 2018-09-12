@@ -2,7 +2,7 @@ from django.db import models
 from django.core.validators import URLValidator
 from django.utils.text import slugify
 
-from .management.commands.scrape import scrape_wiki, scrape_bc
+from .management.commands.scrape import scrape_wiki, scrape_bc, screw_the_rules
 
 # Create your models here.
 class Artist(models.Model):
@@ -213,11 +213,15 @@ class Album(models.Model):
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name, allow_unicode=True)[:50]
         self.current_rating = self.average_rating
-        if self.wiki_url:
-            self = scrape_wiki(self)
-        if self.bc_url:
-            self = scrape_bc(self)
-        super(Album, self).save(*args, **kwargs)
+        if self.all_info_found():
+            super(Album, self).save(*args, **kwargs)
+        else:
+            screw_the_rules()
+            if self.wiki_url:
+                self = scrape_wiki(self)
+            if self.bc_url:
+                self = scrape_bc(self)
+            super(Album, self).save(*args, **kwargs)
 
     @property
     def get_subgenres(self):
