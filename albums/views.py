@@ -98,7 +98,7 @@ def chart_landing(request):
     num_of_charts = Album.objects.all().order_by('-chart').first().chart
     nums = range(1, num_of_charts)
     context = {'charts': nums}
-    return render(request, 'albums/chart_main.html', context)
+    return render(request, 'albums/landing/chart.html', context)
 
 def chart(request, chart_num):
     albums = Album.objects.filter(chart=chart_num).order_by('order')
@@ -141,6 +141,35 @@ def edit_album(request, artist, album):
     context = {'form': form, 'album': album, 'saved': saved, 'error': error}
     return render(request, 'albums/edit_album.html', context)
 
+@login_required
+def add_album(request):
+    saved = None
+    error = None
+    if request.POST:
+        form = AlbumForm(request.POST)
+        if form.is_valid():
+            Album.objects.create(
+                name = form.cleaned_data['name'],
+                artist = form.cleaned_data['artist'],
+                date_finished = form.cleaned_data['date_finished'],
+                primary_genre = form.cleaned_data['primary_genre'],
+                wiki_url = form.cleaned_data['wiki_url'],
+                bc_url = form.cleaned_data['bc_url'],
+                amazon_url = form.cleaned_data['amazon_url'],
+                time_length = form.cleaned_data['time_length'],
+                release_date = form.cleaned_data['release_date'],
+                album_art = form.cleaned_data['album_art'],
+                vinyl = form.cleaned_data['vinyl'],
+                cassette = form.cleaned_data['cassette']
+            )
+            saved = True
+        else:
+            error = True
+    form = AlbumForm()
+
+    context = {'saved': saved, 'error': error, 'form': form}
+    return render(request, 'albums/add_album.html', context)
+    
 
 def htmltest(request):
     album = Album.objects.all().first()

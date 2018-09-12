@@ -15,5 +15,6 @@ urlpatterns = [
     path('list/<group>/', views.group, name='group'),
     path('chart/', views.chart_landing, name='chart-main'),
     path('chart/<chart_num>/', views.chart, name='chart'),
-    path('edit/<artist>/<album>/', views.edit_album, name='edit-album')
+    path('edit/<artist>/<album>/', views.edit_album, name='edit-album'),
+    path('add/album/', views.add_album, name='add-album'),
 ]

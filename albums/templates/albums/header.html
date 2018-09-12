@@ -96,7 +96,7 @@ Fixed Navigation
                 <div class="dropdown-menu">
                   <a class="dropdown-item" href="">Suggest An Album</a>
                   {% if user.is_superuser %}
-                  <a class="dropdown-item" href="">Add Albums</a>
+                  <a class="dropdown-item" href="{% url 'add-album' %}">Add Albums</a>
                   {% endif %}
                 </div>
               </li>

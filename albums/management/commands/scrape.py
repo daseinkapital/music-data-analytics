@@ -273,7 +273,7 @@ def scrape_wiki(album):
         html = fetch_url(album.wiki_url)
     except(ValueError, urllib.error.HTTPError):
         #print("Couldn't find Wikipedia page")
-        return
+        return album
     # if wiki_artist_check(html, album):
     if not album.time_check():
         album.time_length = wiki_full_length(html)
@@ -283,24 +283,23 @@ def scrape_wiki(album):
     
     if not album.album_art_check():
         album.album_art = wiki_album_art(html)
-    album.save()
-    return
+    return album
         
 def scrape_bc(album):
     if not album.bc_url:
         try:
             url = bc_navigate_to_page(album)
         except(urllib.error.HTTPError):
-            return
+            return album
     else:
         url = album.bc_url
     if url == "skip":
-        return
+        return album
     try:
         html = fetch_url(url)
     except(ValueError, urllib.error.HTTPError):
         print("Couldn't find bandcamp page")
-        return
+        return album
 
     if not album.time_check():
         album.time_length = bc_full_length(html)
@@ -310,19 +309,20 @@ def scrape_bc(album):
 
     if not album.album_art_check():
         album.album_art = bc_album_art(html)
-    album.save()
 
-    return
+    return album
         
 def scrape(album):
     if (not os.environ.get('PYTHONHTTPSVERIFY', '') and getattr(ssl, '_create_unverified_context', None)): 
         ssl._create_default_https_context = ssl._create_unverified_context
+
     if album.all_info_found():
         return
 
     if album.has_url():
         if album.wiki_url:
-            scrape_wiki(album)
+            album = scrape_wiki(album)
+            album.save()
     else:
         sleep(5)
         urls = find_urls(album)
@@ -337,14 +337,16 @@ def scrape(album):
             album.save()
         
         if album.wiki_url:
-            scrape_wiki(album)
+            album = scrape_wiki(album)
+            album.save()
 
 
     if album.all_info_found():
         return
     else:
         # print("Checking Bandcamp")
-        scrape_bc(album)
+        album = scrape_bc(album)
+        album.save()
 
 
     if not album.time_check():

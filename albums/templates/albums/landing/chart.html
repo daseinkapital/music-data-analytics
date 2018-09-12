@@ -1,5 +1,5 @@
 {% include "albums/header.html" %}
 
 {% for num in charts %}
-<a href="{% url 'chart' chart_num=num %}"><h1>{{num}}</h1></a>
+<h1><a href="{% url 'chart' chart_num=num %}">{{num}}</a></h1>
 {% endfor %}
