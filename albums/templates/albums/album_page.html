@@ -3,6 +3,9 @@
     <div class="center">
         <img src='{{album.album_art}}' onerror="javascript:this.src='https://static1.squarespace.com/static/55a57011e4b09934ba12fd1a/5612b784e4b07c6a02988249/5612dd98e4b0e75bc4a61cc7/1444076954414/record.png?format=500w'" class="img-album-page" title="{{album}} Album Art">
         <h1>{{album.name}}</h1>
+        {% if user.is_superuser %}
+        <span><a href="{% url 'edit-album' artist=album.artist.slug album=album.slug %}"><small><small>Edit</small></small></a></span>
+        {% endif %}
         <h2><small><small>an album by </small></small><a href="{% url 'artist-page' artist=album.artist.slug %}">{{album.artist.name}}</a></h2>
         {% if album.current_rating %}
         <p>Score: 
@@ -28,4 +31,7 @@
         {% endif %}
     </div>
 </section>
+
+{% include 'albums/js.html' %}
 </body>
+

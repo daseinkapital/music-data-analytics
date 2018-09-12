@@ -1,6 +1,9 @@
 from django.shortcuts import render
-from albums.models import *
 from django.db.models import Q
+from django.contrib.auth.decorators import login_required
+
+from albums.models import *
+from albums.forms import AlbumForm
 
 import datetime as dt
 
@@ -107,8 +110,44 @@ def chart(request, chart_num):
 def about(request):
     return render(request, 'albums/about.html')
 
+@login_required
+def edit_album(request, artist, album):
+    album = Album.objects.filter(slug=album, artist__slug=artist).first()
+    saved = None
+    error = None
+    if request.POST:
+        form = AlbumForm(request.POST)
+        if form.is_valid():
+            album.name = form.cleaned_data['name']
+            album.artist = form.cleaned_data['artist']
+            album.date_finished = form.cleaned_data['date_finished']
+            album.primary_genre = form.cleaned_data['primary_genre']
+            album.wiki_url = form.cleaned_data['wiki_url']
+            album.bc_url = form.cleaned_data['bc_url']
+            album.amazon_url = form.cleaned_data['amazon_url']
+            album.time_length = form.cleaned_data['time_length']
+            album.release_date = form.cleaned_data['release_date']
+            album.album_art = form.cleaned_data['album_art']
+            album.vinyl = form.cleaned_data['vinyl']
+            album.cassette = form.cleaned_data['cassette']
+            album.save()
+            saved = True
+        else:
+            error = True
+
+
+    form = AlbumForm(instance=album)
+
+    context = {'form': form, 'album': album, 'saved': saved, 'error': error}
+    return render(request, 'albums/edit_album.html', context)
+
+
 def htmltest(request):
-    return render(request, 'albums/test.html')
+    album = Album.objects.all().first()
+    form = AlbumForm(instance=album)
+
+    context = {'form': form, 'album': album}
+    return render(request, 'albums/test.html', context)
 
 
 ########## NON-RENDER FUNCTIONS ###########
