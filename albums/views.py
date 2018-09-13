@@ -155,7 +155,6 @@ def edit_album(request, artist, album):
             album.album_art = form.cleaned_data['album_art']
             album.vinyl = form.cleaned_data['vinyl']
             album.cassette = form.cleaned_data['cassette']
-            album.save()
 
             if form.cleaned_data['subgenres']:
                 print("Rating")
@@ -177,12 +176,17 @@ def edit_album(request, artist, album):
                     last_rating = last_rating.listen
                 else:
                     last_rating = 0
+
+                                
+                print(last_rating)
                     
                 Rating.objects.create(
                     album=album,
                     score=form.cleaned_data['rating'],
                     listen = last_rating + 1
                 )
+            
+            album.save()
 
             saved = True
         else:
@@ -235,12 +239,14 @@ def add_album(request):
                     last_rating = last_rating.listen
                 else:
                     last_rating = 0
-                    
+
                 Rating.objects.create(
                     album=album,
                     rating=form.cleaned_data['rating'],
                     listen = last_rating + 1
                 )
+
+            album.save()
 
             saved = True
         else:

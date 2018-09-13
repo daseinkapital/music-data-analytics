@@ -90,6 +90,7 @@ class Rating(models.Model):
         null=False,
         blank=False,
         on_delete=models.PROTECT,
+        related_name="ratings"
     )
 
     class Meta:
