@@ -1,0 +1,11 @@
+{% include "albums/header.html" %}
+
+<h1 class="center">Thanks for recommending {{album}}! Check back in the queue to see when I'll listen to it!</h1>
+
+<script>
+window.setTimeout(function() {
+location.href = "{% url 'group' group='queue' %}";
+}, 5000);
+</script>
+
+{% include 'albums/js.html' %}

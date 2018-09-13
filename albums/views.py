@@ -3,7 +3,7 @@ from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 
 from albums.models import *
-from albums.forms import AlbumForm
+from albums.forms import AlbumForm, ReccForm
 
 import datetime as dt
 
@@ -110,6 +110,27 @@ def chart(request, chart_num):
     context = {'chart_num' : chart_num, 'albums' : albums}
     context.update({'search' : search, 'order' : order_post, 'direction' : direction})
     return render(request, 'albums/charts.html', context)
+
+def suggest(request):
+    if request.POST:
+        form = ReccForm(request.POST)
+        if form.is_valid():
+            Recommendation.objects.create(
+                recommender = form.cleaned_data['recc_name'],
+                album_name = form.cleaned_data['album_name'],
+                artist_name = form.cleaned_data['artist_name'],
+                genre = form.cleaned_data['genre'],
+                url = form.cleaned_data['url'],
+                note = form.cleaned_data['note']
+            )
+            context = {
+                'album' : form.cleaned_data['album_name']
+            }
+            return render(request, 'albums/thanks.html', context)
+    else:
+        form = ReccForm()
+        context = {'form': form}
+        return render(request, 'albums/suggestion.html', context)
 
 def about(request):
     return render(request, 'albums/about.html')

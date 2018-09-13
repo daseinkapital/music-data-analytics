@@ -11,6 +11,15 @@ class Artist(models.Model):
     )
 
     slug = models.SlugField()
+
+    note = models.TextField(
+        null=True,
+        blank=True
+    )
+
+    seen_live = models.BooleanField(
+        default = False
+    )
     
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name, allow_unicode=True)[:50]
@@ -50,6 +59,11 @@ class SubGenre(models.Model):
         null=True,
         blank=True,
         validators=[URLValidator()],
+    )
+
+    note = models.TextField(
+        null=True,
+        blank=True
     )
 
     def __str__(self):
@@ -176,6 +190,12 @@ class Album(models.Model):
         validators=[URLValidator()],
     )
 
+    discogs_url = models.TextField(
+        null=True,
+        blank=True,
+        validators=[URLValidator()],
+    )
+
     time_length = models.DurationField(
         null=True,
         blank=True,
@@ -208,6 +228,11 @@ class Album(models.Model):
         max_digits=6,
         null=True,
         blank=True,
+    )
+
+    note = models.TextField(
+        null=True,
+        blank=True
     )
 
     def save(self, *args, **kwargs):
@@ -301,6 +326,11 @@ class Group(models.Model):
         blank=False
     )
 
+    note = models.TextField(
+        null=True,
+        blank=True
+    )
+
     class Meta:
         ordering = ['name']
 
@@ -320,3 +350,97 @@ class AlbumGroup(models.Model):
         blank=False,
         on_delete=models.CASCADE,
     )
+
+class WikiSubgenre(models.Model):
+    name = models.CharField(
+        max_length=250,
+        null=False,
+        blank=False
+    )
+
+    url = models.URLField()
+
+class BandcampSubgenre(models.Model):
+    name = models.CharField(
+        max_length=250,
+        null=False,
+        blank=False
+    )
+
+class ListenURL(models.Model):
+    album = models.ForeignKey(
+        to=Album,
+        related_name='playback_urls',
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE
+    )
+
+    spotify = models.URLField(
+        null=True,
+        blank=True
+    )
+
+    itunes = models.URLField(
+        null=True,
+        blank=True
+    )
+
+    bandcamp = models.URLField(
+        null=True,
+        blank=True
+    )
+
+    amazon = models.URLField(
+        null=True,
+        blank=True
+    )
+
+    soundcloud = models.URLField(
+        null=True,
+        blank=True
+    )
+
+    youtube = models.URLField(
+        null=True,
+        blank=True
+    )
+
+class Recommendation(models.Model):
+    recommender = models.CharField(
+        max_length = 100,
+        null=False,
+        blank=False
+    )
+
+    album_name = models.CharField(
+        max_length = 256,
+        null=False,
+        blank=False
+    )
+
+    artist_name = models.CharField(
+        max_length = 250,
+        null=False,
+        blank=False
+    )
+
+    genre = models.CharField(
+        max_length = 250,
+        null = True,
+        blank=True
+    )
+
+    url = models.TextField(
+        null=True,
+        blank=True,
+        validators=[URLValidator()]
+    )
+
+    note = models.TextField(
+        null=True,
+        blank=True
+    )
+
+    def __str__(self):
+        return "{0} recommends {1} by {2}".format(self.recommender, self.album_name, self.artist_name)

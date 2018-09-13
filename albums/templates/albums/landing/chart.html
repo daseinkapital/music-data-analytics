@@ -3,3 +3,5 @@
 {% for num in charts %}
 <h1><a href="{% url 'chart' chart_num=num %}">{{num}}</a></h1>
 {% endfor %}
+
+{% include 'albums/js.html' %}

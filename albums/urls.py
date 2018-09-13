@@ -17,4 +17,5 @@ urlpatterns = [
     path('chart/<chart_num>/', views.chart, name='chart'),
     path('edit/<artist>/<album>/', views.edit_album, name='edit-album'),
     path('add/album/', views.add_album, name='add-album'),
+    path('suggest/', views.suggest, name='suggestion'),
 ]
