@@ -385,8 +385,8 @@ def scrape(album):
         return
 
     if album.has_url():
-        if album.wiki_url:
-            album = scrape_wiki(album)
+        if album.amazon_url:
+            album = scrape_amazon(album)
             album.save()
     else:
         sleep(5)
@@ -403,8 +403,8 @@ def scrape(album):
             album.album_art = None
             album.save()
         
-        if album.wiki_url:
-            album = scrape_wiki(album)
+        if album.amazon_url:
+            album = scrape_amazon(album)
             album.save()
 
 
@@ -417,8 +417,8 @@ def scrape(album):
     
     if album.all_info_found():
         return
-    else:
-        album = scrape_amazon(album)
+    elif urls['amazon']:
+        album = scrape_wiki(album)
         album.save()
 
 

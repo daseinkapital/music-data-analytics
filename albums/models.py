@@ -246,12 +246,12 @@ class Album(models.Model):
             super(Album, self).save(*args, **kwargs)
         else:
             screw_the_rules()
-            if self.wiki_url:
-                self = scrape_wiki(self)
-            if self.bc_url:
-                self = scrape_bc(self)
             if self.amazon_url:
                 self = scrape_amazon(self)
+            if self.bc_url:
+                self = scrape_bc(self)
+            if self.wiki_url:
+                self = scrape_wiki(self)
             super(Album, self).save(*args, **kwargs)
 
     @property
