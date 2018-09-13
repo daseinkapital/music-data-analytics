@@ -262,7 +262,7 @@ def add_album(request):
 
                 Rating.objects.create(
                     album=album,
-                    rating=form.cleaned_data['rating'],
+                    score=form.cleaned_data['rating'],
                     listen = last_rating + 1
                 )
 
