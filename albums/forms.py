@@ -6,6 +6,9 @@ from albums.models import Album
 
 #MODEL CLASSES
 class AlbumForm(ModelForm):
+    rating = forms.DecimalField(label="Rating", required=False)
+    subgenres = forms.CharField(label="Subgenres", required=False, widget=forms.Textarea)
+
     class Meta:
         model = Album
         fields = [
@@ -20,7 +23,9 @@ class AlbumForm(ModelForm):
             'release_date',
             'album_art',
             'vinyl',
-            'cassette'
+            'cassette',
+            'rating',
+            'subgenres'
         ]
 
 #OTHER FORMS

@@ -92,6 +92,9 @@ class Rating(models.Model):
         on_delete=models.PROTECT,
     )
 
+    class Meta:
+        ordering = ['-listen']
+
     def __str__(self):
         return "{} received a {} on the {}{} listen.".format(self.album.name, str(self.score), str(self.listen), self.ending())
 

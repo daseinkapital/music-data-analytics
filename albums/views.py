@@ -156,6 +156,29 @@ def edit_album(request, artist, album):
             album.vinyl = form.cleaned_data['vinyl']
             album.cassette = form.cleaned_data['cassette']
             album.save()
+
+            if form.cleaned_data['subgenres']:
+                print("Rating")
+                subgenres = form.cleaned_data['subgenres'].split('/')
+                for genre in subgenres:
+                    genre_inst = SubGenre.objects.filter(name__iexact=genre).first()
+
+                    if not genre_inst:
+                        genre_inst = SubGenre.objects.create(name=genre)
+
+                    AlbumSubgenre.objects.create(
+                            album = album,
+                            subgenre = genre_inst
+                        )
+
+            if form.cleaned_data['rating']:
+                last_rating = Rating.objects.filter(album=album).first().listen
+                Rating.objects.create(
+                    album=album,
+                    score=form.cleaned_data['rating'],
+                    listen = last_rating + 1
+                )
+
             saved = True
         else:
             error = True
@@ -173,7 +196,7 @@ def add_album(request):
     if request.POST:
         form = AlbumForm(request.POST)
         if form.is_valid():
-            Album.objects.create(
+            album = Album.objects.create(
                 name = form.cleaned_data['name'],
                 artist = form.cleaned_data['artist'],
                 date_finished = form.cleaned_data['date_finished'],
@@ -187,6 +210,29 @@ def add_album(request):
                 vinyl = form.cleaned_data['vinyl'],
                 cassette = form.cleaned_data['cassette']
             )
+
+            if form.cleaned_data['subgenres']:
+                print("Rating")
+                subgenres = form.cleaned_data['subgenres'].split('/')
+                for genre in subgenres:
+                    genre_inst = SubGenre.objects.filter(name__iexact=genre).first()
+
+                    if not genre_inst:
+                        genre_inst = SubGenre.objects.create(name=genre)
+
+                    AlbumSubgenre.objects.create(
+                            album = album,
+                            subgenre = genre_inst
+                        )
+
+            if form.cleaned_data['rating']:
+                last_rating = Rating.objects.filter(album=album).first().listen
+                Rating.objects.create(
+                    album=album,
+                    rating=form.cleaned_data['rating'],
+                    listen = last_rating + 1
+                )
+
             saved = True
         else:
             error = True
