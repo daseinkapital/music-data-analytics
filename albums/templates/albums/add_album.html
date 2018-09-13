@@ -5,14 +5,23 @@
 {% if error %}
 <p>Please check every field for an error.</p>
 {% endif %}
+
 <div class="bootstrap-iso">
     <div class="container-fluid">
-        <div class="col-md-4 col-sm-4 col-xs-12">
-            <form action="{% url 'add-album' %}" method=POST>
+        <div class="row form-div">
+            <form action="{% url 'add-album' %}" method=POST class="center">
                 {% csrf_token %}
-                <table>
-                {{ form.as_table }}
-                </table>
+                {% for field in form %}
+                <div class="row">
+                    <span class="col-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 form-label">{{field.label_tag}}{% if field.field.required %}<span class="help-text">*</span>{% endif %}</span>
+                    <span class="col-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 form-label">{{field}}</span>
+                </div>
+                <div class="row">    
+                    <small><span class="col-4 help-text">{{field.help_text}}</span></small>
+                </div>
+                <br>
+                {% endfor %}
+                <hr/>   
                 <input type="submit" value="Submit">
                 <input type="reset" value="Reset">
             </form>
