@@ -2,7 +2,7 @@ from django.db import models
 from django.core.validators import URLValidator
 from django.utils.text import slugify
 
-from .management.commands.scrape import scrape_wiki, scrape_bc, screw_the_rules
+from .management.commands.scrape import scrape_wiki, scrape_bc, scrape_amazon, screw_the_rules
 
 # Create your models here.
 class Artist(models.Model):
@@ -250,6 +250,8 @@ class Album(models.Model):
                 self = scrape_wiki(self)
             if self.bc_url:
                 self = scrape_bc(self)
+            if self.amazon_url:
+                self = scrape_amazon(self)
             super(Album, self).save(*args, **kwargs)
 
     @property

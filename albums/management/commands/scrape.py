@@ -26,7 +26,7 @@ def find_urls(album):
     artist_name = album.artist.name
     query = album_name + " " + artist_name
 
-    urls = {'wiki' : None, 'bc' : None}
+    urls = {'wiki' : None, 'bc' : None, 'amazon' : None}
 
     for result in search(query, num=10, stop=10, pause=2):
         if 'wikipedia.org' in result:
@@ -37,6 +37,9 @@ def find_urls(album):
             if 'album' in result:
                 if urls['bc'] == None:
                     urls.update({'bc' : result})
+        if 'amazon.com' in result:
+            if urls['amazon'] == None:
+                urls.update({'amazon' : result})
     
     if (urls['wiki'] == None) and (urls['bc'] == None):
         query = query + " wikipedia bandcamp"
@@ -235,7 +238,7 @@ def bc_navigate_to_page(album):
 def bc_full_length(soup):
     times = soup.findAll('span', {'class':'time secondaryText'})
     lengths = []
-    pass
+
     for time in times:
         time = time.getText().strip()
         lengths.append(time)
@@ -263,6 +266,48 @@ def bc_album_art(soup):
         img = div.find('img')['src']
         if img:
             return img
+    return None   
+
+#### AMAZON HELPER FUNCTIONS
+def amazon_full_length(soup):
+    song_table = soup.find('table', id='dmusic_tracklist_content')
+    if song_table:
+        times = song_table.findAll('td', id=lambda x: x and x.startswith('dmusic_tracklist_duration_'))
+
+        lengths = []
+        for time in times:
+            time = time.getText().strip()
+            lengths.append(time)
+        total_length = dt.timedelta()
+        for i in lengths:
+            (m, s) = i.split(':')
+            d = dt.timedelta(minutes=int(m), seconds=int(s))
+            total_length += d
+        return total_length
+    else:
+        return None
+
+
+def amazon_release_date(soup):
+    div = soup.find('table', {'id': 'productDetailsTable'})
+    if div:
+        source = div.getText()
+        return wiki_parse_date(source)
+    else:
+        return None
+
+def amazon_album_art(soup):
+    image = soup.find('img', id='landingImage')
+    print(image)
+    if image:
+        img = image['data-old-hires']
+        img2 = image['src']
+        print(img)
+        print(img2)
+        if img:
+            return img
+        elif img2:
+            return img2
     return None   
 
 #### main functions
@@ -311,7 +356,28 @@ def scrape_bc(album):
         album.album_art = bc_album_art(html)
 
     return album
-        
+
+def scrape_amazon(album):
+    url = album.amazon_url
+
+    try:
+        html = fetch_url(url)
+    except(ValueError, urllib.error.HTTPError):
+        print("No Amazon page")
+        return album
+    
+    if not album.time_check():
+        album.time_length = amazon_full_length(html)
+    
+    if not album.release_date_check():
+        album.release_date = amazon_release_date(html)
+
+    if not album.album_art_check():
+        album.album_art = amazon_album_art(html)
+
+    return album
+
+
 def scrape(album):
     screw_the_rules()
 
@@ -329,6 +395,8 @@ def scrape(album):
             album.wiki_url = urls['wiki']
         if urls['bc']:
             album.bc_url = urls['bc']
+        if urls['amazon']:
+            album.amazon_url = urls['amazon']
         try:
             album.save()
         except(DataError):
@@ -345,6 +413,12 @@ def scrape(album):
     else:
         # print("Checking Bandcamp")
         album = scrape_bc(album)
+        album.save()
+    
+    if album.all_info_found():
+        return
+    else:
+        album = scrape_amazon(album)
         album.save()
 
 
