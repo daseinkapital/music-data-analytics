@@ -8,12 +8,14 @@ from albums.models import Album
 class AlbumForm(ModelForm):
     rating = forms.DecimalField(label="Rating", required=False)
     subgenres = forms.CharField(label="Subgenres", required=False, widget=forms.Textarea)
+    new_artist = forms.CharField(label="Artist", required=False)
 
     class Meta:
         model = Album
         fields = [
             'name',
             'artist',
+            'new_artist',
             'date_finished',
             'primary_genre',
             'wiki_url',

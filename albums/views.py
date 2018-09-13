@@ -157,7 +157,6 @@ def edit_album(request, artist, album):
             album.cassette = form.cleaned_data['cassette']
 
             if form.cleaned_data['subgenres']:
-                print("Rating")
                 subgenres = form.cleaned_data['subgenres'].split('/')
                 for genre in subgenres:
                     genre_inst = SubGenre.objects.filter(name__iexact=genre).first()
@@ -176,9 +175,6 @@ def edit_album(request, artist, album):
                     last_rating = last_rating.listen
                 else:
                     last_rating = 0
-
-                                
-                print(last_rating)
                     
                 Rating.objects.create(
                     album=album,
@@ -204,10 +200,34 @@ def add_album(request):
     error = None
     if request.POST:
         form = AlbumForm(request.POST)
+
         if form.is_valid():
+            latest_album = Album.objects.all().order_by('-order').first()
+            chart = latest_album.chart
+            album_row_count = Album.objects.filter(chart=latest_album.chart, row=latest_album.row).count
+            if album_row_count == 10:
+                if latest_album.row == 10:
+                    row = 1
+                    chart = latest_album.chart + 1
+                else:
+                    row = latest_album.row + 1
+                    chart = latest_album.chart
+            else:
+                row = latest_album.row
+                chart = latest_album.chart
+            order = latest_album.order
+
+            if request.POST.get('new_artist'):
+                artist = Artist.objects.create(name=request.POST.get('new_artist'))
+            else:
+                artist = form.cleaned_data['artist']
+
             album = Album.objects.create(
                 name = form.cleaned_data['name'],
-                artist = form.cleaned_data['artist'],
+                artist = artist,
+                order = order,
+                chart = chart,
+                row = row,
                 date_finished = form.cleaned_data['date_finished'],
                 primary_genre = form.cleaned_data['primary_genre'],
                 wiki_url = form.cleaned_data['wiki_url'],
