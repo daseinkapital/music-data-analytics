@@ -172,7 +172,12 @@ def edit_album(request, artist, album):
                         )
 
             if form.cleaned_data['rating']:
-                last_rating = Rating.objects.filter(album=album).first().listen
+                last_rating = Rating.objects.filter(album=album).first()
+                if last_rating:
+                    last_rating = last_rating.listen
+                else:
+                    last_rating = 0
+                    
                 Rating.objects.create(
                     album=album,
                     score=form.cleaned_data['rating'],
@@ -212,7 +217,6 @@ def add_album(request):
             )
 
             if form.cleaned_data['subgenres']:
-                print("Rating")
                 subgenres = form.cleaned_data['subgenres'].split('/')
                 for genre in subgenres:
                     genre_inst = SubGenre.objects.filter(name__iexact=genre).first()
@@ -226,7 +230,12 @@ def add_album(request):
                         )
 
             if form.cleaned_data['rating']:
-                last_rating = Rating.objects.filter(album=album).first().listen
+                last_rating = Rating.objects.filter(album=album).first()
+                if last_rating:
+                    last_rating = last_rating.listen
+                else:
+                    last_rating = 0
+                    
                 Rating.objects.create(
                     album=album,
                     rating=form.cleaned_data['rating'],
