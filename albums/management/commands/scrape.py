@@ -326,7 +326,9 @@ def scrape_wiki(album):
     if not album.release_date_check():
         album.release_date = wiki_release_date(html)
     
-    if not album.album_art_check():
+    if album.bc_url or album.amazon_url:
+        return album
+    elif not album.album_art_check():
         album.album_art = wiki_album_art(html)
     return album
         
