@@ -5,6 +5,8 @@ from django.contrib.auth.decorators import login_required
 from albums.models import *
 from albums.forms import AlbumForm, ReccForm
 
+from .management.commands.scrape import scrape
+
 import datetime as dt
 
 # Create your views here.
@@ -202,21 +204,6 @@ def add_album(request):
         form = AlbumForm(request.POST)
 
         if form.is_valid():
-            latest_album = Album.objects.all().order_by('-order').first()
-            chart = latest_album.chart
-            album_row_count = Album.objects.filter(chart=latest_album.chart, row=latest_album.row).count
-            if album_row_count == 10:
-                if latest_album.row == 10:
-                    row = 1
-                    chart = latest_album.chart + 1
-                else:
-                    row = latest_album.row + 1
-                    chart = latest_album.chart
-            else:
-                row = latest_album.row
-                chart = latest_album.chart
-            order = latest_album.order + 1
-
             if request.POST.get('new_artist'):
                 artist = Artist.objects.create(name=request.POST.get('new_artist'))
             else:
@@ -266,7 +253,7 @@ def add_album(request):
                     listen = last_rating + 1
                 )
 
-            album.save()
+            scrape(album)
 
             saved = True
         else:
