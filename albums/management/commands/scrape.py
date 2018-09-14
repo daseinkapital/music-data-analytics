@@ -360,11 +360,11 @@ def scrape_amazon(album):
     else:
         return album
 
-    # try:
-    html = fetch_url(url)
-    # except(ValueError, urllib.error.HTTPError):
-    #     print("No Amazon page")
-    #     return album
+    try:
+        html = fetch_url(url)
+    except(ValueError, urllib.error.HTTPError):
+        print("No Amazon page")
+        return album
     
     if not album.time_check():
         album.time_length = amazon_full_length(html)
