@@ -298,12 +298,9 @@ def amazon_release_date(soup):
 
 def amazon_album_art(soup):
     image = soup.find('img', id='landingImage')
-    print(image)
     if image:
         img = image['data-old-hires']
         img2 = image['src']
-        print(img)
-        print(img2)
         if img:
             return img
         elif img2:
@@ -363,11 +360,11 @@ def scrape_amazon(album):
     else:
         return album
 
-    try:
-        html = fetch_url(url)
-    except(ValueError, urllib.error.HTTPError):
-        print("No Amazon page")
-        return album
+    # try:
+    html = fetch_url(url)
+    # except(ValueError, urllib.error.HTTPError):
+    #     print("No Amazon page")
+    #     return album
     
     if not album.time_check():
         album.time_length = amazon_full_length(html)
@@ -414,7 +411,6 @@ def scrape(album):
     if album.all_info_found():
         return
     else:
-        # print("Checking Bandcamp")
         album = scrape_bc(album)
         album.save()
     
