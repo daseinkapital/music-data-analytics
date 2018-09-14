@@ -242,6 +242,24 @@ class Album(models.Model):
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name, allow_unicode=True)[:50]
         self.current_rating = self.average_rating
+        if not self.order:
+            latest_album = Album.objects.exclude(order=None).order_by('-order').first()
+            chart = latest_album.chart
+            album_row_count = Album.objects.filter(chart=latest_album.chart, row=latest_album.row).count
+            if album_row_count == 10:
+                if latest_album.row == 10:
+                    row = 1
+                    chart = chart + 1
+                else:
+                    row = latest_album.row + 1
+                    chart = latest_album.chart
+            else:
+                row = latest_album.row
+                chart = latest_album.chart
+            self.order = latest_album.order + 1
+            self.row = row
+            self.chart = chart
+
         if self.all_info_found():
             super(Album, self).save(*args, **kwargs)
         else:

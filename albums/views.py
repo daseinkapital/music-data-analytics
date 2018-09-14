@@ -215,7 +215,7 @@ def add_album(request):
             else:
                 row = latest_album.row
                 chart = latest_album.chart
-            order = latest_album.order
+            order = latest_album.order + 1
 
             if request.POST.get('new_artist'):
                 artist = Artist.objects.create(name=request.POST.get('new_artist'))
