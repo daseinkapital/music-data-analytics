@@ -340,6 +340,15 @@ class Album(models.Model):
         else:
             return False
 
+    def time_hours(self):
+        return self.time_length.seconds//3600
+
+    def time_minutes(self):
+        return (self.time_length.seconds//60)%60
+    
+    def time_seconds(self):
+        return self.time_length.seconds%60
+
     class Meta:
         ordering = ['name', 'artist']
 

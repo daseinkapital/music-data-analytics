@@ -205,7 +205,9 @@ def add_album(request):
 
         if form.is_valid():
             if request.POST.get('new_artist'):
-                artist = Artist.objects.create(name=request.POST.get('new_artist'))
+                artist = Artist.objects.filter(name__iexact=request.POST.get('new_artist')).first()
+                if not artist:
+                    artist = Artist.objects.create(name=request.POST.get('new_artist'))
             else:
                 artist = form.cleaned_data['artist']
 
