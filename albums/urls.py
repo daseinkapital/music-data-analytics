@@ -4,7 +4,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.main, name="albums"),
+    path('', views.main, name="home"),
     path('stats/', views.statistics, name="statistics"),
     path('artist/<artist>/<album>/', views.album_page, name="album-page"),
     path('artist/<artist>/', views.artist_page, name="artist-page"),
@@ -18,4 +18,6 @@ urlpatterns = [
     path('edit/<artist>/<album>/', views.edit_album, name='edit-album'),
     path('add/album/', views.add_album, name='add-album'),
     path('suggest/', views.suggest, name='suggestion'),
+    path('page-not-found', views.page_not_found, name='404'),
+    path('this-is-on-us', views.internal_server_error, name='500')
 ]

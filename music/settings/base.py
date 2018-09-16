@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 
 import os
 import django_heroku
+import dj_database_url
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -22,10 +23,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'h%62ka(@g-2k%ch^1ue28^9$s8^e90s&i^jkg0(1f)2e8o4z(('
+SECRET_KEY = os.environ['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+dev_env = os.environ['ENVIRON_SETTING']
+if dev_env == "dev":
+    DEBUG = True
+elif dev_env == "prod":
+    DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -76,14 +81,21 @@ WSGI_APPLICATION = 'music.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
+
+if dev_env == "dev":
+    db_settings = {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ['DB_NAME'],
+            'USER': os.environ['DB_USER'],
+            'HOST': os.environ['DB_HOST'],
+            'PORT': os.environ['DB_PORT'],
+        }
+
+elif dev_env == "prod":
+    db_settings = dj_database_url.config(os.environ['DATABASE_URL'])
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'HOST': 'db',
-        'PORT': '5432',
-    }
+    'default' : db_settings
 }
 
 

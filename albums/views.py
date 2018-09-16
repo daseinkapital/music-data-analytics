@@ -76,8 +76,6 @@ def statistics(request):
             queue_time += album.time_length
     queue_time = format_sum_time(queue_time)
 
-    
-
 
     #collect all the statistics
     context.update({
@@ -291,6 +289,12 @@ def htmltest(request):
     context = {'form': form, 'album': album}
     return render(request, 'albums/test.html', context)
 
+
+def page_not_found(request):
+    return render(request, '404.html')
+
+def internal_server_error(request):
+    return render(request, '404.html')
 
 ########## NON-RENDER FUNCTIONS ###########
 def search_albums(request, albums):

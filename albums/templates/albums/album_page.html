@@ -31,6 +31,12 @@
             {% endfor %}
         </p>
         {% endif %}
+        {% if album.note %}
+        <p>My thoughts:</p>
+        <p id="notes">
+            {{album.note}}
+        </p>
+        {% endif %}
         {% if album.release_date %}
         <p id="release-date">
             Release Date:
