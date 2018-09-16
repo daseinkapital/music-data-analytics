@@ -38,7 +38,12 @@ def artist_page(request, artist):
     return render(request, 'albums/artist_page.html', context)
 
 def statistics(request):
-    albums = Album.objects.all()
+    #albums not in queue
+    albums = Album.objects.exclude(date_finished=None)
+    
+    #albums in queue
+    queue = Album.objects.filter(date_finished=None)
+
     context = {}
 
     #count how many subgenres listened to
@@ -52,12 +57,26 @@ def statistics(request):
     for album in albums:
         if album.time_length:
             total_time += album.time_length
+    total_time = format_sum_time(total_time)
+
 
     #count the number of albums listened in each primary genre
     genre_count = []
     for genre in PrimaryGenre.objects.all():
-        count = Album.objects.filter(primary_genre=genre).count()
+        count = albums.filter(primary_genre=genre).count()
         genre_count.append({'genre' : genre, 'count': count})
+    
+    #gather the queue length
+    queue_length = queue.count()
+
+    #gather length of queue
+    queue_time = dt.timedelta(seconds=0)
+    for album in queue:
+        if album.time_length:
+            queue_time += album.time_length
+    queue_time = format_sum_time(queue_time)
+
+    
 
 
     #collect all the statistics
@@ -65,7 +84,9 @@ def statistics(request):
         'total_album_num' : total_album_num,
         'total_subgenres_num' : total_subgenres_num,
         'total_time' : total_time,
-        'genre_count' : genre_count
+        'genre_count' : genre_count,
+        'queue_length' : queue_length,
+        'queue_time' : queue_time
     })
 
     return render(request, 'albums/statistics.html', context)
@@ -214,9 +235,6 @@ def add_album(request):
             album = Album.objects.create(
                 name = form.cleaned_data['name'],
                 artist = artist,
-                order = order,
-                chart = chart,
-                row = row,
                 date_finished = form.cleaned_data['date_finished'],
                 primary_genre = form.cleaned_data['primary_genre'],
                 wiki_url = form.cleaned_data['wiki_url'],
@@ -310,3 +328,12 @@ def search_albums(request, albums):
         order_post = ''
         direction = 'up'
     return albums, search, order_post, direction
+
+#takes a time delta and nicely formats to a string
+def format_sum_time(sum_time):
+    hours, remainder = divmod(sum_time.seconds, 3600)
+    minutes, seconds = divmod(remainder, 60)
+    if sum_time.days:
+        return '{:02}d {:02}h {:02}m {:02}s'.format(int(sum_time.days), int(hours), int(minutes), int(seconds))
+    else:
+        return '{:02}h {:02}m {:02}s'.format(int(hours), int(minutes), int(seconds))
