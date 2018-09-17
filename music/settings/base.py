@@ -32,8 +32,6 @@ if dev_env == "dev":
 elif dev_env == "prod":
     DEBUG = False
 
-DEBUG=True
-
 ALLOWED_HOSTS = ['*']
 
 
