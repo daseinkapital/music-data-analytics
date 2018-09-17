@@ -37,7 +37,7 @@ if dev_env == "prod":
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     SECURE_BROWSER_XSS_FILTER = True
-    ALLOWED_HOSTS = ['localhost']
+    ALLOWED_HOSTS = [os.environ['ALLOWED_HOST']]
 
 
 
