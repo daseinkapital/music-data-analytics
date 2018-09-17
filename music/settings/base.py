@@ -32,13 +32,14 @@ if dev_env == "dev":
 elif dev_env == "prod":
     DEBUG = False
 
-ALLOWED_HOSTS = ['localhost']
-
 
 if dev_env == "prod":
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
-    X_FRAME_OPTIONS = True
+    SECURE_BROWSER_XSS_FILTER = True
+    ALLOWED_HOSTS = ['localhost']
+
+
 
 # Application definition
 
