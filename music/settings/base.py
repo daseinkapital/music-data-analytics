@@ -16,7 +16,7 @@ import dj_database_url
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
 # Quick-start development settings - unsuitable for production
@@ -32,8 +32,13 @@ if dev_env == "dev":
 elif dev_env == "prod":
     DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['localhost']
 
+
+if dev_env == "prod":
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    X_FRAME_OPTIONS = True
 
 # Application definition
 
@@ -138,7 +143,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
-    os.path.join(os.path.dirname(BASE_DIR), "static"),
+    os.path.join(BASE_DIR, "static"),
 ]
 
 # Activate Django-Heroku.

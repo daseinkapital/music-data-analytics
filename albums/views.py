@@ -9,6 +9,7 @@ from .management.commands.scrape import scrape
 
 import datetime as dt
 
+
 # Create your views here.
 def main(request):
     context = {}
