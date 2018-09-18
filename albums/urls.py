@@ -18,6 +18,7 @@ urlpatterns = [
     path('edit/<artist>/<album>/', views.edit_album, name='edit-album'),
     path('add/album/', views.add_album, name='add-album'),
     path('suggest/', views.suggest, name='suggestion'),
+    path('match-game/', views.match_game, name="game"),
     path('page-not-found', views.page_not_found, name='404'),
     path('this-is-on-us', views.internal_server_error, name='500')
 ]

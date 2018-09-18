@@ -9,6 +9,8 @@ from .management.commands.scrape import scrape
 
 import datetime as dt
 
+import random
+
 
 # Create your views here.
 def main(request):
@@ -154,8 +156,46 @@ def suggest(request):
         context = {'form': form}
         return render(request, 'albums/suggestion.html', context)
 
+def match_game(request):
+    print(request.POST)
+    context = {}
+
+    if request.POST:
+        answer = request.POST.get('answer')
+        selected = request.POST.get('selected')
+        attempts = int(request.POST.get('attempts'))
+        correct = int(request.POST.get('correct'))
+        if answer:
+            if answer == selected:
+                correct += 1
+        albums = Album.objects.exclude(album_art=None)
+        album_count = albums.count()
+        choices = generate_choices(album_count)
+        answer_num = random_num(3)
+        choice_dict = {
+            0 : 'A',
+            1 : 'B',
+            2 : 'C',
+            3 : 'D'
+        }
+        answer_letter = choice_dict[answer_num]
+        answer = {'num' : answer_num, 'letter' : answer_letter}
+        album_display = choices[answer_num]['album']
+        percent_correct = 100
+        if attempts != 0:
+            percent_correct = round((correct/attempts)*100)
+        attempts += 1
+        context.update({'choices' : choices, 'album_display' : album_display, 'attempts' : attempts, 'correct' : correct, 'answer' : answer, 'percent' : percent_correct})
+        return render(request, 'albums/game/round.html', context)
+    
+    return render(request, 'albums/game/main.html')
+
+
+
+
 def about(request):
     return render(request, 'albums/about.html')
+
 
 @login_required
 def edit_album(request, artist, album):
@@ -342,3 +382,28 @@ def format_sum_time(sum_time):
         return '{:02}d {:02}h {:02}m {:02}s'.format(int(sum_time.days), int(hours), int(minutes), int(seconds))
     else:
         return '{:02}h {:02}m {:02}s'.format(int(hours), int(minutes), int(seconds))
+
+#functions for the album match game
+def random_num(maximum):
+    return int(random.uniform(0, maximum))
+
+def generate_choices(total_count):
+    choices = []
+    answer_int = random_num(total_count)
+    choices.append(answer_int)
+    for i in range(3):
+        choices.append(unique_random_num(choices, total_count))
+    albums = []
+    letters = ['A', 'B', 'C', 'D']
+    for i in range(4):
+        albums.append({'letter' : letters[i], 'album' : convert_to_album(choices[i])})
+    return albums
+
+def unique_random_num(choices, maximum):
+    num = random_num(maximum)
+    while num in choices:
+        num = random_num(maximum)
+    return num
+
+def convert_to_album(choice):
+    return Album.objects.exclude(album_art=None)[choice]

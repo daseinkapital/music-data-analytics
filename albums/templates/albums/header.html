@@ -92,6 +92,7 @@ Fixed Navigation
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
                 <div class="dropdown-menu">
                   <a class="dropdown-item" href="{% url 'suggestion' %}">Suggest An Album</a>
+                  <a class="dropdown-item" href="{% url 'game' %}">Album Match Game</a>
                   {% if user.is_superuser %}
                   <a class="dropdown-item" href="{% url 'add-album' %}">Add Albums</a>
                   <a class="dropdown-item" href="">Recommendations Review</a>

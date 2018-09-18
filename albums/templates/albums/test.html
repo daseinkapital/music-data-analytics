@@ -1,7 +1,7 @@
 {% include 'albums/header.html' %}
 
 <style>
-#post-it-container {
+#album-container {
   position: relative;
   width: 100px;
   height: 100px;
@@ -9,16 +9,16 @@
   z-index: 1;
   float:left;
 }
-#post-it-container {
+#album-container {
   perspective: 1000;
 }
-#post-it-card {
+#album-card {
   width: 100%;
   height: 100%;
   transform-style: preserve-3d;
   transition: all 500ms linear;
 }
-#post-it-container:hover #post-it-card {
+#album-container:hover #album-card {
   transform: rotateY(180deg);
   cursor:pointer;
 }
@@ -54,8 +54,8 @@ font-size: 0.9rem;
 </style>
 
   
-<div id="post-it-container">
-  <div id="post-it-card" class="">
+<div id="album-container">
+  <div id="album-card" class="">
     <div class="front face">
       <div class="strategy">
         <a href="{% url 'album-page' artist=album.artist.slug album=album.slug %}"><img src="{{album.album_art}}" name="{{album.slug}}" onerror="javascript:this.src='https://static1.squarespace.com/static/55a57011e4b09934ba12fd1a/5612b784e4b07c6a02988249/5612dd98e4b0e75bc4a61cc7/1444076954414/record.png?format=500w'" style="max-height: 100px; max-width: 100px; width: 100px; display: inline-block; margin-left: auto; margin-right: auto;" title="{{album}}"></a>
@@ -67,8 +67,8 @@ font-size: 0.9rem;
   </div>
 </div>
   
-  <div id="post-it-container">
-  <div id="post-it-card" class="shadow">
+  <div id="album-container">
+  <div id="album-card" class="shadow">
     <div class="front face">
       <div class="strategy">At conferences or workshops</div>
     </div>
@@ -78,8 +78,8 @@ font-size: 0.9rem;
   </div>
   </div>
   
-  <div id="post-it-container">
-  <div id="post-it-card" class="shadow">
+  <div id="album-container">
+  <div id="album-card" class="shadow">
     <div class="front face">
       <div class="strategy">Engage partners and allies in dialogue</div>
     </div>
@@ -89,8 +89,8 @@ font-size: 0.9rem;
   </div>
   </div>
   
-    <div id="post-it-container">
-  <div id="post-it-card" class="shadow">
+    <div id="album-container">
+  <div id="album-card" class="shadow">
     <div class="front face">
       <div class="strategy">Integrate it into policy briefings</div>
     </div>
@@ -100,8 +100,8 @@ font-size: 0.9rem;
   </div>
   </div>
   
-  <div id="post-it-container">
-  <div id="post-it-card" class="shadow">
+  <div id="album-container">
+  <div id="album-card" class="shadow">
     <div class="front face">
       <div class="strategy">Bring attention to current news</div>
     </div>
@@ -111,8 +111,8 @@ font-size: 0.9rem;
   </div>
   </div>
   
-  <div id="post-it-container">
-  <div id="post-it-card" class="shadow">
+  <div id="album-container">
+  <div id="album-card" class="shadow">
     <div class="front face">
       <div class="strategy">Hosting town halls and public dialogues</div>
     </div>
@@ -122,8 +122,8 @@ font-size: 0.9rem;
   </div>
   </div>
   
-    <div id="post-it-container">
-  <div id="post-it-card" class="shadow">
+    <div id="album-container">
+  <div id="album-card" class="shadow">
     <div class="front face">
       <div class="strategy">Support a specific policy target</div>
     </div>
@@ -133,8 +133,8 @@ font-size: 0.9rem;
   </div>
   </div>
   
-  <div id="post-it-container">
-  <div id="post-it-card" class="shadow">
+  <div id="album-container">
+  <div id="album-card" class="shadow">
     <div class="front face">
       <div class="strategy">Build new alliances</div>
     </div>
@@ -144,8 +144,8 @@ font-size: 0.9rem;
   </div>
   </div>
   
-  <div id="post-it-container">
-  <div id="post-it-card" class="shadow">
+  <div id="album-container">
+  <div id="album-card" class="shadow">
     <div class="front face">
       <div class="strategy">Engage the media</div>
     </div>

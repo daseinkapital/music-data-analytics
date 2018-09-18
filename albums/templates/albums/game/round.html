@@ -1,0 +1,33 @@
+{% include 'albums/header.html' %}
+
+<div class="center">
+    <div style="margin-top: 10%;">
+        <span style="margin:20px;">Question #{{attempts}}</span>
+        <span style="margin:20px;">Correct: {{correct}} ({{percent}}%)</span>
+    </div>
+    <img src='{{album_display.album_art}}' class="img-album-page" style="margin-bottom: 5%;">
+    <form id="game-form" action="{% url 'game' %}" method="POST">
+        {% csrf_token %}
+        <input id="selected" name="selected" value="letter" hidden>
+        <input name="attempts" value="{{attempts}}" hidden>
+        <input name="correct" value="{{correct}}" hidden>
+        <input name="answer" value="{{answer.letter}}" hidden>
+        <div class="row" style="margin: 0 30%;">
+            {% for choice in choices %}
+            <div class="col-lg-6 col-m-6 col-sm-12" style="max-width: 50%; min-width:250px;">
+                <button type="button" onclick="SelectAnswer('{{choice.letter}}')" style="background-color:green; color:white; height: 50px; width:250px;">{{choice.album}}</button>
+            </div>
+            {% endfor %}
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+function SelectAnswer(letter) {
+    var form = $('#game-form');
+    $("#selected").val(letter); 
+    form.submit();
+};
+</script>
+
+{% include 'albums/js.html' %}

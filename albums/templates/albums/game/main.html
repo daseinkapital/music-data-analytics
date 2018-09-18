@@ -1,0 +1,16 @@
+{% include 'albums/header.html' %}
+
+<div class="center">
+    <div style="margin-top: 30%">
+        <h1>Album Matching Game (Beta)</h1>
+        <h4>Match the album cover with its name.</h4>
+    </div>
+    <form action={% url 'game' %} method="POST">
+        {% csrf_token %}
+        <input name="attempts" value=0 hidden>
+        <input name="correct" value=0 hidden>
+        <input style="margin-top: 5%" class="btn btn-main" type="submit" value="Start!"></button>
+    </form>
+</div>
+
+{% include 'albums/js.html' %}

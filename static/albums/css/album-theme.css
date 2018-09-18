@@ -13,11 +13,6 @@
 .img-main-page {
     max-height: 100px;
     max-width: 100px;
-}
-
-.img-album-main {
-    max-height: 100px;
-    max-width: 100px;
     width: 100px;
     display: inline-block;
     margin-left: auto;
