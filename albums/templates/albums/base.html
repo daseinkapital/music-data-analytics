@@ -1,0 +1,122 @@
+{% load static %}
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> 
+<html class="no-js"> <!--<![endif]-->
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+  <title>Samuelson's Album Experiment</title>
+
+  <!-- JQuery CDN -->
+  <script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous">
+  </script>
+
+<!-- Mobile Specific Meta
+  ================================================== -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <!-- Favicon -->
+  <link rel="shortcut icon" type="image/x-icon" href="{% static 'albums/img/favicon1.ico' %}" />
+  
+  <!-- CSS
+  ================================================== -->
+  <!-- bootstrap.min css -->
+  <link rel="stylesheet" href="{% static 'albums/css/bootstrap/bootstrap.min.css' %}">
+  <!-- Lightbox.min css -->
+  <link rel="stylesheet" href="{% static 'albums/css/lightbox2/lightbox.min.css' %}">
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="{% static 'albums/css/style.css' %}">
+  <!-- Personal Stylesheet -->
+  <link rel="stylesheet" href="{% static 'albums/css/album-theme.css' %}">
+
+  <!-- Colors -->
+  <!-- <link rel="stylesheet" type="text/css" href="css/colors/green.css" title="green">
+  <link rel="stylesheet" type="text/css" href="css/colors/red.css" title="light-red">
+  <link rel="stylesheet" type="text/css" href="css/colors/light-blue.css" title="light-blue">
+  <link rel="stylesheet" type="text/css" href="css/colors/yellow.css" title="yellow">
+  <link rel="stylesheet" type="text/css" href="css/colors/light-green.css" title="light-green">
+  <link rel="stylesheet" type="text/css" href="css/colors/blue.css" title="blue"> -->
+
+  <!-- Select2 CDN -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+  
+
+</head>
+
+<body id="body">
+
+
+<!--
+Fixed Navigation
+==================================== -->
+<section class="header  navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <nav class="navbar navbar-expand-md">
+                    <span style="color:wheat">Brought to you by:</span>
+                    <a class="navbar-brand" href="">
+                        <img src="{% static 'albums/img/new_logo.png' %}" alt="logo">
+                    </a>  
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="tf-ion-android-menu"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav ml-auto">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="{% url 'home' %}">Home <span class="sr-only">(current)</span></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'about' %}">About</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'statistics' %}">Statistics</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Discover</a>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="{% url 'chart-main' %}">Charts</a>
+                                    <a class="dropdown-item" href="{% url 'group' group='queue' %}">Queue</a>
+                                    <a class="dropdown-item" href="{% url 'group' group='vinyl' %}">Vinyls</a>
+                                    <a class="dropdown-item" href="{% url 'group' group='cassette' %}">Cassettes</a>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="{% url 'suggestion' %}">Suggest An Album</a>
+                                    <a class="dropdown-item" href="{% url 'game' %}">Album Match Game</a>
+                                {% if user.is_superuser %}
+                                    <a class="dropdown-item" href="{% url 'add-album' %}">Add Albums</a>
+                                    <a class="dropdown-item" href="">Recommendations Review</a>
+                                {% endif %}
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+{% block body_block %}
+{% endblock %}
+</body>
+
+<footer>
+    <!-- 
+    Essential Scripts
+    =====================================-->    
+    <!-- Main jQuery -->
+    <script src="{% static 'albums/plugins/jquery/dist/jquery.min.js' %}"></script>
+    <!-- Bootstrap 3.7 -->
+    <script src="{% static 'albums/plugins/bootstrap/dist/js/popper.min.js' %}"></script>
+    <script src="{% static 'albums/plugins/bootstrap/dist/js/bootstrap.min.js' %}"></script>
+</footer>

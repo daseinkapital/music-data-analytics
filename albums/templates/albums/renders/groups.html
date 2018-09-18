@@ -1,4 +1,7 @@
-{% include "albums/header.html" %}
+{% extends 'albums/base.html' %}
+
+{% block body_block %}
+
 <section>
     <div class="container">
         <div class="row" style="padding: 10px;">
@@ -56,4 +59,4 @@ $("#search-bar").trigger("input");
     </script>
 </footer>
 
-{% include 'albums/js.html' %}
+{% endblock %}

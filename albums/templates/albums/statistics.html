@@ -1,4 +1,7 @@
-{% include "albums/header.html" %}
+{% extends 'albums/base.html' %}
+
+{% block body_block %}
+
     <h1>Statistics Homepage</h1>
     <h3>Summary Statistics</h3>
     <ul>
@@ -20,3 +23,5 @@
         <li>Time Length of Queue: {{queue_time}}</li>
     </ul>
 </body>
+
+{% endblock %}

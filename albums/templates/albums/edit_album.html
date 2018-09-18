@@ -1,4 +1,7 @@
-{% include 'albums/header.html' %}
+{% extends 'albums/base.html' %}
+
+{% block body_block %}
+
 {% if saved %}
 <p>Saved!</p>
 {% endif %}
@@ -35,4 +38,4 @@ $('textarea').each(function() {
 });
 </script>
 
-{% include 'albums/js.html' %}
+{% endblock %}

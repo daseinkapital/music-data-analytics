@@ -1,4 +1,7 @@
-{% include "albums/header.html" %}
+{% extends 'albums/base.html' %}
+
+{% block body_block %}
+
     <h1>{{artist.name}}</h1>
     <h4>Albums:</h4>
     <div>
@@ -7,3 +10,4 @@
     {% endfor %}
     </div>
 </body>
+{% endblock %}

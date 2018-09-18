@@ -1,5 +1,6 @@
-{% include 'albums/header.html' %}
+{% extends 'albums/base.html' %}
 
+{% block body_block %}
 <div class="center">
     <div style="margin-top: 10%;">
         <span style="margin:20px;">Question #{{attempts}}</span>
@@ -29,5 +30,4 @@ function SelectAnswer(letter) {
     form.submit();
 };
 </script>
-
-{% include 'albums/js.html' %}
+{% endblock %}
