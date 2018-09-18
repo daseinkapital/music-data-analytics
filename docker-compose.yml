@@ -21,7 +21,6 @@ services:
       DB_USER: "${DB_USER}"
       DB_HOST: "${DB_HOST}"
       DB_PORT: "${DB_PORT}"
-      DATABASE_URL: "${DATABASE_URL}"
       ENVIRON_SETTING: "${ENVIRON_SETTING}"
       SECRET_KEY: "${SECRET_KEY}"
 volumes:

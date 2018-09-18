@@ -29,11 +29,9 @@ SECRET_KEY = os.environ['SECRET_KEY']
 dev_env = os.environ['ENVIRON_SETTING']
 if dev_env == "dev":
     DEBUG = True
+    ALLOWED_HOSTS = ['*']
 elif dev_env == "prod":
     DEBUG = False
-
-
-if dev_env == "prod":
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     SECURE_BROWSER_XSS_FILTER = True
@@ -99,6 +97,7 @@ if dev_env == "dev":
 
 elif dev_env == "prod":
     db_settings = dj_database_url.config(os.environ['DATABASE_URL'])
+
 
 DATABASES = {
     'default' : db_settings

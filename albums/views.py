@@ -22,7 +22,7 @@ def main(request):
         'order' : order_post,
         'direction' : direction
     })
-    return render(request, 'albums/main.html', context)
+    return render(request, 'albums/renders/main.html', context)
 
 def album_page(request, artist, album):
     album = Album.objects.filter(slug=album).filter(artist__slug=artist).first()
@@ -96,7 +96,7 @@ def primary_genre(request, genre):
     albums, search, order_post, direction = search_albums(request.POST, albums)
     context = {'genre' : primary_genre, 'albums' : albums}
     context.update({'search' : search, 'order' : order_post, 'direction' : direction})
-    return render(request, 'albums/primary_genre.html', context)
+    return render(request, 'albums/renders/primary_genre.html', context)
 
 def secondary_genre(request,genre):
     sub_genre = SubGenre.objects.filter(name__iexact=genre).first()
@@ -104,7 +104,7 @@ def secondary_genre(request,genre):
     albums, search, order_post, direction = search_albums(request.POST, albums)
     context = {'genre' : sub_genre, 'albums' : albums}
     context.update({'search' : search, 'order' : order_post, 'direction' : direction})
-    return render(request, 'albums/subgenre.html', context)
+    return render(request, 'albums/renders/subgenre.html', context)
 
 def group(request, group):
     if group == "queue":
@@ -118,7 +118,7 @@ def group(request, group):
     albums, search, order_post, direction = search_albums(request.POST, albums)
     context = {'group' : group, 'albums' : albums}
     context.update({'search' : search, 'order' : order_post, 'direction' : direction})
-    return render(request, 'albums/groups.html', context)
+    return render(request, 'albums/renders/groups.html', context)
 
 def chart_landing(request):
     num_of_charts = Album.objects.all().order_by('-chart').first().chart
@@ -131,7 +131,7 @@ def chart(request, chart_num):
     albums, search, order_post, direction = search_albums(request.POST, albums)
     context = {'chart_num' : chart_num, 'albums' : albums}
     context.update({'search' : search, 'order' : order_post, 'direction' : direction})
-    return render(request, 'albums/charts.html', context)
+    return render(request, 'albums/renders/charts.html', context)
 
 def suggest(request):
     if request.POST:
@@ -284,7 +284,7 @@ def add_album(request):
     
 
 def htmltest(request):
-    album = Album.objects.all().first()
+    album = Album.objects.exclude(album_art=None).filter(name__icontains="I Don").first()
     form = AlbumForm(instance=album)
 
     context = {'form': form, 'album': album}

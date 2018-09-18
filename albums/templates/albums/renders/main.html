@@ -1,17 +1,16 @@
+{% load static %}
 {% include "albums/header.html" %}
 <section>
-    <div class="container">
-        <div class="row" style="padding: 10px;">
-            <form action="{% url 'group' group=group %}" method=POST> {% csrf_token %}
+        <div class="container">
+            <div class="row" style="padding: 10px;">
+            <form action="{% url 'home' %}" method=POST> {% csrf_token %}
                 <input type="text" placeholder="Search..." id="search-bar" name="search">
                 <select onchange=this.form.submit() name="order">
                     <option value="" disabled selected>Order By...</option>
                     <option value="name">Alphabetical (Album)</option>
                     <option value="artist">Alphabetical (Artist)</option>
                     <option value="time">Album Length</option>
-                    {% if group != 'queue' %}
                     <option value="listen_date">Chronological</option>
-                    {% endif %}
                     <option value="rating">Rating</option>
                     <option value="release">Release Date</option>
                 </select>
@@ -23,10 +22,8 @@
         </div>
     </div>
 </section>
-<section>
-    <h1 class="center">{{group.capitalize}}</h1>
-</section>
-{% include "albums/album_displays.html" %}
+{% include "albums/render_albums.html" %}
+
 <footer>
     <script>
 $( document ).ready(function(){
@@ -55,5 +52,3 @@ $("#search-bar").on("input", function(e) {
 $("#search-bar").trigger("input");        
     </script>
 </footer>
-
-{% include 'albums/js.html' %}
