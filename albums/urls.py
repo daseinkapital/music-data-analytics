@@ -20,5 +20,6 @@ urlpatterns = [
     path('suggest/', views.suggest, name='suggestion'),
     path('match-game/', views.match_game, name="game"),
     path('page-not-found', views.page_not_found, name='404'),
-    path('this-is-on-us', views.internal_server_error, name='500')
+    path('this-is-on-us', views.internal_server_error, name='500'),
+    path('delete-album/<album>/<artist>/', views.delete_album, name="delete-album")
 ]

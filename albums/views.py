@@ -337,6 +337,15 @@ def page_not_found(request):
 def internal_server_error(request):
     return render(request, '404.html')
 
+########## FUNCTIONS THAT THEN REDIRECT ###########
+@login_required
+def delete_album(request, album, artist):
+    album = Album.objects.filter(slug=album, artist__slug=artist).first()
+    message = "{} by {} was deleted.".format(album.name, album.artist.name)
+    album.delete()
+    context = {'message': message}
+    return render(request, 'albums/message.html', context)
+
 ########## NON-RENDER FUNCTIONS ###########
 def search_albums(request, albums):
     if request:

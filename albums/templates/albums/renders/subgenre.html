@@ -3,8 +3,8 @@
 {% block body_block %}
 
 <section>
-        <div class="container">
-            <div class="row" style="padding: 10px;">
+    <div class="container">
+        <div class="row" style="padding: 10px;">
             <form action="{% url 'secondary-genre' genre=genre %}" method=POST> {% csrf_token %}
                 <input type="text" placeholder="Search..." id="search-bar" name="search">
                 <select onchange=this.form.submit() name="order">

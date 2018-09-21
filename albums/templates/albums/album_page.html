@@ -8,6 +8,7 @@
         <h1>{{album.name}}</h1>
         {% if user.is_superuser %}
         <span><a href="{% url 'edit-album' artist=album.artist.slug album=album.slug %}"><small><small>Edit</small></small></a></span>
+        <span><a href="#" onclick="ConfirmDelete('{{album.artist.slug}}', '{{album.slug}}');"><small><small>Delete</small></small></a></span>
         {% endif %}
         <h2><small><small>an album by </small></small><a href="{% url 'artist-page' artist=album.artist.slug %}">{{album.artist.name}}</a></h2>
         {% if album.current_rating %}
@@ -104,5 +105,14 @@
 
     </div>
 </section>
+
+<script>
+function ConfirmDelete(artist, album) {
+    var d = confirm("Are you sure you want to delete" + album + ' by ' + artist + "?");
+    if (d) {
+        window.location.href = "{% url 'delete-album' album=album.slug artist=album.artist.slug %}";
+    }
+};
+</script>
 
 {% endblock %}
