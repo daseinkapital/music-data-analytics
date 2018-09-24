@@ -334,6 +334,16 @@ def recommendations(request):
     context = {'reccs' : reccs}
     return render(request, 'albums/recommendation-review.html', context)
 
+#accepts a recommendation
+@login_required
+def accept_recc(request, recc_id):
+    recc = Recommendation.objects.filter(id=recc_id).first()
+    recc.accepted = True
+    recc.save()
+    reccs = Recommendation.objects.filter(accepted=False)
+    context = {'reccs' : reccs}
+    return render(request, 'albums/recommendation-review.html', context)
+
 ########## FUNCTIONS THAT THEN REDIRECT ###########
 @login_required
 def delete_album(request, album, artist):
@@ -414,12 +424,7 @@ def unique_random_num(choices, maximum):
 def convert_to_album(choice):
     return Album.objects.exclude(album_art=None)[choice]
 
-#accepts a recommendation
-@login_required
-def accept_recc(request, recc_id):
-    recc = Recommendation.objects.filter(id=recc_id)
-    recc.accepted = True
-    recc.save()
+
 
 ############ TEST PAGES ####################
 @login_required

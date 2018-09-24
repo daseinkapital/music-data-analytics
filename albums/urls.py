@@ -19,7 +19,7 @@ urlpatterns = [
     path('suggest/', views.suggest, name='suggestion'),
     path('match-game/', views.match_game, name='game'),
     path('recc-review/', views.recommendations, name='recc-review'),
-    path('accept-recc/<recc_id>/', views.accept_recc, name='accept-recc'),
+    path('accept-recc/<recc_id>/', views.accept_recc, name='accept_recc'),
     path('delete-album/<album>/<artist>/', views.delete_album, name='delete-album'),
     path('test', views.htmltest, name='htmltest'),
 ]
