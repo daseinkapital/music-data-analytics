@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Album, Artist, PrimaryGenre, SubGenre, AlbumSubgenre, Rating
+from .models import Album, Artist, PrimaryGenre, SubGenre, AlbumSubgenre, Rating, Recommendation
 
 # Register your models here.
 class AlbumAdmin(admin.ModelAdmin):
@@ -25,3 +25,7 @@ admin.site.register(AlbumSubgenre, AlbumSubgenreAdmin)
 class RatingAdmin(admin.ModelAdmin):
     pass
 admin.site.register(Rating, RatingAdmin)
+
+class ReccAdmin(admin.ModelAdmin):
+    pass
+admin.site.register(Recommendation, ReccAdmin)
