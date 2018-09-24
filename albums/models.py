@@ -475,5 +475,26 @@ class Recommendation(models.Model):
         blank=True
     )
 
+    accepted = models.BooleanField(
+        default=False
+    )
+
     def __str__(self):
         return "{0} recommends {1} by {2}".format(self.recommender, self.album_name, self.artist_name)
+
+class AlbumArtist(models.Model):
+    artist = models.ForeignKey(
+        to='Artist',
+        related_name="all_albums",
+        blank=False,
+        null=False,
+        on_delete=models.CASCADE,
+    )
+
+    album = models.ForeignKey(
+        to='Album',
+        related_name="all_artists",
+        blank=False,
+        null=False,
+        on_delete=models.CASCADE,
+    )

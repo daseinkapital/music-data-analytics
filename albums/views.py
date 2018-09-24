@@ -321,21 +321,18 @@ def add_album(request):
 
     context = {'saved': saved, 'error': error, 'form': form}
     return render(request, 'albums/add_album.html', context)
-    
-
-def htmltest(request):
-    album = Album.objects.exclude(album_art=None).filter(name__icontains="I Don").first()
-    form = AlbumForm(instance=album)
-
-    context = {'form': form, 'album': album}
-    return render(request, 'albums/test.html', context)
-
 
 def page_not_found(request):
     return render(request, '404.html')
 
 def internal_server_error(request):
     return render(request, '404.html')
+
+@login_required
+def recommendations(request):
+    reccs = Recommendation.objects.filter(accepted=False)
+    context = {'reccs' : reccs}
+    return render(request, 'albums/recommendation-review.html', context)
 
 ########## FUNCTIONS THAT THEN REDIRECT ###########
 @login_required
@@ -416,3 +413,19 @@ def unique_random_num(choices, maximum):
 
 def convert_to_album(choice):
     return Album.objects.exclude(album_art=None)[choice]
+
+#accepts a recommendation
+@login_required
+def accept_recc(request, recc_id):
+    recc = Recommendation.objects.filter(id=recc_id)
+    recc.accepted = True
+    recc.save()
+
+############ TEST PAGES ####################
+@login_required
+def htmltest(request):
+    album = Album.objects.exclude(album_art=None).filter(name__icontains="I Don").first()
+    form = AlbumForm(instance=album)
+
+    context = {'form': form, 'album': album}
+    return render(request, 'albums/test.html', context)

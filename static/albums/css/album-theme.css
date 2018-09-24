@@ -36,6 +36,7 @@
     color: red;
 }
 
+/*Album flip css */
 #album-container {
     position: relative;
     width: 100px;
@@ -85,3 +86,27 @@
   font-family: "Gloria Hallelujah","Lato","Helvetica Neue", Arial, sans-serif;
   font-size: 0.9rem;
   }
+
+/*Table formattings */
+
+table {
+    width:100%;
+}
+th, td {
+    border-bottom: 1px solid #1f2532;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 15px;
+    text-align: left;
+}
+table.table-format tr:nth-child(even) {
+    background-color: #eee;
+}
+table.table-format tr:nth-child(odd) {
+   background-color: #fff;
+}
+table.table-format th {
+    background-color: black;
+    color: white;
+}

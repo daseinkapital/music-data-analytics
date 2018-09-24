@@ -1,0 +1,28 @@
+{% extends 'albums/base.html' %}
+
+{% block body_block %}
+<table class="center table-format">
+    <tbody style="margin: 10px; margin-left:auto; margin-right: auto;">
+        <tr class="row">
+            <th class="col-2">Album Name</th>
+            <th class="col-2">Artist Name</th>
+            <th class="col-1">Genre</th>
+            <th class="col-2">Note</th>
+            <th class="col-1">URL</th>
+            <th class="col-1">Recommender</th>
+            <th class="col-1">Add</th>
+        </tr>
+        {% for recc in reccs %}
+        <tr class="row">
+            <td class="col-2">{{recc.album_name}}</td>
+            <td class="col-2">{{recc.artist_name}}</td>
+            <td class="col-1">{{recc.genre|default_if_none:"N/A"}}</td>
+            <td class="col-2">{{recc.note|default_if_none:"N/A"}}</td>
+            <td class="col-1">{% if recc.url %}<a href="{{recc.url}}">Listen Here</a>{% endif %}</td>
+            <td class="col-1">{{recc.recommender|default_if_none:"N/A"}}</td>
+            <td class="col-1"><a href="{% url 'accept_recc' recc_id=recc.id %}">+</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

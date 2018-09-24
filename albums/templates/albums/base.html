@@ -95,7 +95,7 @@ Fixed Navigation
                                     <a class="dropdown-item" href="{% url 'game' %}">Album Match Game</a>
                                 {% if user.is_superuser %}
                                     <a class="dropdown-item" href="{% url 'add-album' %}">Add Albums</a>
-                                    <a class="dropdown-item" href="">Recommendations Review</a>
+                                    <a class="dropdown-item" href="{% url 'recc-review' %}">Recommendations Review</a>
                                 {% endif %}
                                 </div>
                             </li>
