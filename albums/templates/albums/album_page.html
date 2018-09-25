@@ -1,110 +1,158 @@
 {% extends 'albums/base.html' %}
 
 {% block body_block %}
+<style>
+p {
+    color: black;
+}
 
-<section>
-    <div class="center">
-        <img src='{{album.album_art}}' onerror="javascript:this.src='https://static1.squarespace.com/static/55a57011e4b09934ba12fd1a/5612b784e4b07c6a02988249/5612dd98e4b0e75bc4a61cc7/1444076954414/record.png?format=500w'" class="img-album-page" title="{{album}} Album Art">
-        <h1>{{album.name}}</h1>
-        {% if user.is_superuser %}
-        <span><a href="{% url 'edit-album' artist=album.artist.slug album=album.slug %}"><small><small>Edit</small></small></a></span>
-        <span><a href="#" onclick="ConfirmDelete('{{album.artist.slug}}', '{{album.slug}}');"><small><small>Delete</small></small></a></span>
-        {% endif %}
-        <h2><small><small>an album by </small></small><a href="{% url 'artist-page' artist=album.artist.slug %}">{{album.artist.name}}</a></h2>
-        {% if album.current_rating %}
-        <p id="current-rating">Score: 
-            {{album.current_rating.normalize}}
-        </p>
-        {% endif %}
-        {% if album.primary_genre %}
-        <p id="primary-genre">
-            Primary Genre:
-            <a href="{% url 'primary-genre' genre=album.primary_genre %}">{{album.primary_genre}}</a>
-        </p>
-        {% endif %}
-        {% if album.subgenres.all %}
-        <p id="subgenres">
-            Subgenres:
-            {% for match in album.subgenres.all %}
-            {% if forloop.first %}
-            <a href="{% url 'secondary-genre' genre=match.subgenre %}">{{match.subgenre}}</a>
-            {% endif %}
-            {% if not forloop.first %}
-            , <a href="{% url 'secondary-genre' genre=match.subgenre %}">{{match.subgenre}}</a>
-            {% endif %}
-            {% endfor %}
-        </p>
-        {% endif %}
-        {% if album.note %}
-        <p>My thoughts:</p>
-        <p id="notes">
-            {{album.note}}
-        </p>
-        {% endif %}
-        {% if album.release_date %}
-        <p id="release-date">
-            Release Date:
-            {{album.release_date}}
-        </p>
-        {% endif %}
-        {% if album.order %}
-        <p id="order">
-            Order:
-            {{album.order}}
-        </p>
-        {% endif %}
-        {% if album.chart %}
-        <p id="chart">
-            Chart:
-            {{album.chart}}
-        </p>
-        {% endif %}
-        {% if album.row %}
-        <p id="row">
-            Row:
-            {{album.row}}
-        </p>
-        {% endif %}
-        {% if album.date_finished %}
-        <p id="listen-date">
-            Personal First Listen Date:
-            {{album.date_finished}}
-        </p>
-        {% endif %}
-        {% if album.release_date %}
-        <p id="release-date">
-            Release Date:
-            {{album.release_date}}
-        </p>
-        {% endif %}
-        {% if album.time_length %}
-        <p id="time-length">
-            Run Length of Album:
-            {% if album.time_hours %}
-            {{album.time_hours}}h 
-            {% endif %}
-            {{album.time_minutes}}m {{album.time_seconds}}s
-        </p>
-        {% endif %}
-        <p id="vinyl">
-            Own On Viynl:
-            {% if album.vinyl %}
-            Yes
-            {% else %}
-            No 
-            {% endif %}
-        </p>
-        <p id="vinyl">
-            Own On Cassette:
-            {% if album.cassette %}
-            Yes
-            {% else %}
-            No 
-            {% endif %}
-        </p>
+a {
 
+}
+
+.album-info {
+    background-color: rgba(100, 100, 100, 1);
+    border-radius: 40px;
+}
+
+.content:before {
+  content: "";
+  position: fixed;
+  left: 0;
+  right: 0;
+  z-index: -1;
+  
+  display: block;
+  background-image: url({{album.album_art}});
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  width:100%;
+  height: 100%;
+  
+  -webkit-filter: blur(5px);
+  -moz-filter: blur(5px);
+  -o-filter: blur(5px);
+  -ms-filter: blur(5px);
+  filter: blur(5px);
+}
+
+.content {
+  position: fixed;
+  left: 0;
+  right: 0;
+  z-index: 0;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+</style>
+<div class="content">
+    <div class="container">
+        <div class="row" style="padding-top:200px; filter: blur(0px);">
+            <div class="col-6">
+                <img src='{{album.album_art}}' onerror="javascript:this.src='https://static1.squarespace.com/static/55a57011e4b09934ba12fd1a/5612b784e4b07c6a02988249/5612dd98e4b0e75bc4a61cc7/1444076954414/record.png?format=500w'" class="img-album-page" title="{{album}} Album Art">
+            </div>
+            <div class="col-6 album-info">
+                <h1>{{album.name}}</h1>
+                {% if user.is_superuser %}
+                <span><a href="{% url 'edit-album' artist=album.artist.slug album=album.slug %}"><small><small>Edit</small></small></a></span>
+                <span><a href="#" onclick="ConfirmDelete('{{album.artist.slug}}', '{{album.slug}}');"><small><small>Delete</small></small></a></span>
+                {% endif %}
+                <h2><small><small>an album by </small></small><a href="{% url 'artist-page' artist=album.artist.slug %}">{{album.artist.name}}</a></h2>
+                {% if album.current_rating %}
+                <p id="current-rating">Score: 
+                    {{album.current_rating.normalize}}
+                </p>
+                {% endif %}
+                {% if album.primary_genre %}
+                <p id="primary-genre">
+                    Primary Genre:
+                    <a href="{% url 'primary-genre' genre=album.primary_genre %}">{{album.primary_genre}}</a>
+                </p>
+                {% endif %}
+                {% if album.subgenres.all %}
+                <p id="subgenres">
+                    Subgenres:
+                    {% for match in album.subgenres.all %}
+                    {% if forloop.first %}
+                    <a href="{% url 'secondary-genre' genre=match.subgenre %}">{{match.subgenre}}</a>
+                    {% endif %}
+                    {% if not forloop.first %}
+                    , <a href="{% url 'secondary-genre' genre=match.subgenre %}">{{match.subgenre}}</a>
+                    {% endif %}
+                    {% endfor %}
+                </p>
+                {% endif %}
+                {% if album.note %}
+                <p>My thoughts:</p>
+                <p id="notes">
+                    {{album.note}}
+                </p>
+                {% endif %}
+                {% if album.release_date %}
+                <p id="release-date">
+                    Release Date:
+                    {{album.release_date}}
+                </p>
+                {% endif %}
+                {% if album.order %}
+                <p id="order">
+                    Order:
+                    {{album.order}}
+                </p>
+                {% endif %}
+                {% if album.chart %}
+                <p id="chart">
+                    Chart:
+                    {{album.chart}}
+                </p>
+                {% endif %}
+                {% if album.row %}
+                <p id="row">
+                    Row:
+                    {{album.row}}
+                </p>
+                {% endif %}
+                {% if album.date_finished %}
+                <p id="listen-date">
+                    Personal First Listen Date:
+                    {{album.date_finished}}
+                </p>
+                {% endif %}
+                {% if album.release_date %}
+                <p id="release-date">
+                    Release Date:
+                    {{album.release_date}}
+                </p>
+                {% endif %}
+                {% if album.time_length %}
+                <p id="time-length">
+                    Run Length of Album:
+                    {% if album.time_hours %}
+                    {{album.time_hours}}h 
+                    {% endif %}
+                    {{album.time_minutes}}m {{album.time_seconds}}s
+                </p>
+                {% endif %}
+                <p id="vinyl">
+                    Own On Viynl:
+                    {% if album.vinyl %}
+                    Yes
+                    {% else %}
+                    No 
+                    {% endif %}
+                </p>
+                <p id="vinyl">
+                    Own On Cassette:
+                    {% if album.cassette %}
+                    Yes
+                    {% else %}
+                    No 
+                    {% endif %}
+                </p>
+            </div>
+        </div>
     </div>
-</section>
+</div>
 
 <script>
 function ConfirmDelete(artist, album) {
