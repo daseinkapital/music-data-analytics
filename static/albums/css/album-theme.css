@@ -36,6 +36,7 @@
     color: red;
 }
 
+
 /*Album flip css */
 #album-container {
     position: relative;
@@ -44,27 +45,25 @@
     margin: 1px;
     z-index: 1;
     float:left;
-  }
-  #album-container {
-    perspective: 1000;
-  }
-  #album-card {
+}
+
+#album-card {
     width: 100%;
     height: 100%;
     transform-style: preserve-3d;
     transition: all 500ms linear;
-  }
-  #album-container:hover #album-card {
+}
+#album-container:hover #album-card {
     transform: rotateY(180deg);
     cursor:pointer;
-  }
-  .face {
+}
+.face {
     position: absolute;
     width: 100%;
     height: 100%;
     backface-visibility: hidden;
-  }
-  .face.back {
+}
+.face.back {
     display: block;
     transform: rotateY(180deg);
     box-sizing: border-box;
@@ -73,21 +72,21 @@
     text-align: center;
     overflow:hidden;
     text-overflow: ellipsis;
-  }
-  
-  div.strategy {
-  margin:0;
-  float: left;
-  color: #151515;
-  display: block;
-  height: 100px;
-  width: 100px;
-  text-align: center;
-  font-family: "Gloria Hallelujah","Lato","Helvetica Neue", Arial, sans-serif;
-  font-size: 0.9rem;
-  }
+}
 
-/*Table formattings */
+span.strategy {
+    margin:0;
+    float: left;
+    color: #151515;
+    display: block;
+    height: 100px;
+    width: 100px;
+    text-align: center;
+    font-family: "Gloria Hallelujah","Lato","Helvetica Neue", Arial, sans-serif;
+    font-size: 0.9rem;
+}
+
+/*Table formattings*/
 
 table {
     width:100%;
