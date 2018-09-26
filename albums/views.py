@@ -29,8 +29,10 @@ def main(request):
 
 def album_page(request, artist, album):
     album = Album.objects.filter(slug=album).filter(artist__slug=artist).first()
-    has_url = album.has_url()
-    context = {'album' : album, 'has_url' : has_url}
+    urls = ListenURL.objects.filter(album=album).first()
+    album_has_url = album.has_url()
+    other_urls = urls.has_urls()
+    context = {'album' : album, 'has_url' : album_has_url, 'other_urls' : other_urls, 'urls' : urls}
     print(context)
     return render(request, 'albums/album_page.html', context)
 
@@ -194,9 +196,6 @@ def match_game(request):
     
     return render(request, 'albums/game/main.html')
 
-
-
-
 def about(request):
     context = {'about' : 'active'}
     return render(request, 'albums/about.html', context)
@@ -250,6 +249,17 @@ def edit_album(request, artist, album):
                 )
             
             album.save()
+
+            itunes = form.cleaned_data['itunes_url']
+            soundcloud = form.cleaned_data['soundcloud_url']
+            spotify = form.cleaned_data['spotify_url']
+            youtube = form.cleaned_data['youtube_url']
+            urls = ListenURL.objects.filter(album=album).first()
+            urls.itunes = itunes
+            urls.soundcloud = soundcloud
+            urls.spotify = spotify
+            urls.youtube = youtube
+            urls.save()
 
             saved = True
         else:

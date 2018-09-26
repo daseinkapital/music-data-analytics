@@ -9,6 +9,10 @@ class AlbumForm(ModelForm):
     rating = forms.DecimalField(label="Rating", required=False)
     subgenres = forms.CharField(label="Subgenres", required=False, widget=forms.Textarea)
     new_artist = forms.CharField(label="Artist", required=False)
+    itunes_url = forms.CharField(label="iTunes URL", required=False)
+    youtube_url = forms.CharField(label="YouTube URL", required=False)
+    soundcloud_url = forms.CharField(label="SoundCloud URL", required=False)
+    spotify_url = forms.CharField(label="Spotify URL", required=False)
 
     class Meta:
         model = Album
@@ -21,6 +25,10 @@ class AlbumForm(ModelForm):
             'wiki_url',
             'bc_url',
             'amazon_url',
+            'itunes_url',
+            'youtube_url',
+            'soundcloud_url',
+            'spotify_url',
             'time_length',
             'release_date',
             'album_art',

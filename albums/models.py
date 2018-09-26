@@ -242,6 +242,27 @@ class Album(models.Model):
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name, allow_unicode=True)[:50]
         self.current_rating = self.average_rating
+
+        listenURL = ListenURL.objects.filter(album=self).first()
+        if not listenURL:
+            bc_url = None
+            amazon_url = None
+            if self.bc_url:
+                bc_url = self.bc_url
+            if self.amazon_url:
+                amazon_url = self.amazon_url
+            ListenURL.objects.create(
+                album = self,
+                bandcamp = bc_url,
+                amazon = amazon_url
+            )
+        else:
+            if (not listenURL.bandcamp) and (self.bc_url):
+                listenURL.bandcamp = self.bc_url
+            if (not listenURL.amazon) and (self.amazon_url):
+                listenURL.amazon = self.amazon_url
+            listenURL.save()
+
         if not self.order:
             latest_album = Album.objects.exclude(order=None).order_by('-order').first()
             chart = latest_album.chart
@@ -335,7 +356,7 @@ class Album(models.Model):
             return True
 
     def has_url(self):
-        if self.wiki_url or self.bc_url or amazon_url:
+        if self.wiki_url or self.bc_url or self.amazon_url:
             return True
         else:
             return False
@@ -438,6 +459,12 @@ class ListenURL(models.Model):
         null=True,
         blank=True
     )
+
+    def has_urls(self):
+        if self.spotify or self.itunes or self.bandcamp or self.amazon or self.soundcloud or self.youtube:
+            return True
+        else:
+            return False
 
 class Recommendation(models.Model):
     recommender = models.CharField(

@@ -176,22 +176,42 @@ p {
                     No 
                     {% endif %}
                 </p>
-                {% if has_url %}
-                <h5>Learn More:</h5>
+                {% if has_url or other_urls %}
+                <h5>Learn More/Listen:</h5>
                 <div class="row">
                     {% if album.wiki_url %}
                     <div class="col-1">
-                        <a href="{{album.wiki_url}}"><i class="fa fa-wikipedia-w" aria-hidden="true"></i></a>
+                        <a href="{{album.wiki_url}}" title="Wikipedia"><i class="fab fa-2x fa-wikipedia-w" aria-hidden="true"></i></a>
                     </div>
                     {% endif %}
                     {% if album.bc_url %}
                     <div class="col-1">
-                        <a href="{{album.bc_url}}"><i class="fa fa-bandcamp" aria-hidden="true"></i></a>
+                        <a href="{{album.bc_url}}" title="Bandcamp"><i class="fab fa-2x fa-bandcamp" aria-hidden="true"></i></a>
                     </div>
                     {% endif %}
                     {% if album.amazon_url %}
                     <div class="col-1">
-                        <a href="{{album.amazon_url}}"><i class="fa fa-amazon" aria-hidden="true"></i></a>
+                        <a href="{{album.amazon_url}}" title="Amazon"><i class="fab fa-2x fa-amazon" aria-hidden="true"></i></a>
+                    </div>
+                    {% endif %}
+                    {% if urls.spotify %}
+                    <div class="col-1">
+                        <a href="{{urls.spotify}}" title="Spotify"><i class="fab fa-2x fa-spotify" aria-hidden="true"></i></a>
+                    </div>
+                    {% endif %}
+                    {% if urls.itunes %}
+                    <div class="col-1">
+                        <a href="{{urls.itunes}}" title="iTunes"><i class="fab fa-2x fa-itunes" size="2x" aria-hidden="true"></i></a>
+                    </div>
+                    {% endif %}
+                    {% if urls.youtube %}
+                    <div class="col-1">
+                        <a href="{{urls.youtube}}" title="YouTube"><i class="fab fa-2x fa-youtube" aria-hidden="true"></i></a>
+                    </div>
+                    {% endif %}
+                    {% if urls.soundcloud %}
+                    <div class="col-1">
+                        <a href="{{urls.soundcloud}}" title="Soundcloud"><i class="fab fa-2x fa-soundcloud" aria-hidden="true"></i></a>
                     </div>
                     {% endif %}
                 {% endif %}
