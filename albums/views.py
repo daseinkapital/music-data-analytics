@@ -31,8 +31,10 @@ def album_page(request, artist, album):
     album = Album.objects.filter(slug=album).filter(artist__slug=artist).first()
     urls = ListenURL.objects.filter(album=album).first()
     album_has_url = album.has_url()
-    other_urls = urls.has_urls()
-    context = {'album' : album, 'has_url' : album_has_url, 'other_urls' : other_urls, 'urls' : urls}
+    context = {'album' : album, 'has_url' : album_has_url}
+    if urls:
+        other_urls = urls.has_urls()
+        context.update({'other_urls' : other_urls, 'urls' : urls})
     print(context)
     return render(request, 'albums/album_page.html', context)
 
@@ -262,11 +264,21 @@ def edit_album(request, artist, album):
             urls.save()
 
             saved = True
+            form = AlbumForm(instance=album, initial={'itunes_url':itunes, 'spotify_url':spotify, 'soundcloud_url':soundcloud, 'youtube_url':youtube})
+
+            context = {'form': form, 'album': album, 'saved': saved, 'error': error}
+            return render(request, 'albums/edit_album.html', context)
         else:
             error = True
+            form = AlbumForm(instance=album, inital={'date_finished':request.POST.get['date_finished'],'rating':request.POST.get['rating'],'subgenres':request.POST.get['subgenres'], 'itunes_url':itunes, 'spotify_url':spotify, 'soundcloud_url':soundcloud, 'youtube_url':youtube})
+            context = {'form': form, 'album': album, 'saved': saved, 'error': error}
+            return render(request, 'albums/edit_album.html', context)
 
-
-    form = AlbumForm(instance=album)
+    urls = ListenURL.objects.filter(album=album).first()
+    if urls:
+        form = AlbumForm(instance=album, initial={'itunes_url':urls.itunes, 'spotify_url':urls.spotify, 'soundcloud_url':urls.soundcloud, 'youtube_url':urls.youtube})
+    else:
+        form = AlbumForm(instance=album)
 
     context = {'form': form, 'album': album, 'saved': saved, 'error': error}
     return render(request, 'albums/edit_album.html', context)
