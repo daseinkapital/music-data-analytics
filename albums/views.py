@@ -270,7 +270,7 @@ def edit_album(request, artist, album):
             return render(request, 'albums/edit_album.html', context)
         else:
             error = True
-            form = AlbumForm(instance=album, inital={'date_finished':request.POST.get['date_finished'],'rating':request.POST.get['rating'],'subgenres':request.POST.get['subgenres'], 'itunes_url':itunes, 'spotify_url':spotify, 'soundcloud_url':soundcloud, 'youtube_url':youtube})
+            form = AlbumForm(instance=album, initial={'date_finished':request.POST.get('date_finished'),'rating':request.POST.get('rating'),'subgenres':request.POST.get('subgenres'), 'itunes_url':request.POST.get('itunes_url'), 'spotify_url':request.POST.get('spotify_url'), 'soundcloud_url':request.POST.get('soundcloud_url'), 'youtube_url':request.POST.get('youtube_url')})
             context = {'form': form, 'album': album, 'saved': saved, 'error': error}
             return render(request, 'albums/edit_album.html', context)
 
@@ -344,6 +344,9 @@ def add_album(request):
             saved = True
         else:
             error = True
+            form = AlbumForm(instance=album, initial={'date_finished':request.POST.get('date_finished'),'rating':request.POST.get('rating'),'subgenres':request.POST.get('subgenres'), 'itunes_url':request.POST.get('itunes_url'), 'spotify_url':request.POST.get('spotify_url'), 'soundcloud_url':request.POST.get('soundcloud_url'), 'youtube_url':request.POST.get('youtube_url')})
+            context = {'saved': saved, 'error': error, 'form': form}
+            return render(request, 'albums/add_album.html', context)
     form = AlbumForm()
 
     context = {'saved': saved, 'error': error, 'form': form}
