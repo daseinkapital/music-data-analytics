@@ -2,13 +2,14 @@
 
 {% block body_block %}
 
+<section id="notification-header" class="center">
 {% if saved %}
-<p>Saved!</p>
+<p style="padding: 10px; background-color:darkgreen; color:white;">Saved!</p>
 {% endif %}
 {% if error %}
-<p>Please check every field for an error.</p>
+<p style="padding: 10px; background-color:red; color:black;">Please check every field for an error.</p>
 {% endif %}
-
+</section>
 <div class="bootstrap-iso">
     <div class="container-fluid">
         <div class="row form-div">
