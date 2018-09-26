@@ -22,13 +22,16 @@ def main(request):
     context.update({
         'search' : search,
         'order' : order_post,
-        'direction' : direction
+        'direction' : direction,
+        'home' : 'active'
     })
     return render(request, 'albums/renders/main.html', context)
 
 def album_page(request, artist, album):
     album = Album.objects.filter(slug=album).filter(artist__slug=artist).first()
-    context = {'album' : album}
+    has_url = album.has_url()
+    context = {'album' : album, 'has_url' : has_url}
+    print(context)
     return render(request, 'albums/album_page.html', context)
 
 def artist_page(request, artist):
@@ -87,7 +90,8 @@ def statistics(request):
         'total_time' : total_time,
         'genre_count' : genre_count,
         'queue_length' : queue_length,
-        'queue_time' : queue_time
+        'queue_time' : queue_time,
+        'stat' : 'active'
     })
 
     return render(request, 'albums/statistics.html', context)
@@ -194,7 +198,8 @@ def match_game(request):
 
 
 def about(request):
-    return render(request, 'albums/about.html')
+    context = {'about' : 'active'}
+    return render(request, 'albums/about.html', context)
 
 
 @login_required

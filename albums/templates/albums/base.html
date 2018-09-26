@@ -34,7 +34,8 @@
   <link rel="stylesheet" href="{% static 'albums/css/style.css' %}">
   <!-- Personal Stylesheet -->
   <link rel="stylesheet" href="{% static 'albums/css/album-theme.css' %}">
-
+  <!-- Icon Stylesheet -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <!-- Colors -->
   <!-- <link rel="stylesheet" type="text/css" href="css/colors/green.css" title="green">
   <link rel="stylesheet" type="text/css" href="css/colors/red.css" title="light-red">
@@ -70,16 +71,16 @@ Fixed Navigation
                     </button>
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav ml-auto">
-                            <li class="nav-item active">
+                            <li class="nav-item {% if home %}{{home}}{% endif %}">
                                 <a class="nav-link" href="{% url 'home' %}">Home <span class="sr-only">(current)</span></a>
                             </li>
-                            <li class="nav-item">
+                            <li class="nav-item {% if about %}{{about}}{% endif %}">
                                 <a class="nav-link" href="{% url 'about' %}">About</a>
                             </li>
-                            <li class="nav-item">
+                            <li class="nav-item {% if stat %}{{stat}}{% endif %}">
                                 <a class="nav-link" href="{% url 'statistics' %}">Statistics</a>
                             </li>
-                            <li class="nav-item dropdown">
+                            <li class="nav-item dropdown {% if discover %}{{discover}}{% endif %}">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Discover</a>
                                 <div class="dropdown-menu">
                                     <a class="dropdown-item" href="{% url 'chart-main' %}">Charts</a>
@@ -88,7 +89,7 @@ Fixed Navigation
                                     <a class="dropdown-item" href="{% url 'group' group='cassette' %}">Cassettes</a>
                                 </div>
                             </li>
-                            <li class="nav-item dropdown">
+                            <li class="nav-item dropdown {% if more %}{{more}}{% endif %}">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
                                 <div class="dropdown-menu">
                                     <a class="dropdown-item" href="{% url 'suggestion' %}">Suggest An Album</a>

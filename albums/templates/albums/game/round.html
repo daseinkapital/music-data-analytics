@@ -6,7 +6,7 @@
         <span style="margin:20px;">Question #{{attempts}}</span>
         <span style="margin:20px;">Correct: {{correct}} ({{percent}}%)</span>
     </div>
-    <img src='{{album_display.album_art}}' class="img-album-page" style="margin-bottom: 5%;">
+    <img src='{{album_display.album_art}}' class="img-album-page" style="margin-bottom: 5%; filter:blur(25px);">
     <form id="game-form" action="{% url 'game' %}" method="POST">
         {% csrf_token %}
         <input id="selected" name="selected" value="letter" hidden>
