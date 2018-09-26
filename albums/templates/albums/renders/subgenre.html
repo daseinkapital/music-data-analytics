@@ -27,30 +27,30 @@
 {% include "albums/render_albums.html" %}
 <footer>
     <script>
-$( document ).ready(function(){
-    $("#search-bar").val("{{search}}")
-    $("select[name='order']").val("{{order}}")
-    $("select[name='direction']").val("{{direction}}")
-    hideImages();
-});
-
-function hideImages () {
-    var h1s = $("#albums").find("img");
-    var q = $( "#search-bar" ).val().toLowerCase();
-    $.each(h1s, function(id, value) {
-        var contains = value.title.toLowerCase();
-        if (contains.indexOf(q) === -1) {
-            $("img[name='"+value.name+"']").css('display', 'none');
-        } else {
-            $("img[name='"+value.name+"']").css('display', 'inline-block');
-        };
-    });   
-};
-
-$("#search-bar").on("input", function(e) {
-    hideImages();
-});
-$("#search-bar").trigger("input");        
+    $( document ).ready(function(){
+        $("#search-bar").val("{{search}}")
+        $("select[name='order']").val("{{order}}")
+        $("select[name='direction']").val("{{direction}}")
+        hideImages();
+    });
+    
+    function hideImages () {
+        var h1s = $("#albums").find("img");
+        var q = $( "#search-bar" ).val().toLowerCase();
+        $.each(h1s, function(id, value) {
+            var contains = value.title.toLowerCase();
+            if (contains.indexOf(q) === -1) {
+                $("img[name='"+value.name+"']").parent().parent().parent().parent().parent().css('display', 'none');
+            } else {
+                $("img[name='"+value.name+"']").parent().parent().parent().parent().parent().css('display', 'inline-block');
+            };
+        });   
+    };
+    
+    $("#search-bar").on("input", function(e) {
+        hideImages();
+    });
+    $("#search-bar").trigger("input");        
     </script>
 </footer>
 {% endblock %}
