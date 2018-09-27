@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import URLValidator
 from django.utils.text import slugify
+from django.db.models.signals import post_save
 
 from .management.commands.scrape import scrape_wiki, scrape_bc, scrape_amazon, screw_the_rules
 
@@ -243,26 +244,6 @@ class Album(models.Model):
         self.slug = slugify(self.name, allow_unicode=True)[:50]
         self.current_rating = self.average_rating
 
-        listenURL = ListenURL.objects.filter(album=self).first()
-        if not listenURL:
-            bc_url = None
-            amazon_url = None
-            if self.bc_url:
-                bc_url = self.bc_url
-            if self.amazon_url:
-                amazon_url = self.amazon_url
-            ListenURL.objects.create(
-                album = self,
-                bandcamp = bc_url,
-                amazon = amazon_url
-            )
-        else:
-            if (not listenURL.bandcamp) and (self.bc_url):
-                listenURL.bandcamp = self.bc_url
-            if (not listenURL.amazon) and (self.amazon_url):
-                listenURL.amazon = self.amazon_url
-            listenURL.save()
-
         if not self.order:
             latest_album = Album.objects.exclude(order=None).order_by('-order').first()
             chart = latest_album.chart
@@ -292,6 +273,28 @@ class Album(models.Model):
             if self.wiki_url:
                 self = scrape_wiki(self)
             super(Album, self).save(*args, **kwargs)
+
+    def post_save(self):
+        #save listen urls
+        listenURL = ListenURL.objects.filter(album=self).first()
+        if not listenURL:
+            bc_url = None
+            amazon_url = None
+            if self.bc_url:
+                bc_url = self.bc_url
+            if self.amazon_url:
+                amazon_url = self.amazon_url
+            ListenURL.objects.create(
+                album = self,
+                bandcamp = bc_url,
+                amazon = amazon_url
+            )
+        else:
+            if (not listenURL.bandcamp) and (self.bc_url):
+                listenURL.bandcamp = self.bc_url
+            if (not listenURL.amazon) and (self.amazon_url):
+                listenURL.amazon = self.amazon_url
+            listenURL.save()
 
     @property
     def get_subgenres(self):

@@ -251,6 +251,7 @@ def edit_album(request, artist, album):
                 )
             
             album.save()
+            album.post_save()
 
             itunes = form.cleaned_data['itunes_url']
             soundcloud = form.cleaned_data['soundcloud_url']
@@ -340,6 +341,7 @@ def add_album(request):
                 )
 
             scrape(album)
+            album.post_save()
 
             saved = True
         else:
