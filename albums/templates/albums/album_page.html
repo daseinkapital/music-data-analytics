@@ -108,7 +108,7 @@ p {
                 <img src='{{album.album_art}}' onerror="javascript:this.src='https://static1.squarespace.com/static/55a57011e4b09934ba12fd1a/5612b784e4b07c6a02988249/5612dd98e4b0e75bc4a61cc7/1444076954414/record.png?format=500w'" class="img-album-page" title="{{album}} Album Art">
             </div>
             <div class="col-xl-6 col-lg-12 album-info">
-                <h1 id="album-name">{{album.name}}</h1>
+                <h1 id="album-name">{{album.name}}</h1><a style="position: absolute; top: 24px; right: 15px; align-self: right;" href='#' onclick="javascript:window.history.back();"><i class="fas fa-2x fa-arrow-circle-left"></i></a>
                 {% if user.is_superuser %}
                 <span><a href="{% url 'edit-album' artist=album.artist.slug album=album.slug %}"><small><small>Edit</small></small></a></span>
                 <span><a href="#" onclick="ConfirmDelete('{{album.artist.slug}}', '{{album.slug}}');"><small><small>Delete</small></small></a></span>
@@ -211,42 +211,42 @@ p {
                 <div class="row" >
                     {% if album.wiki_url %}
                     <div class="col-1 center">
-                        <a href="{{album.wiki_url}}" title="Wikipedia" class="listen-logo"><i class="fab fa-2x fa-wikipedia-w" aria-hidden="true" style="color: black"></i></a>
+                        <a href="{{album.wiki_url}}" title="Wikipedia" class="listen-logo" target="_blank"><i class="fab fa-2x fa-wikipedia-w" aria-hidden="true" style="color: black"></i></a>
                     </div>
                     {% endif %}
                     {% if album.bc_url %}
                     <div class="col-1 center">
-                        <a href="{{album.bc_url}}" title="Bandcamp" class="listen-logo"><i class="fab fa-2x fa-bandcamp" aria-hidden="true" style="color: #61929c;"></i></a>
+                        <a href="{{album.bc_url}}" title="Bandcamp" class="listen-logo" target="_blank"><i class="fab fa-2x fa-bandcamp" aria-hidden="true" style="color: #61929c;"></i></a>
                     </div>
                     {% endif %}
                     {% if album.amazon_url %}
                     <div class="col-1 center">
-                        <a href="{{album.amazon_url}}" title="Amazon" class="listen-logo"><i class="fab fa-2x fa-amazon" aria-hidden="true" style="color: #FF9900"></i></a>
+                        <a href="{{album.amazon_url}}" title="Amazon" class="listen-logo" target="_blank"><i class="fab fa-2x fa-amazon" aria-hidden="true" style="color: #FF9900"></i></a>
                     </div>
                     {% endif %}
                     {% if album.discogs_url %}
                     <div class="col-1 center">
-                        <a href="{{album.discogs_url}}" title="Discogs" class="listen-logo"><img src="{% static 'albums/img/discogs-vinyl-record-mark.svg' %}" style="width:28px; height:34px;"></a>
+                        <a href="{{album.discogs_url}}" title="Discogs" class="listen-logo" target="_blank"><img src="{% static 'albums/img/discogs-vinyl-record-mark.svg' %}" style="width:28px; height:34px;"></a>
                     </div>
                     {% endif %}
                     {% if urls.soundcloud %}
                     <div class="col-1 center" style="text-align: left;">
-                        <a href="{{urls.soundcloud}}" title="Soundcloud" class="soundcloud-background listen-logo"><i class="fab fa-2x fa-soundcloud" aria-hidden="true" style="color: #FFE9E1;"></i></a>
+                        <a href="{{urls.soundcloud}}" title="Soundcloud" class="soundcloud-background listen-logo" target="_blank"><i class="fab fa-2x fa-soundcloud" aria-hidden="true" style="color: #FFE9E1;"></i></a>
                     </div>
                     {% endif %}
                     {% if urls.spotify %}
                     <div class="col-1 center">
-                        <a href="{{urls.spotify}}" title="Spotify" class="listen-logo"><i class="fab fa-2x fa-spotify" aria-hidden="true" style="color:#8bb601"></i></a>
+                        <a href="{{urls.spotify}}" title="Spotify" class="listen-logo" target="_blank"><i class="fab fa-2x fa-spotify" aria-hidden="true" style="color:#8bb601"></i></a>
                     </div>
                     {% endif %}
                     {% if urls.itunes %}
                     <div class="col-1 center">
-                        <a href="{{urls.itunes}}" title="iTunes" class="itunes-background listen-logo"><i class="fab fa-2x fa-itunes-note itunes-logo" size="2x" aria-hidden="true"></i></a>
+                        <a href="{{urls.itunes}}" title="iTunes" class="itunes-background listen-logo" target="_blank"><i class="fab fa-2x fa-itunes-note itunes-logo" size="2x" aria-hidden="true"></i></a>
                     </div>
                     {% endif %}
                     {% if urls.youtube %}
                     <div class="col-1 center">
-                        <a href="{{urls.youtube}}" title="YouTube" class="listen-logo"><i class="fab fa-2x fa-youtube" aria-hidden="true" style="color: #e52D27;"></i></a>
+                        <a href="{{urls.youtube}}" title="YouTube" class="listen-logo" target="_blank"><i class="fab fa-2x fa-youtube" aria-hidden="true" style="color: #e52D27;"></i></a>
                     </div>
                     {% endif %}
                 {% endif %}
