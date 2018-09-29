@@ -25,6 +25,7 @@ class AlbumForm(ModelForm):
             'wiki_url',
             'bc_url',
             'amazon_url',
+            'discogs_url',
             'itunes_url',
             'youtube_url',
             'soundcloud_url',

@@ -218,6 +218,7 @@ def edit_album(request, artist, album):
             album.wiki_url = form.cleaned_data['wiki_url']
             album.bc_url = form.cleaned_data['bc_url']
             album.amazon_url = form.cleaned_data['amazon_url']
+            album.discogs_url = form.cleaned_data['discogs_url']
             album.time_length = form.cleaned_data['time_length']
             album.release_date = form.cleaned_data['release_date']
             album.album_art = form.cleaned_data['album_art']
@@ -307,6 +308,7 @@ def add_album(request):
                 wiki_url = form.cleaned_data['wiki_url'],
                 bc_url = form.cleaned_data['bc_url'],
                 amazon_url = form.cleaned_data['amazon_url'],
+                discogs_url = form.cleaned_data['discogs_url'],
                 time_length = form.cleaned_data['time_length'],
                 release_date = form.cleaned_data['release_date'],
                 album_art = form.cleaned_data['album_art'],
