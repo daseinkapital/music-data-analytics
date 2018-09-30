@@ -1,7 +1,7 @@
-{% include 'albums/base.html' %}
+{% extends 'albums/base.html' %}
 
   
-
+{% block body_block %}
 	<section class="page-404 text-center d-flex align-items-center">
 		<div class="container">
 			<div class="row">
@@ -14,7 +14,4 @@
 			</div>
 		</div>
 	</section>
-	
-{% include 'albums/js.html' %}
-  </body>
-  </html>
+{% endblock %}
