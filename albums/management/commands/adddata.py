@@ -20,7 +20,8 @@ class Command(BaseCommand):
                 listen_urls = ListenURL.objects.create(album=album)
             
             if listen_urls and urls:
-                print(listen_urls)
-                listen_urls.spotify = urls['spotify']
-                listen_urls.itunes = urls['itunes']
+                if urls['spotify']:
+                    listen_urls.spotify = urls['spotify']
+                if urls['itunes']:
+                    listen_urls.itunes = urls['itunes']
                 listen_urls.save()
