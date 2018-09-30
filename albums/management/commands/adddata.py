@@ -21,6 +21,6 @@ class Command(BaseCommand):
             
             if listen_urls and urls:
                 print(listen_urls)
-                listen_urls.spotify = urls.spotify
-                listen_urls.itunes = urls.itunes
+                listen_urls.spotify = urls['spotify']
+                listen_urls.itunes = urls['itunes']
                 listen_urls.save()
