@@ -3,6 +3,10 @@
 {% block body_block %}
 
 {% for num in charts %}
-<h1><a href="{% url 'chart' chart_num=num %}">{{num}}</a></h1>
+    {% if num is 0 %}
+    <h1><a href="{% url 'chart' chart_num=num %}">Pre-Charts</a></h1>
+    {% else %}
+    <h1><a href="{% url 'chart' chart_num=num %}">{{num}}</a></h1>
+    {% endif %}
 {% endfor %}
 {% endblock %}

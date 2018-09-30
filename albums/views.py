@@ -132,7 +132,7 @@ def group(request, group):
 
 def chart_landing(request):
     num_of_charts = Album.objects.all().order_by('-chart').first().chart
-    nums = range(1, num_of_charts)
+    nums = range(num_of_charts)
     context = {'charts': nums}
     return render(request, 'albums/landing/chart.html', context)
 

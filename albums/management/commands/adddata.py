@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
 
-from albums.models import Album
+from albums.models import Album, ListenURL
 from .scrape import scrape
 
 
@@ -14,4 +14,11 @@ class Command(BaseCommand):
         albums = albums.exclude(name="")
         for album in albums:
             print(album)
-            scrape(album)
+            urls = scrape(album)
+            listen_urls = ListenURL.objects.filter(album=album)
+            if not listen_urls:
+                listen_urls = ListenURL.objects.create(album=album)
+            
+            listen_urls.spotify = urls.spotify
+            listen_urls.itunes = urls.itunes
+            listen_urls.save()

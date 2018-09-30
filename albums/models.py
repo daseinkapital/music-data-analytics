@@ -244,7 +244,8 @@ class Album(models.Model):
         self.slug = slugify(self.name, allow_unicode=True)[:50]
         self.current_rating = self.average_rating
 
-        if not self.order:
+        if self.order == None:
+
             latest_album = Album.objects.exclude(order=None).order_by('-order').first()
             chart = latest_album.chart
             album_row_count = Album.objects.filter(chart=latest_album.chart, row=latest_album.row).count

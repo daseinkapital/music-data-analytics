@@ -26,7 +26,14 @@ def find_urls(album):
     artist_name = album.artist.name
     query = album_name + " " + artist_name
 
-    urls = {'wiki' : None, 'bc' : None, 'amazon' : None}
+    urls = {
+        'wiki' : None,
+        'bc' : None,
+        'amazon' : None,
+        'discogs' : None,
+        'spotify' : None,
+        'itunes' : None
+    }
 
     for result in search(query, num=10, stop=10, pause=2):
         if 'wikipedia.org' in result:
@@ -40,6 +47,15 @@ def find_urls(album):
         if 'amazon.com' in result:
             if urls['amazon'] == None:
                 urls.update({'amazon' : result})
+        if 'discogs.com' in result:
+            if urls['discogs'] == None:
+                urls.update({'discogs' : result})
+        if 'spotify.com' in result:
+            if urls['spotify'] == None:
+                urls.update({'spotify' : result})
+        if 'itunes.apple.com' in result:
+            if urls['itunes'] == None:
+                urls.update({'itunes' : result})
     
     if (urls['wiki'] == None) and (urls['bc'] == None):
         query = query + " wikipedia bandcamp"
@@ -280,9 +296,10 @@ def amazon_full_length(soup):
             lengths.append(time)
         total_length = dt.timedelta()
         for i in lengths:
-            (m, s) = i.split(':')
-            d = dt.timedelta(minutes=int(m), seconds=int(s))
-            total_length += d
+            if ":" in i:
+                (m, s) = i.split(':')
+                d = dt.timedelta(minutes=int(m), seconds=int(s))
+                total_length += d
         return total_length
     else:
         return None
@@ -384,6 +401,11 @@ def scrape(album):
     if album.all_info_found():
         return
 
+    listen_urls = {
+        'spotify' : None,
+        'itunes' : None
+    }
+
     if album.has_url():
         if album.amazon_url:
             album = scrape_amazon(album)
@@ -397,6 +419,12 @@ def scrape(album):
             album.bc_url = urls['bc']
         if urls['amazon']:
             album.amazon_url = urls['amazon']
+        if urls['discogs']:
+            album.discogs_url = urls['discogs']
+        if urls['spotify']:
+            listen_urls.spotify = urls['spotify']
+        if urls['itunes']:
+            listen_urls.itunes = urls['itunes']
         try:
             album.save()
         except(DataError):
@@ -416,7 +444,7 @@ def scrape(album):
     
     if album.all_info_found():
         return
-    else:
+    elif album.wiki_url:
         album = scrape_wiki(album)
         album.save()
 
@@ -427,6 +455,7 @@ def scrape(album):
         print("Unable to find album publish date")
     if not album.album_art_check():
         print("Unable to find album art")
+    return listen_urls
 
 def screw_the_rules():
     if (not os.environ.get('PYTHONHTTPSVERIFY', '') and getattr(ssl, '_create_unverified_context', None)): 
