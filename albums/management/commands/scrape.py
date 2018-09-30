@@ -422,9 +422,9 @@ def scrape(album):
         if urls['discogs']:
             album.discogs_url = urls['discogs']
         if urls['spotify']:
-            listen_urls.spotify = urls['spotify']
+            listen_urls.update({'spotify' : urls['spotify']})
         if urls['itunes']:
-            listen_urls.itunes = urls['itunes']
+            listen_urls.update({'itunes' : urls['itunes']})
         try:
             album.save()
         except(DataError):
@@ -437,13 +437,13 @@ def scrape(album):
 
 
     if album.all_info_found():
-        return
+        return listen_urls
     else:
         album = scrape_bc(album)
         album.save()
     
     if album.all_info_found():
-        return
+        return listen_urls
     elif album.wiki_url:
         album = scrape_wiki(album)
         album.save()

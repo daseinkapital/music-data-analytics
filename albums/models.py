@@ -469,6 +469,9 @@ class ListenURL(models.Model):
             return True
         else:
             return False
+    
+    def __str__(self):
+        return self.album
 
 class Recommendation(models.Model):
     recommender = models.CharField(
