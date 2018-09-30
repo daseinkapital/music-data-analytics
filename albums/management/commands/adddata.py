@@ -15,10 +15,11 @@ class Command(BaseCommand):
         for album in albums:
             print(album)
             urls = scrape(album)
-            listen_urls = ListenURL.objects.filter(album=album)
+            listen_urls = ListenURL.objects.filter(album=album).first()
             if not listen_urls:
                 listen_urls = ListenURL.objects.create(album=album)
             
-            listen_urls.spotify = urls.spotify
-            listen_urls.itunes = urls.itunes
-            listen_urls.save()
+            if listen_urls:
+                listen_urls.spotify = urls.spotify
+                listen_urls.itunes = urls.itunes
+                listen_urls.save()
