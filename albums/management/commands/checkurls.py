@@ -19,6 +19,7 @@ class Command(BaseCommand):
         screw_the_rules()
         albums = Album.objects.all()
         for album in albums:
+            print(album)
             check_urls(album)
 
 def check_urls(album):
