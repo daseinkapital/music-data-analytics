@@ -463,8 +463,11 @@ def convert_to_album(choice):
 ############ TEST PAGES ####################
 @login_required
 def htmltest(request):
-    album = Album.objects.exclude(album_art=None).filter(name__icontains="I Don").first()
-    form = AlbumForm(instance=album)
-
-    context = {'form': form, 'album': album}
+    artist_slug = "kanye-west"
+    albums = Album.objects.filter(artist__slug=artist_slug).order_by('release_date')
+    artist = Artist.objects.filter(slug=artist_slug).first()
+    context = {
+        'albums' : albums,
+        'artist' : artist
+    }
     return render(request, 'albums/test.html', context)

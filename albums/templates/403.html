@@ -1,0 +1,17 @@
+{% extends 'albums/base.html' %}
+
+  
+{% block body_block %}
+	<section class="page-404 text-center d-flex align-items-center">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<h1>403</h1>
+					<h2>Forbidden</h2>
+  					<p>If you landed on this page after trying to submit a form, please ensure your cookies are enabled and your computer does not have malware.</p>
+					<a href="{% url 'home' %}" class="btn btn-main mt-20">Go Home</a>
+				</div>
+			</div>
+		</div>
+	</section>
+{% endblock %}

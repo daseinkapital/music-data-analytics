@@ -2,12 +2,243 @@
 
 {% block body_block %}
 
-    <h1>{{artist.name}}</h1>
-    <h4>Albums:</h4>
-    <div>
+<style>
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: -webkit-linear-gradient(top, #4D4D4D 0, #4D4D4D 180px, #939393 400px);                
+}
+
+.warning {
+  margin: 10px auto 0;
+  width: 500px;
+  text-align: center;
+  font-size: 20px;
+}
+
+#scroller {
+  width: 500px;
+  height: 200px;
+  margin: 0 auto;
+  padding: 50px 0;
+  -webkit-perspective: 500px;
+  -moz-perspective: 500px;
+  -o-perspective: 500px;
+}
+
+#scroller .item {
+  width: 500px;
+  display: block;
+  position: absolute;
+  border-radius: 10px;
+  -webkit-box-reflect: below 0px -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(.85, transparent), to(rgba(255,255,255,0.15)));
+  -webkit-transition: all 0.4s ease-in-out;
+  -moz-transition: all 0.4s ease-in-out;
+  -o-transition: all 0.4s ease-in-out;
+  z-index: 0;
+}
+
+/* Since inset shadows don't play nice with images, we'll create a pseudo element and apply our image styling to that instead */
+#scroller .item:before {
+  border-radius: 10px;
+  width: 500px;
+  display: block;
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.3), 0 0 0 1px rgba(0,0,0,0.4);
+}
+
+#scroller .item img {
+  display: block;
+  border-radius: 10px;
+}
+
+#scroller .left {
+  -webkit-transform: rotateY(25deg) translateX(-320px) skewY(-5deg) scale(0.4, 0.6);
+  -moz-transform: rotateY(25deg) translateX(-320px) skewY(-5deg) scale(0.4, 0.6);
+  -o-transform: rotateY(25deg) translateX(-320px) skewY(-5deg) scale(0.4, 0.6);
+}
+
+#scroller .left2 {
+    z-index: 1;
+    display: inline-block;
+    -webkit-transform: rotateY(0deg) translateX(-320px) scale(1);
+    -moz-transform: rotateY(0deg) translateX(-320px) scale(1);
+    -o-transform: rotateY(0deg) translateX(-320px) scale(1);
+}
+
+#scroller .middle {
+  z-index:1;
+  -webkit-transform: rotateY(0deg) translateX(0) scale(1);
+  -moz-transform: rotateY(0deg) translateX(0) scale(1);
+  -o-transform: rotateY(0deg) translateX(0) scale(1);
+}
+
+#scroller .right {
+  -webkit-transform: rotateY(-25deg) translateX(320px) skewY(5deg) scale(0.4, 0.6);
+  -moz-transform: rotateY(-25deg) translateX(320px) skewY(5deg) scale(0.4, 0.6);
+  -o-transform: rotateY(-25deg) translateX(320px) skewY(5deg) scale(0.4, 0.6);
+}
+
+#scroller .right2 {
+    z-index: 1;
+    display: inline-block;
+    -webkit-transform: rotateY(0deg) translateX(320px) scale(1);
+    -moz-transform: rotateY(0deg) translateX(320px) scale(1);
+    -o-transform: rotateY(0deg) translateX(320px) scale(1);
+}
+
+#scroller .left-hidden {
+  opacity: 0;
+  z-index: -1;
+  -webkit-transform: rotateY(25deg) translateX(-430px) skewY(-5deg) scale(0.3, 0.5);
+  -moz-transform: rotateY(25deg) translateX(-430px) skewY(-5deg) scale(0.3, 0.5);
+  -o-transform: rotateY(25deg) translateX(-430px) skewY(-5deg) scale(0.3, 0.5);
+}
+
+#scroller .right-hidden {
+  opacity: 0;
+  z-index: -1;
+  -webkit-transform: rotateY(-25deg) translateX(430px) skewY(5deg) scale(0.3, 0.5);
+  -moz-transform: rotateY(-25deg) translateX(430px) skewY(5deg) scale(0.3, 0.5);
+  -o-transform: rotateY(-25deg) translateX(430px) skewY(5deg) scale(0.3, 0.5);
+}
+
+.nav-scroll {
+  position: absolute;
+  width: 500px;
+  height: 30px;
+  margin: 170px 0 0;
+  z-index: 2;
+  display: inherit;
+}
+
+.prev, .next {
+  position: absolute;
+  display: block;
+  height: 30px;
+  width: 30px;
+  background-color: transparent;
+  color: #E4E4E4;
+  bottom: 230px;
+  left: 15px;
+  text-align: center;
+  line-height: 26px;
+  cursor: pointer;
+}
+
+.next {
+  left: inherit;
+  right: 15px;
+}
+
+.white{
+    color: white;
+}
+
+
+
+</style>
+
+    <h1 class="white">{{artist.name}}</h1>
+    <h4 class="white">Albums:</h4>
+    <div id="scroller">
+        <div class="nav-scroll">
+          <a class="prev"><i class="fas fa-chevron-circle-left fa-2x"></i></a>
+          <a class="next"><i class="fas fa-chevron-circle-right fa-2x"></i></a>
+        </div>
     {% for album in albums %}
-        <span style="display: inline-block; width:100px;"><a href="{% url 'album-page' artist=album.artist.slug album=album.slug %}"><img src="{{album.album_art}}" onerror="javascript:this.src='https://static1.squarespace.com/static/55a57011e4b09934ba12fd1a/5612b784e4b07c6a02988249/5612dd98e4b0e75bc4a61cc7/1444076954414/record.png?format=500w'" style="max-height: 100px; max-width: 100px; display: block; margin-left: auto; margin-right: auto;" title="{{album}}"></a></span>
+    <a class="item" href="{% url 'album-page' artist=album.artist.slug album=album.slug %}"><img src="{{album.album_art}}" onerror="javascript:this.src='https://static1.squarespace.com/static/55a57011e4b09934ba12fd1a/5612b784e4b07c6a02988249/5612dd98e4b0e75bc4a61cc7/1444076954414/record.png?format=500w'" style="max-height: 500px; max-width: 500px; display: block; margin-left: auto; margin-right: auto; width:500px;" title="{{album}}"></a>
     {% endfor %}
     </div>
 </body>
+
+<footer>
+    <script>
+/* Create an array to hold the different image positions */
+var itemPositions = [];
+var numberOfItems = $('#scroller .item').length;
+
+/* Assign each array element a CSS class based on its initial position */
+function assignPositions() {
+    if (numberOfItems == 1) {
+        itemPositions[0] = 'middle';
+        hideScroll();
+    } else if (numberOfItems == 2) {
+        for (var i = 0; i < numberOfItems; i++) {
+            if (i === 0) {
+                itemPositions[i] = 'left2';
+            } else if (i === 1) {
+                itemPositions[i] = 'right2';
+            }
+        };
+        hideScroll();
+    } else if (numberOfItems == 3) {
+        for (var i = 0; i < numberOfItems; i++) {
+            if (i === 0) {
+                itemPositions[i] = 'left';
+            } else if (i === 1) {
+                itemPositions[i] = 'middle';
+            } else if (i === 2) {
+                itemPositions[i] = 'right';
+            };
+        };
+    } else if (numberOfItems >= 4) {
+        for (var i = 0; i < numberOfItems; i++) {
+            if (i === 0) {
+                itemPositions[i] = 'left-hidden';
+            } else if (i === 1) {
+                itemPositions[i] = 'left';
+            } else if (i === 2) {
+                itemPositions[i] = 'middle';
+            } else if (i === 3) {
+                itemPositions[i] = 'right';
+            } else {
+                itemPositions[i] = 'right-hidden';
+            };
+        };
+    };
+    /* Add each class to the corresponding element */
+    $('#scroller .item').each(function(index) {
+        $(this).addClass(itemPositions[index]);
+    });
+}
+
+/* To scroll, we shift the array values by one place and reapply the classes to the images */
+function scroll(direction) {
+    if (direction === 'prev') {
+        itemPositions.push(itemPositions.shift());
+    } else if (direction === 'next') {
+        itemPositions.unshift(itemPositions.pop());
+    }
+    $('#scroller .item').removeClass('left-hidden left middle right right-hidden').each(function(index) {
+        $(this).addClass(itemPositions[index]);
+    });        
+}
+
+function hideScroll() {
+    $('.nav-scroll').hide();
+}
+
+/* Do all this when the DOMs ready */
+$(document).ready(function() {
+
+    assignPositions();
+
+    /* Click behaviours */
+    $('.prev').click(function() {
+        scroll('prev');
+    });
+    $('.next').click(function() {
+        scroll('next');
+    });
+
+});
+    </script>
+</footer>
 {% endblock %}
