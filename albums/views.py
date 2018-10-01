@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 
 from albums.models import *
 from albums.forms import AlbumForm, ReccForm
@@ -459,15 +460,18 @@ def convert_to_album(choice):
     return Album.objects.exclude(album_art=None)[choice]
 
 
-
 ############ TEST PAGES ####################
 @login_required
 def htmltest(request):
-    artist_slug = "kanye-west"
-    albums = Album.objects.filter(artist__slug=artist_slug).order_by('release_date')
-    artist = Artist.objects.filter(slug=artist_slug).first()
-    context = {
-        'albums' : albums,
-        'artist' : artist
-    }
+    context = {}
+    albums = Album.objects.exclude(date_finished=None)
+    albums, search, order_post, direction = search_albums(request.POST, albums)
+    
+    context.update({'albums': albums})
+    context.update({
+        'search' : search,
+        'order' : order_post,
+        'direction' : direction,
+        'home' : 'active'
+    })
     return render(request, 'albums/test.html', context)

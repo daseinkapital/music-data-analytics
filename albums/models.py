@@ -364,6 +364,18 @@ class Album(models.Model):
             return True
         else:
             return False
+    
+    def has_spotify(self):
+        if self.playback_urls.all().first().spotify:
+            return True
+        else:
+            return False
+
+    def has_itunes(self):
+        if self.playback_urls.all().first().itunes:
+            return True
+        else:
+            return False
 
     def time_hours(self):
         return self.time_length.seconds//3600
