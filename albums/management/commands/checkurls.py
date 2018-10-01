@@ -111,11 +111,11 @@ def find_url(album, site):
 
     site_url = None
 
-    for result in search(query, num=10, stop=10, pause=3):
+    for result in search(query, num=10, stop=10, pause=2):
         if site in result:
             site_url = result
             break
-    
+    sleep(2)
     return site_url
 
 def find_bandcamp(album):
