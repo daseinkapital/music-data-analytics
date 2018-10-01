@@ -97,7 +97,6 @@ def find_missing_urls(album):
     if album.has_itunes():
         missing_urls.remove('itunes.apple.com')
     
-    print(missing_urls)
     return missing_urls
 
 def find_url(album, site):
@@ -116,7 +115,6 @@ def find_url(album, site):
             site_url = result
             break
     
-    print(site_url)
     return site_url
 
 def find_bandcamp(album):

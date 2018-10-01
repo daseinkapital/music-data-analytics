@@ -1,0 +1,8 @@
+{% extends 'albums/base.html' %}
+
+{% block body_block %}
+
+{% for genre in genres %}
+    <h1><a href="{% url 'primary-genre' genre=genre %}">{{genre}}</a></h1>
+{% endfor %}
+{% endblock %}

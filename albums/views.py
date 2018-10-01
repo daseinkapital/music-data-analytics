@@ -109,6 +109,11 @@ def primary_genre(request, genre):
     context.update({'search' : search, 'order' : order_post, 'direction' : direction})
     return render(request, 'albums/renders/primary_genre.html', context)
 
+def prime_genre_landing(request):
+    genres = PrimaryGenre.objects.all()
+    context = {'genres' : genres}
+    return render(request, 'albums/landing/primary_genre.html', context)
+
 def secondary_genre(request,genre):
     sub_genre = SubGenre.objects.filter(name__iexact=genre).first()
     albums = Album.objects.filter(subgenres__subgenre__name__iexact=genre).exclude(date_finished=None)
@@ -116,6 +121,11 @@ def secondary_genre(request,genre):
     context = {'genre' : sub_genre, 'albums' : albums}
     context.update({'search' : search, 'order' : order_post, 'direction' : direction})
     return render(request, 'albums/renders/subgenre.html', context)
+
+def subgenre_landing(request):
+    genres = SubGenre.objects.all()
+    context = {'genres' : genres}
+    return render(request, 'albums/landing/subgenre.html', context)
 
 def group(request, group):
     if group == "queue":
