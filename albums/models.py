@@ -296,6 +296,7 @@ class Album(models.Model):
             if (not listenURL.amazon) and (self.amazon_url):
                 listenURL.amazon = self.amazon_url
             listenURL.save()
+        
 
     @property
     def get_subgenres(self):

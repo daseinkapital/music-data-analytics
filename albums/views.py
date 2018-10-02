@@ -184,9 +184,20 @@ def match_game(request):
         selected = request.POST.get('selected')
         attempts = int(request.POST.get('attempts'))
         correct = int(request.POST.get('correct'))
+        if request.POST.get('total-points'):
+            point_total = int(request.POST.get('total-points'))
+            points = int(request.POST.get('points'))
+        else:
+            point_total = 0
+            points = 0
+
         if answer:
             if answer == selected:
                 correct += 1
+                point_total += points
+            else:
+                point_total -= points
+        
         albums = Album.objects.exclude(album_art=None)
         album_count = albums.count()
         choices = generate_choices(album_count)
@@ -204,7 +215,15 @@ def match_game(request):
         if attempts != 0:
             percent_correct = round((correct/attempts)*100)
         attempts += 1
-        context.update({'choices' : choices, 'album_display' : album_display, 'attempts' : attempts, 'correct' : correct, 'answer' : answer, 'percent' : percent_correct})
+        context.update({
+            'choices' : choices,
+            'album_display' : album_display,
+            'attempts' : attempts,
+            'correct' : correct,
+            'answer' : answer,
+            'percent' : percent_correct,
+            'point_total': point_total
+        })
         return render(request, 'albums/game/round.html', context)
     
     return render(request, 'albums/game/main.html')

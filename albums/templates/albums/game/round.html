@@ -1,14 +1,70 @@
 {% extends 'albums/base.html' %}
 
 {% block body_block %}
+<style>
+.img-game-page {
+    width: 500px;
+    height: 500px;
+    -webkit-animation: 10s linear forwards img-game-page;
+     -moz-animation: 10s linear forwards img-game-page;
+       -o-animation: 10s linear forwards img-game-page;
+          animation: 10s linear forwards img-game-page;
+}
+
+#stopWatch {
+    width: 280px;
+    height: auto;
+    text-align: center;
+    display: block;
+    padding: 5px;
+    margin: 0 auto;
+}
+#timer, #fulltime {
+    width: auto;
+    height: auto;
+    padding: 10px;
+    font-weight: bold;
+    font-family: tahoma;
+    display: block;
+    border: 1px solid #eee;
+    text-align: center;
+    box-shadow: 0 0 5px #ccc;
+    background: #fbfbf0;
+    color: darkblue;
+    border-bottom:4px solid darkgrey;
+    }
+button {
+    cursor: pointer;
+    font-weight: 700;
+}
+
+#fulltime {
+    display:none;
+    font-size:16px;
+    font-weight:bold;
+}
+
+@-webkit-keyframes img-game-page { from { filter:blur(25px); } to { filter:blur(0px); }  }
+   @-moz-keyframes img-game-page { from { filter:blur(25px); } to { filter:blur(0px); }  }
+     @-o-keyframes img-game-page { from { filter:blur(25px); } to { filter:blur(0px); }  }
+        @keyframes img-game-page { from { filter:blur(25px); } to { filter:blur(0px); }  }
+</style>
+
 <div class="center">
     <div style="padding-top: 2%;">
         <span style="margin:20px;">Question #{{attempts}}</span>
         <span style="margin:20px;">Correct: {{correct}} ({{percent}}%)</span>
     </div>
-    <img src='{{album_display.album_art}}' class="img-album-page" style="margin-bottom: 5%; filter:blur(25px);">
+    <div>
+            Time: <span id="time" style="margin:20px;">00:10</span>
+            <span id="start" style="margin:20px;"> Total Points: {{point_total}} </span>
+    </div>
+    <br>
+    <img src='{{album_display.album_art}}' class="img-game-page" style="margin-bottom: 5%; filter:blur(25px);">
     <form id="game-form" action="{% url 'game' %}" method="POST">
         {% csrf_token %}
+        <input id="points" name="points" value="" hidden>
+        <input id="total-points" name="total-points" value="{{point_total}}" hidden>
         <input id="selected" name="selected" value="letter" hidden>
         <input name="attempts" value="{{attempts}}" hidden>
         <input name="correct" value="{{correct}}" hidden>
@@ -29,5 +85,31 @@ function SelectAnswer(letter) {
     $("#selected").val(letter); 
     form.submit();
 };
+
+//create a function to stop the time
+function startTimer(duration, display) {
+    var timer = duration, minutes, seconds;
+    setInterval(function () {
+        minutes = parseInt(timer / 60, 10)
+        seconds = parseInt(timer % 60, 10);
+
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+        display.textContent = minutes + ":" + seconds;
+
+        if (--timer < 0) {
+            timer = 0;
+        }
+        $('#points').val(timer);
+    }, 1000);
+}
+
+window.onload = function () {
+    var tenSeconds = 10,
+        display = document.querySelector('#time');
+    startTimer(tenSeconds, display);
+};
+
 </script>
 {% endblock %}
