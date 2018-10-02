@@ -1,7 +1,7 @@
 from django.forms import ModelForm
 from django import forms
 
-from albums.models import Album
+from albums.models import Album, SubGenre
 
 
 #MODEL CLASSES
@@ -62,4 +62,19 @@ class ReccForm(forms.Form):
             'recc_name',
             'album_name',
             'artist_name'
+        ]
+
+class consolidateSubgenreForm(forms.Form):
+    mismatched_subgenre = forms.ModelChoiceField(queryset=SubGenre.objects.all(), label='Unofficial Subgenre', empty_label="----------", required=True)
+    official_subgenre = forms.ModelChoiceField(queryset=SubGenre.objects.all(), label='Official Subgenre', empty_label="----------", required=True)
+
+    class Meta:
+        fields = [
+            'mismatched_subgenre',
+            'official_subgenre'
+        ]
+
+        fields_required = [
+            'mismatched_subgenre',
+            'official_subgenre'
         ]

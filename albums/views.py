@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 
 from albums.models import *
-from albums.forms import AlbumForm, ReccForm
+from albums.forms import AlbumForm, ReccForm, consolidateSubgenreForm
 
 from .management.commands.scrape import scrape
 
@@ -126,6 +126,31 @@ def subgenre_landing(request):
     genres = SubGenre.objects.all()
     context = {'genres' : genres}
     return render(request, 'albums/landing/subgenre.html', context)
+
+def consolidate_subgenre(request):
+    context = {}
+    if request.POST:
+        form = consolidateSubgenreForm(request.POST)
+        if form.is_valid():
+            good_subgenre = form.cleaned_data['official_subgenre']
+            bad_subgenre = form.cleaned_data['mismatched_subgenre']
+            bad_subgenre_album = AlbumSubgenre.objects.filter(subgenre=bad_subgenre)
+            for album in bad_subgenre_album:
+                album.subgenre = good_subgenre
+                album.save()
+            bad_subgenre_album = AlbumSubgenre.objects.filter(subgenre=bad_subgenre)
+            if bad_subgenre_album.count() == 0:
+                bad_subgenre.delete()
+            
+            good_name = good_subgenre.name
+            bad_name = bad_subgenre.name
+
+            context.update({'good_name' : good_name, 'bad_name' : bad_name, 'form' : form})
+    else:
+        context.update({'form': consolidateSubgenreForm()})
+    
+    return render(request, 'albums/consolidate_subgenre.html', context)
+                
 
 def group(request, group):
     if group == "queue":

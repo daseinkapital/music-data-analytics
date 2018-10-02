@@ -1,0 +1,33 @@
+{% extends 'albums/base.html' %}
+
+  
+{% block body_block %}
+<section id="notification-header" class="center">
+    {% if good_name %}
+    <p style="padding: 10px; background-color:darkgreen; color:white;">{{bad_name}} has been replaced by {{good_name}}. If this was a mistake visit the <a href='/admin/albums/subgenre/'>admin</a>.</p>
+    {% endif %}
+</section>
+<div class="bootstrap-iso">
+    <div class="container-fluid">
+        <div class="row form-div">
+            <form action="{% url 'change-subgenres' %}" method=POST class="center">
+                {% csrf_token %}
+                {% for field in form %}
+                <div class="row">
+                    <span class="col-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 form-label">{{field.label_tag}}{% if field.field.required %}<span class="help-text">*</span>{% endif %}</span>
+                    <span class="col-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 form-label">{{field}}</span>
+                </div>
+                <div class="row">    
+                    <small><span class="col-4 help-text">{{field.help_text}}</span></small>
+                </div>
+                <br>
+                {% endfor %}
+                <hr/>   
+                <input type="submit" value="Submit">
+                <input type="reset" value="Reset">
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

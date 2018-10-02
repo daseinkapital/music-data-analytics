@@ -12,6 +12,7 @@ urlpatterns = [
     path('genre/primary/', views.prime_genre_landing, name='primary-genre-landing'),
     path('genre/secondary/<genre>/', views.secondary_genre, name='secondary-genre'),
     path('genre/secondary/', views.subgenre_landing, name='subgenre-landing'),
+    path('consolidate-subgenre/', views.consolidate_subgenre, name='change-subgenres'),
     path('about', views.about, name='about'),
     path('list/<group>/', views.group, name='group'),
     path('chart/', views.chart_landing, name='chart-main'),
