@@ -9,17 +9,16 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
   <title>Samuelson's Album Experiment</title>
-
-  <!-- JQuery CDN -->
-  <script
-  src="https://code.jquery.com/jquery-3.3.1.min.js"
-  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-  crossorigin="anonymous">
-  </script>
+      <!-- JQuery CDN -->
+      <script
+      src="https://code.jquery.com/jquery-3.3.1.min.js"
+      integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+      crossorigin="anonymous">
+      </script>
 
 <!-- Mobile Specific Meta
   ================================================== -->
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
   
   <!-- Favicon -->
   <link rel="shortcut icon" type="image/x-icon" href="{% static 'albums/img/favicon1.ico' %}" />
@@ -28,25 +27,12 @@
   ================================================== -->
   <!-- bootstrap.min css -->
   <link rel="stylesheet" href="{% static 'albums/css/bootstrap/bootstrap.min.css' %}">
-  <!-- Lightbox.min css -->
-  <link rel="stylesheet" href="{% static 'albums/css/lightbox2/lightbox.min.css' %}">
   <!-- Main Stylesheet -->
   <link rel="stylesheet" href="{% static 'albums/css/style.css' %}">
   <!-- Personal Stylesheet -->
   <link rel="stylesheet" href="{% static 'albums/css/album-theme.css' %}">
   <!-- Icon Stylesheet -->
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
-  <!-- Colors -->
-  <!-- <link rel="stylesheet" type="text/css" href="css/colors/green.css" title="green">
-  <link rel="stylesheet" type="text/css" href="css/colors/red.css" title="light-red">
-  <link rel="stylesheet" type="text/css" href="css/colors/light-blue.css" title="light-blue">
-  <link rel="stylesheet" type="text/css" href="css/colors/yellow.css" title="yellow">
-  <link rel="stylesheet" type="text/css" href="css/colors/light-green.css" title="light-green">
-  <link rel="stylesheet" type="text/css" href="css/colors/blue.css" title="blue"> -->
-
-  <!-- Select2 CDN -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
   
 
 </head>
@@ -62,10 +48,12 @@ Fixed Navigation
         <div class="row">
             <div class="col-md-12">
                 <nav class="navbar navbar-expand-md">
-                    <span style="color:wheat">Brought to you by:</span>
-                    <a class="navbar-brand" href="">
-                        <img src="{% static 'albums/img/new_logo.png' %}" alt="logo">
-                    </a>  
+                    <span class="col-6">
+                        <span style="color:wheat">Brought to you by:</span>
+                        <a class="navbar-brand" href="">
+                            <img src="{% static 'albums/img/new_logo.png' %}" alt="logo">
+                        </a>
+                    </span>
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="tf-ion-android-menu"></span>
                     </button>
@@ -116,7 +104,7 @@ Fixed Navigation
     </div>
 </section>
 
-<div style="margin-top:100px;">
+<div style="margin-top:125px;">
 {% block body_block %}
 {% endblock %}
 </div>
@@ -127,11 +115,12 @@ Fixed Navigation
     Essential Scripts
     =====================================-->    
     <!-- Main jQuery -->
+
     <!--<script src="{% static 'albums/plugins/jquery/dist/jquery.min.js' %}"></script>-->
     <!-- Bootstrap 3.7 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <!--<script src="{% static 'albums/plugins/bootstrap/dist/js/popper.min.js' %}"></script>-->
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>-->
+    <script src="{% static 'albums/plugins/bootstrap/dist/js/popper.min.js' %}"></script>
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-    <!--<script src="{% static 'albums/plugins/bootstrap/dist/js/bootstrap.min.js' %}"></script>-->
+    <script src="{% static 'albums/plugins/bootstrap/dist/js/bootstrap.min.js' %}"></script>
 </footer>
