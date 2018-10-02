@@ -56,9 +56,9 @@
         $.each(h1s, function(id, value) {
             var contains = value.title.toLowerCase();
             if (contains.indexOf(q) === -1) {
-                $("img[name='"+value.name+"']").parent().parent().parent().parent().parent().css('display', 'none');
+                $("img[name='"+value.name+"']").css('display', 'none');
             } else {
-                $("img[name='"+value.name+"']").parent().parent().parent().parent().parent().css('display', 'inline-block');
+                $("img[name='"+value.name+"']").css('display', 'inline-block');
             };
         });   
     };

@@ -24,6 +24,12 @@
         </div>
     </div>
 </section>
+<section>
+    <div class="center">
+            <h1>{{genre}} - {% if genre.spotify_playlist %}<a href="{{genre.spotify_playlist}}" title="Spotify"  style="inline-block" target="_blank"><i class="fab fa-spotify" aria-hidden="true" style="color:#8bb601"></i></a>{% endif %}</h1>
+    </div>
+
+</section>
 {% include "albums/render_albums.html" %}
 <footer>
     <script>
