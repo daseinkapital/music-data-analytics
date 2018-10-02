@@ -57,7 +57,7 @@
 <!--
 Fixed Navigation
 ==================================== -->
-<section class="header  navigation">
+<section class="header  navigation" style="position:fixed; z-index:99999; width:100%; top:0px;">
     <div class="container">
         <div class="row">
             <div class="col-md-12">
@@ -116,8 +116,10 @@ Fixed Navigation
     </div>
 </section>
 
+<div style="margin-top:100px;">
 {% block body_block %}
 {% endblock %}
+</div>
 </body>
 
 <footer>
