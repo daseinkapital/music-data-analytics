@@ -80,7 +80,7 @@ Fixed Navigation
                             <li class="nav-item {% if stat %}{{stat}}{% endif %}">
                                 <a class="nav-link" href="{% url 'statistics' %}">Statistics</a>
                             </li>
-                            <li class="nav-item dropdown {% if discover %}{{discover}}{% endif %}">
+                            <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Discover</a>
                                 <div class="dropdown-menu">
                                     <a class="dropdown-item" href="{% url 'chart-main' %}">Charts</a>
@@ -91,17 +91,23 @@ Fixed Navigation
                                     <a class="dropdown-item" href="{% url 'group' group='cassette' %}">Cassettes</a>
                                 </div>
                             </li>
-                            <li class="nav-item dropdown {% if more %}{{more}}{% endif %}">
+                            <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
                                 <div class="dropdown-menu">
                                     <a class="dropdown-item" href="{% url 'suggestion' %}">Suggest An Album</a>
                                     <a class="dropdown-item" href="{% url 'game' %}">Album Match Game</a>
-                                {% if user.is_superuser %}
-                                    <a class="dropdown-item" href="{% url 'add-album' %}">Add Albums</a>
-                                    <a class="dropdown-item" href="{% url 'recc-review' %}">Recommendations Review</a>
-                                {% endif %}
                                 </div>
                             </li>
+                            {% if user.is_superuser %}
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin</a>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="{% url 'add-album' %}">Add Albums</a>
+                                    <a class="dropdown-item" href="{% url 'recc-review' %}">Recommendations Review</a>
+                                    <a class="dropdown-item" href="{% url 'change-subgenres' %}">Change Subgenres</a>
+                                </div>
+                            </li>
+                            {% endif %}
                         </ul>
                     </div>
                 </nav>

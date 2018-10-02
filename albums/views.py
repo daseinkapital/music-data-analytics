@@ -127,6 +127,7 @@ def subgenre_landing(request):
     context = {'genres' : genres}
     return render(request, 'albums/landing/subgenre.html', context)
 
+@login_required
 def consolidate_subgenre(request):
     context = {}
     if request.POST:
