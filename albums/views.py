@@ -186,6 +186,7 @@ def suggest(request):
                 artist_name = form.cleaned_data['artist_name'],
                 genre = form.cleaned_data['genre'],
                 url = form.cleaned_data['url'],
+                amazon_referral_url = form.cleaned_data['amazon_referral_url'],
                 note = form.cleaned_data['note']
             )
             context = {
@@ -422,6 +423,28 @@ def accept_recc(request, recc_id):
     context = {'reccs' : reccs}
     return render(request, 'albums/recommendation-review.html', context)
 
+@login_required
+def accept_and_add_recc(request, recc_id):
+    recc = Recommendation.objects.filter(id=recc_id).first()
+    recc.accepted = True
+    recc.save()
+    artist = Artist.objects.filter(name__iexact=recc.artist_name).first()
+    if not artist:
+        artist = Artist.objects.create(name=recc.artist_name)
+    if recc.amazon_referral_url:
+        Album.objects.create(
+            name = recc.album_name,
+            artist = artist,
+            amazon_url = recc.amazon_referral_url
+        )
+    else:
+        Album.objects.create(
+            name = recc.album_name,
+            artist = artist
+        )
+    reccs = Recommendation.objects.filter(accepted=False)
+    context = {'reccs' : reccs}
+    return render(request, 'albums/recommendation-review.html', context)
 ########## FUNCTIONS THAT THEN REDIRECT ###########
 @login_required
 def delete_album(request, album, artist):

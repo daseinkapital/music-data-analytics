@@ -50,15 +50,17 @@ class ReccForm(forms.Form):
     artist_name = forms.CharField(label="Artist", required=True)
     genre = forms.CharField(label="Genre", required=False)
     url = forms.CharField(label="Album Info", help_text="This could be a Wikipedia/Bandcamp/Amazon link etc. that has information about the album", required=False)
-    note = forms.CharField(label="Reason for Recommendation", help_text="Tell me why you're recommending me this album!", widget=forms.Textarea)
+    amazon_referral_url = forms.CharField(label="Amazon Referral Link", help_text="Add your Amazon referral link (more info below)", required=False)
+    note = forms.CharField(label="Reason for Recommendation", help_text="Tell me why I'd like this album!", widget=forms.Textarea)
 
     class Meta:
         fields = [
-            'recc_name,'
+            'recc_name',
             'album_name',
             'artist_name',
             'genre',
             'url',
+            'amazon_referral_url',
             'note'
         ]
 
