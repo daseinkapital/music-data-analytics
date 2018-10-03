@@ -145,31 +145,7 @@ p {
                     {{album.note}}
                 </p>
                 {% endif %}
-                {% if album.release_date %}
-                <p id="release-date">
-                    Release Date:
-                    {{album.release_date}}
-                </p>
-                {% endif %}
-                {% if album.order %}
-                <p id="order">
-                    Order:
-                    {{album.order}}
-                </p>
-                {% endif %}
-                {% if album.chart %}
-                <p id="chart">
-                    Chart:
-                    {{album.chart}}
-                </p>
-                {% endif %}
-                {% if album.row %}
-                <p id="row">
-                    Row:
-                    {{album.row}}
-                </p>
-                {% endif %}
-                {% if album.date_finished %}
+                {% if album.display_listen_date %}
                 <p id="listen-date">
                     Personal First Listen Date:
                     {{album.date_finished}}

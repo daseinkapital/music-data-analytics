@@ -1,7 +1,8 @@
 from django.db import models
 from django.core.validators import URLValidator
 from django.utils.text import slugify
-from django.db.models.signals import post_save
+
+import datetime as dt
 
 from .management.commands.scrape import scrape_wiki, scrape_bc, scrape_amazon, screw_the_rules
 
@@ -132,7 +133,6 @@ class AlbumSubgenre(models.Model):
 
     class Meta:
         ordering = ['album', '-subgenre']
-
 
 class Song(models.Model):
     album = models.ForeignKey(
@@ -415,6 +415,9 @@ class Album(models.Model):
     
     def time_seconds(self):
         return self.time_length.seconds%60
+    
+    def display_listen_date(self):
+        return self.date_finished > dt.datetime.strptime('01/02/2017', '%m/%d/%Y').date()
 
     class Meta:
         ordering = ['name', 'artist']

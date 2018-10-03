@@ -283,17 +283,20 @@ def edit_album(request, artist, album):
             album.cassette = form.cleaned_data['cassette']
 
             if form.cleaned_data['subgenres']:
-                subgenres = form.cleaned_data['subgenres'].split('/')
+                subgenres = form.cleaned_data['subgenres'].split(',')
                 for genre in subgenres:
                     genre_inst = SubGenre.objects.filter(name__iexact=genre).first()
 
                     if not genre_inst:
                         genre_inst = SubGenre.objects.create(name=genre)
 
-                    AlbumSubgenre.objects.create(
-                            album = album,
-                            subgenre = genre_inst
-                        )
+                    subgenre_assign = AlbumSubgenre.objects.filter(album=album, subgenre=subgenre_inst).first()
+
+                    if not subgenre_assign:
+                        AlbumSubgenre.objects.create(
+                                album = album,
+                                subgenre = genre_inst
+                            )
 
             if form.cleaned_data['rating']:
                 last_rating = Rating.objects.filter(album=album).first()
@@ -306,6 +309,11 @@ def edit_album(request, artist, album):
                     album=album,
                     score=form.cleaned_data['rating'],
                     listen = last_rating + 1
+                )
+            if not AlbumArtist.objects.filter(artist=form.cleaned_data['artist'], album=album).first():
+                AlbumArtist.objects.create(
+                    album=album,
+                    artist=artist
                 )
             
             album.save()
@@ -388,7 +396,10 @@ def add_album(request):
                 )
 
             scrape(album)
-            album.post_save()
+            AlbumArtist.objects.create(
+                album=album,
+                artist=artist
+            )
 
             saved = True
         else:
