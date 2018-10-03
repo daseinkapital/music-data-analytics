@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
-from albums.models import Album, ListenURL
+from albums.models import Album
 
 from urllib.request import urlopen
 import urllib.parse
@@ -20,15 +20,10 @@ class Command(BaseCommand):
         albums = Album.objects.all()
         for album in albums:
             print(album)
-            check_urls(album)
+            album = check_urls(album)
+            album.save()
 
 def check_urls(album):
-    listen_url = ListenURL.objects.filter(album=album).first()
-
-    if not listen_url:
-        print('Problem with listen URLs')
-        return
-
     missing_urls = find_missing_urls(album)
 
     if not album.bc_url:
@@ -62,17 +57,14 @@ def check_urls(album):
                 print('Discogs URL found for {0}'.format(album))
         if site == 'spotify.com':
             if urls[site] != None:
-                listen_url.spotify = urls[site]
+                album.spotify_url = urls[site]
                 print('Spotify URL found for {0}'.format(album))
         if site == 'itunes.apple.com':
             if urls[site] != None:
-                listen_url.itunes = urls[site]
+                album.itunes_url = urls[site]
                 print('iTunes URL found for {0}'.format(album))
 
-    album.save()
-    listen_url.save()
-
-    return
+    return album
         
 
     
@@ -93,9 +85,9 @@ def find_missing_urls(album):
         missing_urls.remove('amazon.com')
     if album.discogs_url:
         missing_urls.remove('discogs.com')
-    if album.has_spotify():
+    if album.spotify_url:
         missing_urls.remove('spotify.com')
-    if album.has_itunes():
+    if album.itunes_url:
         missing_urls.remove('itunes.apple.com')
     
     return missing_urls
