@@ -30,12 +30,8 @@ def main(request):
 
 def album_page(request, artist, album):
     album = Album.objects.filter(slug=album).filter(artist__slug=artist).first()
-    urls = ListenURL.objects.filter(album=album).first()
     album_has_url = album.has_url()
     context = {'album' : album, 'has_url' : album_has_url}
-    if urls:
-        other_urls = urls.has_urls()
-        context.update({'other_urls' : other_urls, 'urls' : urls})
     print(context)
     return render(request, 'albums/album_page.html', context)
 
@@ -275,6 +271,10 @@ def edit_album(request, artist, album):
             album.bc_url = form.cleaned_data['bc_url']
             album.amazon_url = form.cleaned_data['amazon_url']
             album.discogs_url = form.cleaned_data['discogs_url']
+            album.itunes_url = form.cleaned_data['itunes_url']
+            album.soundcloud_url = form.cleaned_data['soundcloud_url']
+            album.spotify_url = form.cleaned_data['spotify_url']
+            album.youtube_url = form.cleaned_data['youtube_url']
             album.time_length = form.cleaned_data['time_length']
             album.release_date = form.cleaned_data['release_date']
             album.album_art = form.cleaned_data['album_art']
@@ -308,35 +308,19 @@ def edit_album(request, artist, album):
                 )
             
             album.save()
-            album.post_save()
-
-            itunes = form.cleaned_data['itunes_url']
-            soundcloud = form.cleaned_data['soundcloud_url']
-            spotify = form.cleaned_data['spotify_url']
-            youtube = form.cleaned_data['youtube_url']
-            urls = ListenURL.objects.filter(album=album).first()
-            urls.itunes = itunes
-            urls.soundcloud = soundcloud
-            urls.spotify = spotify
-            urls.youtube = youtube
-            urls.save()
 
             saved = True
-            form = AlbumForm(instance=album, initial={'itunes_url':itunes, 'spotify_url':spotify, 'soundcloud_url':soundcloud, 'youtube_url':youtube})
+            form = AlbumForm(instance=album)
 
             context = {'form': form, 'album': album, 'saved': saved, 'error': error}
             return render(request, 'albums/edit_album.html', context)
         else:
             error = True
-            form = AlbumForm(instance=album, initial={'date_finished':request.POST.get('date_finished'),'rating':request.POST.get('rating'),'subgenres':request.POST.get('subgenres'), 'itunes_url':request.POST.get('itunes_url'), 'spotify_url':request.POST.get('spotify_url'), 'soundcloud_url':request.POST.get('soundcloud_url'), 'youtube_url':request.POST.get('youtube_url')})
+            form = AlbumForm(instance=album, initial={'date_finished':request.POST.get('date_finished'),'rating':request.POST.get('rating'),'subgenres':request.POST.get('subgenres')})
             context = {'form': form, 'album': album, 'saved': saved, 'error': error}
             return render(request, 'albums/edit_album.html', context)
 
-    urls = ListenURL.objects.filter(album=album).first()
-    if urls:
-        form = AlbumForm(instance=album, initial={'itunes_url':urls.itunes, 'spotify_url':urls.spotify, 'soundcloud_url':urls.soundcloud, 'youtube_url':urls.youtube})
-    else:
-        form = AlbumForm(instance=album)
+    form = AlbumForm(instance=album)
 
     context = {'form': form, 'album': album, 'saved': saved, 'error': error}
     return render(request, 'albums/edit_album.html', context)
@@ -365,6 +349,10 @@ def add_album(request):
                 bc_url = form.cleaned_data['bc_url'],
                 amazon_url = form.cleaned_data['amazon_url'],
                 discogs_url = form.cleaned_data['discogs_url'],
+                itunes_url = form.cleaned_data['itunes_url'],
+                spotify_url = form.cleaned_data['spotify_url'],
+                soundcloud_url = form.cleaned_data['soundcloud_url'],
+                youtube_url = form.cleaned_data['youtube_url'],
                 time_length = form.cleaned_data['time_length'],
                 release_date = form.cleaned_data['release_date'],
                 album_art = form.cleaned_data['album_art'],
@@ -404,7 +392,7 @@ def add_album(request):
             saved = True
         else:
             error = True
-            form = AlbumForm(instance=album, initial={'date_finished':request.POST.get('date_finished'),'rating':request.POST.get('rating'),'subgenres':request.POST.get('subgenres'), 'itunes_url':request.POST.get('itunes_url'), 'spotify_url':request.POST.get('spotify_url'), 'soundcloud_url':request.POST.get('soundcloud_url'), 'youtube_url':request.POST.get('youtube_url')})
+            form = AlbumForm(instance=album, initial={'date_finished':request.POST.get('date_finished'),'rating':request.POST.get('rating'),'subgenres':request.POST.get('subgenres')})
             context = {'saved': saved, 'error': error, 'form': form}
             return render(request, 'albums/add_album.html', context)
     form = AlbumForm()

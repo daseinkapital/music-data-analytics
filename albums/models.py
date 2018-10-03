@@ -133,6 +133,30 @@ class AlbumSubgenre(models.Model):
     class Meta:
         ordering = ['album', '-subgenre']
 
+
+class Song(models.Model):
+    album = models.ForeignKey(
+        to='Album',
+        related_name='songs',
+        blank=False,
+        null=False,
+        on_delete=models.PROTECT,
+    )
+
+    name = models.CharField(
+        max_length=500,
+        blank=False,
+        null=False
+    )
+
+    favorite = models.BooleanField(
+        default=False
+    )
+
+    least_favorite = models.BooleanField(
+        default=False
+    )
+
 class Album(models.Model):
 
     name = models.CharField(
@@ -201,6 +225,30 @@ class Album(models.Model):
         validators=[URLValidator()],
     )
 
+    itunes_url = models.TextField(
+        null=True,
+        blank=True,
+        validators=[URLValidator()],
+    )
+
+    spotify_url = models.TextField(
+        null=True,
+        blank=True,
+        validators=[URLValidator()],
+    )
+
+    soudncloud_url = models.TextField(
+        null=True,
+        blank=True,
+        validators=[URLValidator()],
+    )
+
+    youtube_url = models.TextField(
+        null=True,
+        blank=True,
+        validators=[URLValidator()],
+    )
+
     time_length = models.DurationField(
         null=True,
         blank=True,
@@ -240,6 +288,10 @@ class Album(models.Model):
         blank=True
     )
 
+    personally_checked = models.BooleanField(
+        default=False
+    )
+
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name, allow_unicode=True)[:50]
         self.current_rating = self.average_rating
@@ -274,29 +326,6 @@ class Album(models.Model):
             if self.wiki_url:
                 self = scrape_wiki(self)
             super(Album, self).save(*args, **kwargs)
-
-    def post_save(self):
-        #save listen urls
-        listenURL = ListenURL.objects.filter(album=self).first()
-        if not listenURL:
-            bc_url = None
-            amazon_url = None
-            if self.bc_url:
-                bc_url = self.bc_url
-            if self.amazon_url:
-                amazon_url = self.amazon_url
-            ListenURL.objects.create(
-                album = self,
-                bandcamp = bc_url,
-                amazon = amazon_url
-            )
-        else:
-            if (not listenURL.bandcamp) and (self.bc_url):
-                listenURL.bandcamp = self.bc_url
-            if (not listenURL.amazon) and (self.amazon_url):
-                listenURL.amazon = self.amazon_url
-            listenURL.save()
-        
 
     @property
     def get_subgenres(self):
@@ -438,54 +467,6 @@ class BandcampSubgenre(models.Model):
         blank=False
     )
 
-class ListenURL(models.Model):
-    album = models.ForeignKey(
-        to=Album,
-        related_name='playback_urls',
-        null=False,
-        blank=False,
-        on_delete=models.CASCADE
-    )
-
-    spotify = models.URLField(
-        null=True,
-        blank=True
-    )
-
-    itunes = models.URLField(
-        null=True,
-        blank=True
-    )
-
-    bandcamp = models.URLField(
-        null=True,
-        blank=True
-    )
-
-    amazon = models.URLField(
-        null=True,
-        blank=True
-    )
-
-    soundcloud = models.URLField(
-        null=True,
-        blank=True
-    )
-
-    youtube = models.URLField(
-        null=True,
-        blank=True
-    )
-
-    def has_urls(self):
-        if self.spotify or self.itunes or self.bandcamp or self.amazon or self.soundcloud or self.youtube:
-            return True
-        else:
-            return False
-    
-    def __str__(self):
-        return self.album.__str__()
-
 class Recommendation(models.Model):
     recommender = models.CharField(
         max_length = 100,
@@ -512,6 +493,12 @@ class Recommendation(models.Model):
     )
 
     url = models.TextField(
+        null=True,
+        blank=True,
+        validators=[URLValidator()]
+    )
+
+    amazon_referral_url = models.TextField(
         null=True,
         blank=True,
         validators=[URLValidator()]

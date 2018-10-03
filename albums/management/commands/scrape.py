@@ -401,11 +401,6 @@ def scrape(album):
     if album.all_info_found():
         return
 
-    listen_urls = {
-        'spotify' : None,
-        'itunes' : None
-    }
-
     if album.has_url():
         if album.amazon_url:
             album = scrape_amazon(album)
@@ -422,9 +417,9 @@ def scrape(album):
         if urls['discogs']:
             album.discogs_url = urls['discogs']
         if urls['spotify']:
-            listen_urls.update({'spotify' : urls['spotify']})
+            albums.spotify_url = urls['spotify']
         if urls['itunes']:
-            listen_urls.update({'itunes' : urls['itunes']})
+            albums.itunes_url = urls['itunes']
         try:
             album.save()
         except(DataError):
@@ -455,7 +450,7 @@ def scrape(album):
         print("Unable to find album publish date")
     if not album.album_art_check():
         print("Unable to find album art")
-    return listen_urls
+    return
 
 def screw_the_rules():
     if (not os.environ.get('PYTHONHTTPSVERIFY', '') and getattr(ssl, '_create_unverified_context', None)): 

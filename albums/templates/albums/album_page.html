@@ -229,24 +229,24 @@ p {
                         <a href="{{album.discogs_url}}" title="Discogs" class="listen-logo" target="_blank"><img src="{% static 'albums/img/discogs-vinyl-record-mark.svg' %}" style="width:28px; height:34px;"></a>
                     </div>
                     {% endif %}
-                    {% if urls.soundcloud %}
+                    {% if album.soundcloud_url %}
                     <div class="col-1 center" style="text-align: left;">
-                        <a href="{{urls.soundcloud}}" title="Soundcloud" class="soundcloud-background listen-logo" target="_blank"><i class="fab fa-2x fa-soundcloud" aria-hidden="true" style="color: #FFE9E1;"></i></a>
+                        <a href="{{album.soundcloud_url}}" title="Soundcloud" class="soundcloud-background listen-logo" target="_blank"><i class="fab fa-2x fa-soundcloud" aria-hidden="true" style="color: #FFE9E1;"></i></a>
                     </div>
                     {% endif %}
-                    {% if urls.spotify %}
+                    {% if album.spotify_url %}
                     <div class="col-1 center">
-                        <a href="{{urls.spotify}}" title="Spotify" class="listen-logo" target="_blank"><i class="fab fa-2x fa-spotify" aria-hidden="true" style="color:#8bb601"></i></a>
+                        <a href="{{album.spotify_url}}" title="Spotify" class="listen-logo" target="_blank"><i class="fab fa-2x fa-spotify" aria-hidden="true" style="color:#8bb601"></i></a>
                     </div>
                     {% endif %}
-                    {% if urls.itunes %}
+                    {% if album.itunes_url %}
                     <div class="col-1 center">
-                        <a href="{{urls.itunes}}" title="iTunes" class="itunes-background listen-logo" target="_blank"><i class="fab fa-2x fa-itunes-note itunes-logo" size="2x" aria-hidden="true"></i></a>
+                        <a href="{{album.itunes_url}}" title="iTunes" class="itunes-background listen-logo" target="_blank"><i class="fab fa-2x fa-itunes-note itunes-logo" size="2x" aria-hidden="true"></i></a>
                     </div>
                     {% endif %}
-                    {% if urls.youtube %}
+                    {% if album.youtube_url %}
                     <div class="col-1 center">
-                        <a href="{{urls.youtube}}" title="YouTube" class="listen-logo" target="_blank"><i class="fab fa-2x fa-youtube" aria-hidden="true" style="color: #e52D27;"></i></a>
+                        <a href="{{album.youtube_url}}" title="YouTube" class="listen-logo" target="_blank"><i class="fab fa-2x fa-youtube" aria-hidden="true" style="color: #e52D27;"></i></a>
                     </div>
                     {% endif %}
                 {% endif %}
