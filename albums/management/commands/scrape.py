@@ -324,6 +324,88 @@ def amazon_album_art(soup):
             return img2
     return None   
 
+#### iTUNES HELPER FUNCTIONS
+def itunes_release_date(soup):
+    date_str = soup.find('span', {'class' : 'link-list__item__date'}).text
+    if date_str:
+        try:
+            release_date = dt.datetime.strptime(date_str, '%b %d, %Y')
+            return release_date
+        except(ValueError):
+            print('Unexpected format for {0}'.format(date_str))
+            return None
+    else:
+        return None
+
+def itunes_full_length(soup):
+    times = soup.findAll('time')
+    lengths = []
+    for time in times:
+        time = time.getText().strip()
+        lengths.append(time)
+    total_length = dt.timedelta()
+    for i in lengths:
+        if ":" in i:
+            (m, s) = i.split(':')
+            d = dt.timedelta(minutes=int(m), seconds=int(s))
+            total_length += d
+    return total_length
+
+def itunes_album_art(soup):
+    src = soup.find('source')
+    if src['srcset']:
+        attr = src['srcset']
+        matches = re.finditer(r'((http[s]?|ftp):\/)?\/?([^:\/\s]+)((\/\w+)*\/)([\w\-\.]+[^#?\s]+)', attr)
+        for match in matches:
+            itunes_album_cover = match.group(0)
+        return itunes_album_cover
+    return None
+
+#to be used for future song implementation
+def itunes_collect_songs(soup):
+    titles = soup.findAll('div', {'class' : 'table__row__headline'})
+    for title in titles:
+        song_name = title.getText().strip()
+    pass
+
+
+#### SPOTIFY HELPER FUNCTIONS
+def spotify_album_art(soup):
+    div = soup.find('div', {'class' : 'cover-art-image'})
+    if div:
+        back_img = div['style']
+        img_url = 'https:' + back_img[back_img.find('//'):back_img.find('),')]
+        return img_url
+    else:
+        return None
+
+#Spotify currently uses iframes over the rest of their info so it makes it hard to scrape song times
+#or song titles. They also don't keep precise dates for album releases so this is the only function
+
+
+#### SOUNDCLOUD HELPER FUNCTIONS
+def sc_release_date(soup):
+    time_elem = soup.find('time')
+    if time_elem:
+        date_long = time_elem.getText()
+        date_str = date_long[:date_long.find('T')]
+        if date_str:
+            try:
+                release_date = dt.datetime.strptime(date_str, '%Y-%m-%d')
+                return release_date
+            except(ValueError):
+                print("{0} did not match date format.".format(date_str))
+                return None
+    return None
+
+def sc_album_art(soup):
+    span = soup.find('div').findAll('img')
+    if span:
+        img = span[1]['src']
+        return img
+    else:
+        return None
+
 #### main functions
 
 #check wikipedia for the album
@@ -394,6 +476,62 @@ def scrape_amazon(album):
 
     return album
 
+def scrape_itunes(album):
+    url = album.itunes_url
+    if url:
+        try:
+            html = fetch_url(url)
+        except(ValueError, urllib.error.HTTPError):
+            print("Somethings wrong with iTunes")
+            return album
+    else:
+        return album
+    
+    if not album.time_check():
+        album.time_length = itunes_full_length(html)
+
+    if not album.release_date_check():
+        album.release_date = itunes_release_date(html)
+
+    if not album.album_art_check():
+        album.album_art = itunes_album_art(html)
+
+    return album
+
+def scrape_spotify(album):
+    url = album.spotify_url
+    if url:
+        try:
+            html = fetch_url(url)
+        except(ValueError, urllib.error.HTTPError):
+            print("Somethings wrong with Spotify")
+            return album
+    else:
+        return album
+
+    if not album.album_art_check():
+        album.album_art = itunes_album_art(html)
+    return album
+
+def scrape_soundcloud(album):
+    url = album.soundcloud_url
+    if url:
+        try:
+            html = fetch_url(url)
+        except(ValueError, urllib.error.HTTPError):
+            print("Somethings wrong with Spotify")
+            return album
+    else:
+        return album
+
+    if not album.release_date_check():
+        album.release_date = sc_release_date(html)
+    
+    if not album.album_art_check():
+        album.album_art = sc_album_art(html)
+    
+    return album
+    
 
 def scrape(album):
     screw_the_rules()
@@ -417,9 +555,9 @@ def scrape(album):
         if urls['discogs']:
             album.discogs_url = urls['discogs']
         if urls['spotify']:
-            albums.spotify_url = urls['spotify']
+            album.spotify_url = urls['spotify']
         if urls['itunes']:
-            albums.itunes_url = urls['itunes']
+            album.itunes_url = urls['itunes']
         try:
             album.save()
         except(DataError):
@@ -432,13 +570,31 @@ def scrape(album):
 
 
     if album.all_info_found():
-        return listen_urls
+        return
     else:
         album = scrape_bc(album)
         album.save()
     
     if album.all_info_found():
-        return listen_urls
+        return
+    else:
+        album = scrape_itunes(album)
+        album.save()
+    
+    if album.all_info_found():
+        return
+    else:
+        album = scrape_soundcloud(album)
+        album.save()
+
+    if album.all_info_found():
+        return
+    else:
+        album = scrape_spotify(album)
+        album.save()    
+
+    if album.all_info_found():
+        return
     elif album.wiki_url:
         album = scrape_wiki(album)
         album.save()

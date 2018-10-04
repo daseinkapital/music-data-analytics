@@ -157,6 +157,17 @@ class Song(models.Model):
         default=False
     )
 
+    track_num = models.IntegerField(
+        null=True,
+        blank=True
+    )
+
+    track_length = models.CharField(
+        max_length=15,
+        null=True,
+        blank=True
+    )
+
 class Album(models.Model):
 
     name = models.CharField(
@@ -237,7 +248,7 @@ class Album(models.Model):
         validators=[URLValidator()],
     )
 
-    soudncloud_url = models.TextField(
+    soundcloud_url = models.TextField(
         null=True,
         blank=True,
         validators=[URLValidator()],
