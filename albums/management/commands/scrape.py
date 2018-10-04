@@ -510,7 +510,7 @@ def scrape_spotify(album):
         return album
 
     if not album.album_art_check():
-        album.album_art = itunes_album_art(html)
+        album.album_art = spotify_album_art(html)
     return album
 
 def scrape_soundcloud(album):
