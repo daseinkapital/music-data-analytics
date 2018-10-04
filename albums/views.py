@@ -7,6 +7,7 @@ from albums.models import *
 from albums.forms import AlbumForm, ReccForm, consolidateSubgenreForm
 
 from .management.commands.scrape import scrape
+from .management.commands.checkurls import check_urls
 
 import datetime as dt
 
@@ -317,6 +318,7 @@ def edit_album(request, artist, album):
                 )
             
             album.save()
+            check_urls(album)
 
             saved = True
             form = AlbumForm(instance=album)
@@ -395,7 +397,10 @@ def add_album(request):
                     listen = last_rating + 1
                 )
 
+
+            check_urls(album)
             scrape(album)
+
             AlbumArtist.objects.create(
                 album=album,
                 artist=artist
