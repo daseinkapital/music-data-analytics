@@ -8,6 +8,7 @@ from albums.forms import AlbumForm, ReccForm, consolidateSubgenreForm
 
 from .management.commands.scrape import scrape
 from .management.commands.checkurls import check_urls
+from .management.commands.updatealbumart import update_art
 
 import datetime as dt
 
@@ -291,7 +292,7 @@ def edit_album(request, artist, album):
                     if not genre_inst:
                         genre_inst = SubGenre.objects.create(name=genre)
 
-                    subgenre_assign = AlbumSubgenre.objects.filter(album=album, subgenre=subgenre_inst).first()
+                    subgenre_assign = AlbumSubgenre.objects.filter(album=album, subgenre=genre_inst).first()
 
                     if not subgenre_assign:
                         AlbumSubgenre.objects.create(
@@ -319,6 +320,7 @@ def edit_album(request, artist, album):
             
             album.save()
             check_urls(album)
+            update_art(album)
 
             saved = True
             form = AlbumForm(instance=album)

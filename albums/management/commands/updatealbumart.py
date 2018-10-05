@@ -14,63 +14,66 @@ class Command(BaseCommand):
         albums = Album.objects.filter(album_art__icontains='//upload')
         for album in albums:
             print(album)
-            wiki_art = album.album_art
-            album.album_art = None
-            if album.bc_url:
-                try:
-                    url = album.bc_url
-                    html = fetch_url(url)
-                    album.album_art = bc_album_art(html)
-                    album.save()
-                    print("Successfully updated with Bandcamp!")
+            update_art(album)
 
-                except(urllib.error.HTTPError):
-                    print('Error with page.')
-            if not album.album_art_check():
-                if album.itunes_url:
-                    try:
-                        url = album.itunes_url
-                        html = fetch_url(url)
-                        album.album_art = itunes_album_art(html)
-                        album.save()
-                        print("Successfully updated with iTunes!")
+def update_art(album):
+    wiki_art = album.album_art
+    album.album_art = None
+    if album.itunes_url:
+        try:
+            url = album.itunes_url
+            html = fetch_url(url)
+            album.album_art = itunes_album_art(html)
+            album.save()
+            print("Successfully updated with iTunes!")
 
-                    except(urllib.error.HTTPError):
-                        print('Error with page.')
-            if not album.album_art_check():
-                if album.spotify_url:
-                    try:
-                        url = album.spotify_url
-                        html = fetch_url(url)
-                        album.album_art = spotify_album_art(html)
-                        album.save()
-                        print("Successfully updated with Spotify!")
-
-                    except(urllib.error.HTTPError):
-                        print('Error with page.')
-            if not album.album_art_check():
-                if album.amazon_url:
-                    try:
-                        url = album.amazon_url
-                        html = fetch_url(url)
-                        album.album_art = amazon_album_art(html)
-                        album.save()
-                        print("Successfully updated with Amazon!")
-
-                    except(urllib.error.HTTPError):
-                        print('Error with page.')
-            if not album.album_art_check():
-                if album.soundcloud_url:
-                    try:
-                        url = album.soundcloud_url
-                        html = fetch_url(url)
-                        album.album_art = sc_album_art(html)
-                        album.save()
-                        print("Successfully updated with SoundCloud!")
-
-                    except(urllib.error.HTTPError):
-                        print('Error with page.')
-            if not album.album_art_check():
-                album.album_art = wiki_art
-                print("No matches. Reverting to wikipedia art.")
+        except(urllib.error.HTTPError):
+            print('Error with page.')
+    if not album.album_art_check():
+        if album.bc_url:
+            try:
+                url = album.bc_url
+                html = fetch_url(url)
+                album.album_art = bc_album_art(html)
                 album.save()
+                print("Successfully updated with iTunes!")
+
+            except(urllib.error.HTTPError):
+                print('Error with page.')
+    if not album.album_art_check():
+        if album.spotify_url:
+            try:
+                url = album.spotify_url
+                html = fetch_url(url)
+                album.album_art = spotify_album_art(html)
+                album.save()
+                print("Successfully updated with Spotify!")
+
+            except(urllib.error.HTTPError):
+                print('Error with page.')
+    if not album.album_art_check():
+        if album.amazon_url:
+            try:
+                url = album.amazon_url
+                html = fetch_url(url)
+                album.album_art = amazon_album_art(html)
+                album.save()
+                print("Successfully updated with Amazon!")
+
+            except(urllib.error.HTTPError):
+                print('Error with page.')
+    if not album.album_art_check():
+        if album.soundcloud_url:
+            try:
+                url = album.soundcloud_url
+                html = fetch_url(url)
+                album.album_art = sc_album_art(html)
+                album.save()
+                print("Successfully updated with SoundCloud!")
+
+            except(urllib.error.HTTPError):
+                print('Error with page.')
+    if not album.album_art_check():
+        album.album_art = wiki_art
+        print("No matches. Reverting to wikipedia art.")
+        album.save()
