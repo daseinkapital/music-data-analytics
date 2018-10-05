@@ -294,7 +294,7 @@ def edit_album(request, artist, album):
 
                     subgenre_assign = AlbumSubgenre.objects.filter(album=album, subgenre=genre_inst).first()
 
-                    if not subgenre_assign:
+                    if not subgenre_assign: 
                         AlbumSubgenre.objects.create(
                                 album = album,
                                 subgenre = genre_inst
