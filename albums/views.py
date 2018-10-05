@@ -283,6 +283,7 @@ def edit_album(request, artist, album):
             album.album_art = form.cleaned_data['album_art']
             album.vinyl = form.cleaned_data['vinyl']
             album.cassette = form.cleaned_data['cassette']
+            album.personally_checked = form.cleaned_data['personally_checked']
 
             if form.cleaned_data['subgenres']:
                 subgenres = form.cleaned_data['subgenres'].split(',')
@@ -319,7 +320,8 @@ def edit_album(request, artist, album):
                 )
             
             album.save()
-            check_urls(album)
+            if not album.personally_checked:
+                check_urls(album)
             update_art(album)
 
             saved = True
