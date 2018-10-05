@@ -30,17 +30,6 @@ def update_art(album):
         except(urllib.error.HTTPError):
             print('Error with page.')
     if not album.album_art_check():
-        if album.bc_url:
-            try:
-                url = album.bc_url
-                html = fetch_url(url)
-                album.album_art = bc_album_art(html)
-                album.save()
-                print("Successfully updated with iTunes!")
-
-            except(urllib.error.HTTPError):
-                print('Error with page.')
-    if not album.album_art_check():
         if album.spotify_url:
             try:
                 url = album.spotify_url
@@ -59,6 +48,17 @@ def update_art(album):
                 album.album_art = amazon_album_art(html)
                 album.save()
                 print("Successfully updated with Amazon!")
+
+            except(urllib.error.HTTPError):
+                print('Error with page.')
+    if not album.album_art_check():
+        if album.bc_url:
+            try:
+                url = album.bc_url
+                html = fetch_url(url)
+                album.album_art = bc_album_art(html)
+                album.save()
+                print("Successfully updated with iTunes!")
 
             except(urllib.error.HTTPError):
                 print('Error with page.')
