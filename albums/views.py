@@ -322,7 +322,8 @@ def edit_album(request, artist, album):
             album.save()
             if not album.personally_checked:
                 check_urls(album)
-            update_art(album)
+            if 'upload' in album.album_art:
+                update_art(album)
 
             saved = True
             form = AlbumForm(instance=album)

@@ -428,7 +428,10 @@ class Album(models.Model):
         return self.time_length.seconds%60
     
     def display_listen_date(self):
-        return self.date_finished > dt.datetime.strptime('01/02/2017', '%m/%d/%Y').date()
+        if self.date_finished:
+            return self.date_finished > dt.datetime.strptime('01/02/2017', '%m/%d/%Y').date()
+        else:
+            return False
 
     class Meta:
         ordering = ['name', 'artist']
