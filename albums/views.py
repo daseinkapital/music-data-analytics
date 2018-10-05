@@ -402,8 +402,6 @@ def add_album(request):
                     listen = last_rating + 1
                 )
 
-
-            check_urls(album)
             scrape(album)
 
             AlbumArtist.objects.create(
