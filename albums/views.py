@@ -330,7 +330,8 @@ def edit_album(request, artist, album):
             return render(request, 'albums/edit_album.html', context)
 
     form = AlbumForm(instance=album)
-
+    for whatever in form:
+        print(whatever.label_tag())
     context = {'form': form, 'album': album, 'saved': saved, 'error': error}
     return render(request, 'albums/edit_album.html', context)
 

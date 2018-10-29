@@ -18,7 +18,7 @@
                 {% for field in form %}
                 <div class="row">
                     <span class="col-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 form-label">{{field.label_tag}}{% if field.field.required %}<span class="help-text">*</span>{% endif %}</span>
-                    <span class="col-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 form-label">{{field}}</span>
+                    <span class="col-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 form-label">{{field}}{% if 'Date finished' in field.label_tag  %}<button type="button" onclick="fillCurrentDate();">Current Date</button>{% endif %}</span>
                 </div>
                 <div class="row">    
                     <small><span class="col-4 help-text">{{field.help_text}}</span></small>
@@ -37,6 +37,24 @@
 $('textarea').each(function() {
     $( this ).attr('cols', 30).attr('rows', 2);
 });
+
+function fillCurrentDate() {
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth()+1; //January is 0!
+    var yyyy = today.getFullYear();
+
+    if(dd<10) {
+        dd = '0'+dd
+    } 
+
+    if(mm<10) {
+        mm = '0'+mm
+    } 
+
+    today = yyyy + '-' + mm + '-' + dd;
+    $('#id_date_finished').val(today);
+}
 </script>
 
 {% endblock %}
