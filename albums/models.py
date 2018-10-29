@@ -590,7 +590,7 @@ class ReportIssue(models.Model):
         blank=False
     )
 
-    report = models.TextField(
+    reporter = models.TextField(
         null=False,
         blank=False
     )

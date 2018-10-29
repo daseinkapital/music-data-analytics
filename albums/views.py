@@ -508,10 +508,18 @@ def report(request):
     description = request.POST.get('description')
     name = request.POST.get('name')
     url = request.POST.get('url')
-    print(problem)
-    print(description)
-    print(name)
-    print(url)
+    most_recent_issue = ReportIssue.objects.all().order_by('-issue_num').first()
+    if most_recent_issue:
+        new_issue_num = most_recent_issue.issue_num + 1
+    else:
+        new_issue_num = 1
+    ReportIssue.objects.create(
+        issue_num = new_issue_num,
+        selected_issue = problem,
+        description = description,
+        report = name,
+        page = url
+    )
     return render(request, 'albums/base.html')
 
 #functions for the album match game
