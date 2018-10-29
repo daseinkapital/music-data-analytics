@@ -419,7 +419,7 @@ class Album(models.Model):
             return True
 
     def has_url(self):
-        if self.wiki_url or self.bc_url or self.amazon_url:
+        if self.wiki_url or self.bc_url or self.amazon_url or self.spotify_url or self.discogs_url or self.itunes_url or self.youtube_url or self.soundcloud_url:
             return True
         else:
             return False
