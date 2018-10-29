@@ -1,23 +1,33 @@
 {% extends 'albums/base.html' %}
 
 {% block body_block %}
+    <div class="center" style="text-align: left;">
+        <h1>Statistics Homepage</h1>
+        <h3>Summary Statistics</h3>
+        <ul>
+            <li><b>Total Albums Listened:</b> {{total_album_num}}</li>
+            <li><b>Total Subgenres Listened:</b> {{total_subgenres_num}}</li>
+            <li><b>Total Time Listened:</b> {{total_time}}</li>
+            <li><b>Average Rating of All Albums:</b> {{total_avg_rating}}</li>
+            <li><b>Average Listening Time Per Day:</b> {{avg_new_music}}</li>
+        </ul>
+        <hr>
+        <h3>Queue Statistics</h3>
+        <ul>
+            <li><b>Number of Albums in Queue:</b> {{queue_length}}</li>
+            <li><b>Time Length of Queue:</b> {{queue_time}}</li>
+            <li><b>Estimated Time For Queue Completion:</b> {{queue_completion}} days</li>
+        </ul>
+        <hr>
+        <h3>Primary Genre Statistics</h3>
+    </div>
 
-    <h1>Statistics Homepage</h1>
-    <h3>Summary Statistics</h3>
-    <ul>
-        <li>Total Albums Listened: {{total_album_num}}</li>
-        <li>Total Subgenres Listened: {{total_subgenres_num}}</li>
-        <li>Total Time Listened: {{total_time}}</li>
-        <li>Average Rating of All Albums: {{total_avg_rating}}</li>
-    </ul>
-
-    <h3>Primary Genre Statistics</h3>
     <table id="genreTable">
         <thead>
             <tr>
-                <th onclick="sortTable(0)">Genre</th>
-                <th onclick="sortTable(1)"># of Albums</th>
-                <th onclick="sortTable(2)">Average Rating (of Rated Albums)</th>
+                <th onclick="sortTable(0)" style="cursor: pointer;">Genre</th>
+                <th onclick="sortTable(1)" style="cursor: pointer;"># of Albums</th>
+                <th onclick="sortTable(2)" style="cursor: pointer;">Average Rating (of Rated Albums)</th>
                 <th>Minimum Album Rating</th>
                 <th>Maximum Album Rating</th>
                 <th>Standard Deviation of Album Rating</th>
@@ -36,12 +46,6 @@
     {% endfor %}
         </tbody>
     </table>
-
-    <h3>Queue Statistics</h3>
-    <ul>
-        <li>Number of Albums in Queue: {{queue_length}}</li>
-        <li>Time Length of Queue: {{queue_time}}</li>
-    </ul>
 </body>
 
 

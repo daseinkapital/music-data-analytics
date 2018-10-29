@@ -3,6 +3,8 @@ from albums.models import *
 #aggregations
 from django.db.models import Avg, Sum
 
+from datetime import datetime, date
+
 #generates all necessary data for creating the table of genre statistics
 def generate_genre_table(albums):
     genre_table = []
@@ -48,15 +50,40 @@ def generate_genre_table(albums):
         })
     return genre_table
 
+#finds the average amount of new music I've listened to per day since the start of this project
+def average_listen_time_per_day(query):
+    music_since_start = query.exclude(chart=0)
+    music_since_start_listened = music_since_start.exclude(date_finished=None)
+    total_time = time_total_no_format(music_since_start_listened)
+    days_delta = date.today() - date(2017, 1, 1)
+    days_since_start = days_delta.days
+    music_per_day = total_time/days_since_start
+    return format_sum_time(music_per_day)
+
+def queue_completion_time(albums, queue):
+    music_since_start = albums.exclude(chart=0)
+    music_since_start_listened = music_since_start.exclude(date_finished=None)
+    total_time = time_total_no_format(music_since_start_listened)
+    days_delta = date.today() - date(2017, 1, 1)
+    days_since_start = days_delta.days
+    music_per_day = total_time/days_since_start
+    total_time = time_total_no_format(queue)
+    queue_time = total_time
+    return int(round(queue_time.total_seconds()/music_per_day.total_seconds(),0))
+    
+
 #given a query of albums, returns the total length of time of all albums collectively
 def time_total(query):
+    total_time = time_total_no_format(query)
+    return format_sum_time(total_time)
+
+
+def time_total_no_format(query):
     total_time = dt.timedelta(seconds=0)
     for item in query:
         if item.time_length:
             total_time += item.time_length
-    return format_sum_time(total_time)
-
-
+    return total_time
 #average rating of a query
 def average_rating(query):
     #average rating of genre

@@ -61,6 +61,9 @@ def statistics(request):
 
     #average rating of all albums
     total_avg_rating = average_rating(albums)
+
+    #average new music per day since start
+    avg_new_music = average_listen_time_per_day(albums)
     
     #count how many subgenres listened to
     total_subgenres_num = SubGenre.objects.all().count()
@@ -77,16 +80,21 @@ def statistics(request):
     #gather length of queue
     queue_time = time_total(queue)
 
+    #estimated queue completion time
+    queue_completion = queue_completion_time(albums, queue)
+
 
     #collect all the statistics
     context.update({
         'total_album_num' : total_album_num,
         'total_avg_rating' : total_avg_rating,
+        'avg_new_music' : avg_new_music,
         'total_subgenres_num' : total_subgenres_num,
         'total_time' : total_time,
         'genre_count' : genre_count,
         'queue_length' : queue_length,
         'queue_time' : queue_time,
+        'queue_completion' : queue_completion,
         'stat' : 'active'
     })
 
