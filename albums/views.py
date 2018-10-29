@@ -277,6 +277,7 @@ def edit_album(request, artist, album):
             album.vinyl = form.cleaned_data['vinyl']
             album.cassette = form.cleaned_data['cassette']
             album.personally_checked = form.cleaned_data['personally_checked']
+            album.note = form.cleaned_data['note']
 
             if form.cleaned_data['subgenres']:
                 subgenres = form.cleaned_data['subgenres'].split(',')
@@ -367,7 +368,8 @@ def add_album(request):
                 release_date = form.cleaned_data['release_date'],
                 album_art = form.cleaned_data['album_art'],
                 vinyl = form.cleaned_data['vinyl'],
-                cassette = form.cleaned_data['cassette']
+                cassette = form.cleaned_data['cassette'],
+                note = form.cleaned_data['note']
             )
 
             if form.cleaned_data['subgenres']:

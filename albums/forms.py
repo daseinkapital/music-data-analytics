@@ -41,7 +41,8 @@ class AlbumForm(ModelForm):
             'cassette',
             'rating',
             'subgenres',
-            'personally_checked'
+            'personally_checked',
+            'note'
         ]
 
 #OTHER FORMS
