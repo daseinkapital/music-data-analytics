@@ -132,5 +132,84 @@ table.table-format th {
   }
 
 .album-content {
-    z-index: 9999;
+    z-index: 5;
 }
+
+
+
+/* Report Tooltip container */
+.report-tooltip {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    height:0%;
+}
+
+/* Tooltip text */
+.report-tooltip .report-tooltiptext {
+    visibility: hidden;
+    width: 280px;
+    background-color: #1f2532;
+    color: #fff;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+    top:45px;
+    right: 20px;
+    /* Position the tooltip text - see examples below! */
+    position: absolute;
+    z-index: 1;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.visible {
+    visibility: visible;
+}
+
+#background-box {
+    position: absolute;
+    top: 0; right: 0; bottom: 0; left: 0;
+    z-index: 99999;
+    background-color: #666;
+    opacity: 0.9;
+    visibility: hidden;
+}
+
+#report-success {
+    position: fixed;
+    left: calc(50% - 250px);
+    top: 35%;
+    background-color: #1f2532;
+    color: whitesmoke;
+    width: 500px;
+    text-align: center;
+    font-size: 2em;
+    padding: 5% 2%;
+    border-radius: 25px;
+    visibility: hidden;
+    z-index: 99999;
+}
+
+.button {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 15px 25px;
+    font-size: 24px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    color: #fff;
+    background-color: #e91e63;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 9px #999;
+  }
+  
+  .button:hover {background-color: #e91e63}
+  
+  .button:active {
+    background-color: #e91e63;
+    box-shadow: 0 5px #666;
+    transform: translateY(4px);
+  }

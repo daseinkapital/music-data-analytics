@@ -98,7 +98,6 @@ if dev_env == "dev":
 elif dev_env == "prod":
     db_settings = dj_database_url.config(os.environ['DATABASE_URL'])
 
-
 DATABASES = {
     'default' : db_settings
 }

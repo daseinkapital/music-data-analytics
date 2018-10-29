@@ -1,126 +1,222 @@
-{% load static %}
-<!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> 
-<html class="no-js"> <!--<![endif]-->
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    {% load static %}
+    <!DOCTYPE html>
+    <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+    <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+    <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+    <!--[if gt IE 8]><!--> 
+    <html class="no-js"> <!--<![endif]-->
+    <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-  <title>Samuelson's Album Experiment</title>
-      <!-- JQuery CDN -->
-      <script
-      src="https://code.jquery.com/jquery-3.3.1.min.js"
-      integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-      crossorigin="anonymous">
-      </script>
+    <title>Samuelson's Album Experiment</title>
+        <!-- JQuery CDN -->
+        <script
+        src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous">
+        </script>
 
-<!-- Mobile Specific Meta
-  ================================================== -->
-  <!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
-  
-  <!-- Favicon -->
-  <link rel="shortcut icon" type="image/x-icon" href="{% static 'albums/img/favicon1.ico' %}" />
-  
-  <!-- CSS
-  ================================================== -->
-  <!-- bootstrap.min css -->
-  <link rel="stylesheet" href="{% static 'albums/css/bootstrap/bootstrap.min.css' %}">
-  <!-- Main Stylesheet -->
-  <link rel="stylesheet" href="{% static 'albums/css/style.css' %}">
-  <!-- Personal Stylesheet -->
-  <link rel="stylesheet" href="{% static 'albums/css/album-theme.css' %}">
-  <!-- Icon Stylesheet -->
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
-  
+    <!-- Mobile Specific Meta
+    ================================================== -->
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
+    
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'albums/img/favicon1.ico' %}" />
+    
+    <!-- CSS
+    ================================================== -->
+    <!-- bootstrap.min css -->
+    <link rel="stylesheet" href="{% static 'albums/css/bootstrap/bootstrap.min.css' %}">
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="{% static 'albums/css/style.css' %}">
+    <!-- Personal Stylesheet -->
+    <link rel="stylesheet" href="{% static 'albums/css/album-theme.css' %}">
+    <!-- Icon Stylesheet -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    
 
-</head>
+    </head>
 
-<body id="body">
+    <body id="body">
 
 
-<!--
-Fixed Navigation
-==================================== -->
-<section class="header  navigation" style="position:fixed; z-index:99999; width:100%; top:0px;">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <nav class="navbar navbar-expand-md">
-                    <span class="col-6">
-                        <span style="color:wheat">Brought to you by:</span>
-                        <a class="navbar-brand" href="">
-                            <img src="{% static 'albums/img/new_logo.png' %}" alt="logo">
-                        </a>
-                    </span>
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="tf-ion-android-menu"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul class="navbar-nav ml-auto">
-                            <li class="nav-item {% if home %}{{home}}{% endif %}">
-                                <a class="nav-link" href="{% url 'home' %}">Home <span class="sr-only">(current)</span></a>
-                            </li>
-                            <li class="nav-item {% if about %}{{about}}{% endif %}">
-                                <a class="nav-link" href="{% url 'about' %}">About</a>
-                            </li>
-                            <li class="nav-item {% if stat %}{{stat}}{% endif %}">
-                                <a class="nav-link" href="{% url 'statistics' %}">Statistics</a>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Discover</a>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="{% url 'chart-main' %}">Charts</a>
-                                    <a class="dropdown-item" href="{% url 'primary-genre-landing' %}">Primary Genres</a>
-                                    <a class="dropdown-item" href="{% url 'subgenre-landing' %}">Subgenres</a>
-                                    <a class="dropdown-item" href="{% url 'group' group='queue' %}">Queue</a>
-                                    <a class="dropdown-item" href="{% url 'group' group='vinyl' %}">Vinyls</a>
-                                    <a class="dropdown-item" href="{% url 'group' group='cassette' %}">Cassettes</a>
-                                </div>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="{% url 'suggestion' %}">Suggest An Album</a>
-                                    <a class="dropdown-item" href="{% url 'game' %}">Album Match Game</a>
-                                </div>
-                            </li>
-                            {% if user.is_superuser %}
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin</a>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="{% url 'add-album' %}">Add Albums</a>
-                                    <a class="dropdown-item" href="{% url 'recc-review' %}">Recommendations Review</a>
-                                    <a class="dropdown-item" href="{% url 'change-subgenres' %}">Change Subgenres</a>
-                                </div>
-                            </li>
-                            {% endif %}
-                        </ul>
-                    </div>
-                </nav>
+    <!--
+    Fixed Navigation
+    ==================================== -->
+    <section class="header  navigation" style="position:fixed; z-index:99999; width:100%; top:0px;">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <nav class="navbar navbar-expand-md">
+                        <span class="col-6">
+                            <span style="color:wheat">Brought to you by:</span>
+                            <a class="navbar-brand" href="">
+                                <img src="{% static 'albums/img/new_logo.png' %}" alt="logo">
+                            </a>
+                        </span>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="tf-ion-android-menu"></span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul class="navbar-nav ml-auto">
+                                <li class="nav-item {% if home %}{{home}}{% endif %}">
+                                    <a class="nav-link" href="{% url 'home' %}">Home <span class="sr-only">(current)</span></a>
+                                </li>
+                                <li class="nav-item {% if about %}{{about}}{% endif %}">
+                                    <a class="nav-link" href="{% url 'about' %}">About</a>
+                                </li>
+                                <li class="nav-item {% if stat %}{{stat}}{% endif %}">
+                                    <a class="nav-link" href="{% url 'statistics' %}">Statistics</a>
+                                </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Discover</a>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="{% url 'chart-main' %}">Charts</a>
+                                        <a class="dropdown-item" href="{% url 'primary-genre-landing' %}">Primary Genres</a>
+                                        <a class="dropdown-item" href="{% url 'subgenre-landing' %}">Subgenres</a>
+                                        <a class="dropdown-item" href="{% url 'group' group='queue' %}">Queue</a>
+                                        <a class="dropdown-item" href="{% url 'group' group='vinyl' %}">Vinyl</a>
+                                        <a class="dropdown-item" href="{% url 'group' group='cassette' %}">Cassettes</a>
+                                    </div>
+                                </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="{% url 'suggestion' %}">Suggest An Album</a>
+                                        <a class="dropdown-item" href="{% url 'game' %}">Album Match Game</a>
+                                    </div>
+                                </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link" style="cursor:pointer;" onclick="reportIssue();">Report Issue</a>
+                                    <div class="report-tooltip">Report Issue
+                                        <span class="report-tooltiptext">Please describe the nature of the issue:
+                                            <form action="{% url 'report' %}" method="POST">
+                                                {% csrf_token %}
+                                                <hr>
+                                                <select id="problem" name="problem">
+                                                    <option value="" disabled selected label="Please select..."></option>
+                                                    <option value="bug">Something Doesn't Seem Right</option>
+                                                    <option value="information">Wrong/Inaccurate Information</option>
+                                                    <option value="404/500">404/500 Error On This Page</option>
+                                                    <option value="suggestion">Improvement Suggestion</option>
+                                                    <option value="other">Other (Please Describe)</option>
+                                                </select>
+                                                <p id="problem-help" class="help-text" style="visibility: hidden">Please select a problem.</p>
+                                                <textarea id="txtArea" rows="5" cols ="20" placeholder="Please describe the issue..." name="description"></textarea>
+                                                <p id="text-help" class="help-text" style="visibility: hidden">Please write a description.</p>
+                                                <input type="text" placeholder="Your name..." name="name" id="reporter-name">
+                                                <p id="name-help" class="help-text" style="visibility: hidden">Please provide your name.</p>
+                                                <button type="button" class="button" style="padding: 2% 15%; display: block; margin-left: auto; margin-right: auto; margin-bottom: 10%;" onclick="verifyReport();">Submit</button>
+                                                <button type="button" class="button" style="padding: 2% 15%; display: block; margin-left: auto; margin-right: auto; margin-bottom: 10%;" onclick="reportIssue();">Cancel</button>
+                                            </form>
+                                        </span>
+                                    </div>
+                                </li>
+                                {% if user.is_superuser %}
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin</a>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="{% url 'add-album' %}">Add Albums</a>
+                                        <a class="dropdown-item" href="{% url 'recc-review' %}">Recommendations Review</a>
+                                        <a class="dropdown-item" href="{% url 'change-subgenres' %}">Change Subgenres</a>
+                                    </div>
+                                </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
             </div>
         </div>
+    </section>
+    <div id="background-box" class="overlay"></div>
+    <div id="report-success">
+        <h1>Thank you. Your report has been submitted.</h1>
+        <button class="button" onclick="btnToggle();">OK!</button>
     </div>
-</section>
+    <div style="margin-top:100px;">
+    {% block body_block %}
+    {% endblock %}
+    </div>
+    </body>
 
-<div style="margin-top:94px;">
-{% block body_block %}
-{% endblock %}
-</div>
-</body>
+    <footer>
+        <!-- 
+        Essential Scripts
+        =====================================-->    
+        <!-- Main jQuery -->
+        
+        <!--<script src="{% static 'albums/plugins/jquery/dist/jquery.min.js' %}"></script>-->
+        <!-- Bootstrap 3.7 -->
+        <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>-->
+        <script src="{% static 'albums/plugins/bootstrap/dist/js/popper.min.js' %}"></script>
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <script src="{% static 'albums/plugins/bootstrap/dist/js/bootstrap.min.js' %}"></script>
 
-<footer>
-    <!-- 
-    Essential Scripts
-    =====================================-->    
-    <!-- Main jQuery -->
-
-    <!--<script src="{% static 'albums/plugins/jquery/dist/jquery.min.js' %}"></script>-->
-    <!-- Bootstrap 3.7 -->
-    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>-->
-    <script src="{% static 'albums/plugins/bootstrap/dist/js/popper.min.js' %}"></script>
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-    <script src="{% static 'albums/plugins/bootstrap/dist/js/bootstrap.min.js' %}"></script>
-</footer>
+        <script>
+        var csrftoken = $   ("[name=csrfmiddlewaretoken]").val();
+        function csrfSafeMethod(method) {
+        // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+        function reportIssue() {
+            $('.report-tooltiptext').toggleClass('visible');
+            $('#problem').val('');
+            $('#txtArea').val('');
+            $('#reporter-name').val('');
+        }
+        function btnToggle() {
+            reportIssue();
+            bckToggle();
+            $('#report-success').toggleClass('visible');
+        }
+        function bckToggle() {
+            $('#background-box').toggleClass('visible');
+        }
+        function submitReport(problem, description, name, url) {
+            $.post( "{% url 'report' %}", {'problem' : problem, 'description' : description, 'name' : name, 'url' : url }, function() {$('#report-success').toggleClass('visible');bckToggle();});
+        };
+        function verifyReport() {
+            var problem = $('#problem').val();
+            var description = $('#txtArea').val();
+            var name = $('#reporter-name').val();
+            var url = window.location.href;
+            console.log(url);
+            var problemClean = false;
+            var descrClean = false;
+            var nameClean = false;
+            if (problem == null) {
+                $('#problem-help').toggleClass('visible');
+                return
+            } else {
+                problemClean = true;
+            };
+            if (description == '') {
+                $('#text-help').toggleClass('visible');
+                return
+            } else {
+                descrClean = true;
+            };
+            if (name == '') {
+                $('#name-help').toggleClass('visible');
+                return
+            } else {
+                nameClean = true;
+            };
+            if (problemClean && descrClean && nameClean) {
+                $('#problem-help').removeClass('visible');
+                $('#text-help').removeClass('visible');
+                $('#name-help').removeClass('visible');
+                submitReport(problem, description, name, url);
+            };
+        };
+        </script>
+    </footer>

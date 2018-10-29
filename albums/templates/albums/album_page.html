@@ -116,19 +116,19 @@ p {
                 <h2 id="album-attribution"><small><small>an album by </small></small><a href="{% url 'artist-page' artist=album.artist.slug %}">{{album.artist.name}}</a></h2>
                 <hr class="fancy-hr">
                 {% if album.current_rating %}
-                <p id="current-rating">Score: 
+                <p id="current-rating"><b>Score:</b> 
                     {{album.current_rating.normalize}}
                 </p>
                 {% endif %}
                 {% if album.primary_genre %}
                 <p id="primary-genre">
-                    Primary Genre:
+                    <b>Primary Genre:</b>
                     <a href="{% url 'primary-genre' genre=album.primary_genre %}">{{album.primary_genre}}</a>
                 </p>
                 {% endif %}
                 {% if album.subgenres.all %}
                 <p id="subgenres">
-                    Subgenres:
+                    <b>Subgenres:</b>
                     {% for match in album.subgenres.all %}
                     {% if forloop.first %}
                     <a href="{% url 'secondary-genre' genre=match.subgenre %}">{{match.subgenre}}</a>
@@ -140,26 +140,26 @@ p {
                 </p>
                 {% endif %}
                 {% if album.note %}
-                <p>My thoughts:</p>
+                <p><b>My thoughts:</b></p>
                 <p id="notes">
                     {{album.note}}
                 </p>
                 {% endif %}
                 {% if album.display_listen_date %}
                 <p id="listen-date">
-                    Personal First Listen Date:
+                    <b>Personal First Listen Date:</b>
                     {{album.date_finished}}
                 </p>
                 {% endif %}
                 {% if album.release_date %}
                 <p id="release-date">
-                    Release Date:
+                    <b>Release Date:</b>
                     {{album.release_date}}
                 </p>
                 {% endif %}
                 {% if album.time_length %}
                 <p id="time-length">
-                    Run Length of Album:
+                    <b>Run Length of Album:</b>
                     {% if album.time_hours %}
                     {{album.time_hours}}h 
                     {% endif %}
@@ -167,7 +167,7 @@ p {
                 </p>
                 {% endif %}
                 <p id="vinyl">
-                    Own On Viynl:
+                    <b>Own On Viynl:</b>
                     {% if album.vinyl %}
                     Yes
                     {% else %}
@@ -175,7 +175,7 @@ p {
                     {% endif %}
                 </p>
                 <p id="cassette">
-                    Own On Cassette:
+                    <b>Own On Cassette:</b>
                     {% if album.cassette %}
                     Yes
                     {% else %}

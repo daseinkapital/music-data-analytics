@@ -5,6 +5,7 @@ from django.http import HttpResponse
 
 from albums.models import *
 from albums.forms import AlbumForm, ReccForm, consolidateSubgenreForm
+from albums.functions.stats import *
 
 from .management.commands.scrape import scrape
 from .management.commands.checkurls import check_urls
@@ -55,40 +56,32 @@ def statistics(request):
 
     context = {}
 
-    #count how many subgenres listened to
-    total_subgenres_num = SubGenre.objects.all().count()
-
     #count the total number of albums
     total_album_num = albums.count()
 
-    #determine the total amount of time of all albums (that have time data)
-    total_time = dt.timedelta(seconds=0)
-    for album in albums:
-        if album.time_length:
-            total_time += album.time_length
-    total_time = format_sum_time(total_time)
+    #average rating of all albums
+    total_avg_rating = average_rating(albums)
+    
+    #count how many subgenres listened to
+    total_subgenres_num = SubGenre.objects.all().count()
 
+    #determine the total amount of time of all albums (that have time data)
+    total_time = time_total(albums)
 
     #count the number of albums listened in each primary genre
-    genre_count = []
-    for genre in PrimaryGenre.objects.all():
-        count = albums.filter(primary_genre=genre).count()
-        genre_count.append({'genre' : genre, 'count': count})
+    genre_count = generate_genre_table(albums)
     
     #gather the queue length
     queue_length = queue.count()
 
     #gather length of queue
-    queue_time = dt.timedelta(seconds=0)
-    for album in queue:
-        if album.time_length:
-            queue_time += album.time_length
-    queue_time = format_sum_time(queue_time)
+    queue_time = time_total(queue)
 
 
     #collect all the statistics
     context.update({
         'total_album_num' : total_album_num,
+        'total_avg_rating' : total_avg_rating,
         'total_subgenres_num' : total_subgenres_num,
         'total_time' : total_time,
         'genre_count' : genre_count,
@@ -510,14 +503,16 @@ def search_albums(request, albums):
         direction = 'up'
     return albums, search, order_post, direction
 
-#takes a time delta and nicely formats to a string
-def format_sum_time(sum_time):
-    hours, remainder = divmod(sum_time.seconds, 3600)
-    minutes, seconds = divmod(remainder, 60)
-    if sum_time.days:
-        return '{:02}d {:02}h {:02}m {:02}s'.format(int(sum_time.days), int(hours), int(minutes), int(seconds))
-    else:
-        return '{:02}h {:02}m {:02}s'.format(int(hours), int(minutes), int(seconds))
+def report(request):
+    problem = request.POST.get('problem')
+    description = request.POST.get('description')
+    name = request.POST.get('name')
+    url = request.POST.get('url')
+    print(problem)
+    print(description)
+    print(name)
+    print(url)
+    return render(request, 'albums/base.html')
 
 #functions for the album match game
 def random_num(maximum):

@@ -277,6 +277,24 @@ class Album(models.Model):
         validators=[URLValidator()],
     )
 
+    album_art_primary_color = models.CharField(
+        null=True,
+        blank=True,
+        max_length=6
+    )
+
+    album_art_secondary_color = models.CharField(
+        null=True,
+        blank=True,
+        max_length=6
+    )
+
+    album_art_tertiary_color = models.CharField(
+        null=True,
+        blank=True,
+        max_length=6
+    )
+
     vinyl = models.BooleanField(
         default=False
     )
@@ -548,4 +566,36 @@ class AlbumArtist(models.Model):
         blank=False,
         null=False,
         on_delete=models.CASCADE,
+    )
+
+class ReportIssue(models.Model):
+    issue_num = models.IntegerField(
+        null=False,
+        blank=False
+    )
+
+    resolved = models.BooleanField(
+        null=False,
+        blank=False,
+        default=False
+    )
+
+    selected_issue = models.TextField(
+        null=False,
+        blank=False
+    )
+
+    description = models.TextField(
+        null=False,
+        blank=False
+    )
+
+    report = models.TextField(
+        null=False,
+        blank=False
+    )
+
+    page = models.URLField(
+        null=False,
+        blank=False
     )
