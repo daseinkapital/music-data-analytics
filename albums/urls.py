@@ -21,6 +21,7 @@ urlpatterns = [
     path('add/album/', views.add_album, name='add-album'),
     path('suggest/', views.suggest, name='suggestion'),
     path('match-game/', views.match_game, name='game'),
+    path('issue-manager/', views.issue_manager, name='issue-manager'),
     path('recc-review/', views.recommendations, name='recc-review'),
     path('accept-recc/<recc_id>/', views.accept_recc, name='accept_recc'),
     path('accept_and_add_recc/<recc_id>/', views.accept_and_add_recc, name='accept_and_add_recc'),

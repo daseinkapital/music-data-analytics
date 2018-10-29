@@ -1,0 +1,26 @@
+{% extends 'albums/base.html' %}
+
+{% block body_block %}
+<table class="center table-format">
+    <tbody style="margin: 10px; margin-left:auto; margin-right: auto;">
+        <tr>
+            <th>Issue Num</th>
+            <th>Problem</th>
+            <th>Description</th>
+            <th>Page</th>
+            <th>Reporter</th>
+            <th>Resolved</th>
+        </tr>
+        {% for issue in issues %}
+        <tr>
+            <td>{{issue.issue_num}}</td>
+            <td>{{issue.selected_issue}}</td>
+            <td>{{issue.description}}</td>
+            <td>{{issue.page}}</td>
+            <td>{{issue.reporter}}</td>
+            <td>Checkbox goes here</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

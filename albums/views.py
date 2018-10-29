@@ -413,6 +413,12 @@ def add_album(request):
     context = {'saved': saved, 'error': error, 'form': form}
     return render(request, 'albums/add_album.html', context)
 
+@login_required
+def issue_manager(request):
+    open_issues = ReportIssue.objects.exclude(resolved=True)
+    context = {'issues' : open_issues}
+    return render(request, 'albums/open_issues.html', context)
+
 def page_not_found(request):
     return render(request, '404.html')
 
@@ -423,7 +429,7 @@ def internal_server_error(request):
 def recommendations(request):
     reccs = Recommendation.objects.filter(accepted=False)
     context = {'reccs' : reccs}
-    return render(request, 'albums/recommendation-review.html', context)
+    return render(request, 'albums/recommendation_review.html', context)
 
 #accepts a recommendation
 @login_required
@@ -517,7 +523,7 @@ def report(request):
         issue_num = new_issue_num,
         selected_issue = problem,
         description = description,
-        report = name,
+        reporter = name,
         page = url
     )
     return render(request, 'albums/base.html')
