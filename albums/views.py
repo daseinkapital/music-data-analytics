@@ -281,10 +281,10 @@ def edit_album(request, artist, album):
             if form.cleaned_data['subgenres']:
                 subgenres = form.cleaned_data['subgenres'].split(',')
                 for genre in subgenres:
-                    genre_inst = SubGenre.objects.filter(name__iexact=genre).first()
+                    genre_inst = SubGenre.objects.filter(name__iexact=genre.strip()).first()
 
                     if not genre_inst:
-                        genre_inst = SubGenre.objects.create(name=genre)
+                        genre_inst = SubGenre.objects.create(name=genre.strip())
 
                     subgenre_assign = AlbumSubgenre.objects.filter(album=album, subgenre=genre_inst).first()
 
@@ -371,12 +371,12 @@ def add_album(request):
             )
 
             if form.cleaned_data['subgenres']:
-                subgenres = form.cleaned_data['subgenres'].split('/')
+                subgenres = form.cleaned_data['subgenres'].split(',')
                 for genre in subgenres:
-                    genre_inst = SubGenre.objects.filter(name__iexact=genre).first()
+                    genre_inst = SubGenre.objects.filter(name__iexact=genre.strip()).first()
 
                     if not genre_inst:
-                        genre_inst = SubGenre.objects.create(name=genre)
+                        genre_inst = SubGenre.objects.create(name=genre.strip())
 
                     AlbumSubgenre.objects.create(
                             album = album,
