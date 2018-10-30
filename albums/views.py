@@ -35,7 +35,6 @@ def album_page(request, artist, album):
     album = Album.objects.filter(slug=album).filter(artist__slug=artist).first()
     album_has_url = album.has_url()
     context = {'album' : album, 'has_url' : album_has_url}
-    print(context)
     return render(request, 'albums/album_page.html', context)
 
 def artist_page(request, artist):
@@ -202,7 +201,6 @@ def suggest(request):
         return render(request, 'albums/suggestion.html', context)
 
 def match_game(request):
-    print(request.POST)
     context = {}
 
     if request.POST:
@@ -322,11 +320,7 @@ def edit_album(request, artist, album):
                 )
             
             album.save()
-            if not album.personally_checked:
-                check_urls(album)
-            if 'upload' in album.album_art:
-                update_art(album)
-
+            
             saved = True
             form = AlbumForm(instance=album)
 
@@ -339,10 +333,22 @@ def edit_album(request, artist, album):
             return render(request, 'albums/edit_album.html', context)
 
     form = AlbumForm(instance=album)
-    for whatever in form:
-        print(whatever.label_tag())
+
     context = {'form': form, 'album': album, 'saved': saved, 'error': error}
     return render(request, 'albums/edit_album.html', context)
+
+@login_required
+def update_information(request):
+    album_name = request.POST.get('album_name')
+    artist = request.POST.get('album_artist')
+    album = Album.objects.filter(name=album_name, artist__id=artist).first()
+    screw_the_rules()
+    if not album.personally_checked:
+        album = check_urls(album)
+    if ('upload' in album.album_art) or (album.album_art == None):
+        update_art(album)
+    album.save()
+    return render(request, 'albums/base.html')
 
 @login_required
 def add_album(request):
@@ -406,12 +412,13 @@ def add_album(request):
                     listen = last_rating + 1
                 )
 
-            scrape(album)
-
             AlbumArtist.objects.create(
                 album=album,
                 artist=artist
             )
+
+            album.save()
+            scrape(album)
 
             saved = True
         else:
@@ -509,7 +516,6 @@ def search_albums(request, albums):
 
             order_term = add + orders[order_post]
 
-            print(order_term)
             if order_term == 'date_finished':
                 albums = albums.order_by(order_term, add + 'order')
             else:

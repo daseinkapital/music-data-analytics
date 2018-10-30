@@ -27,6 +27,7 @@
                 {% endfor %}
                 <hr/>   
                 <input type="submit" value="Submit">
+                <input type="button" onclick="updateAlbum();" value="Update">
                 <a href="{% url 'album-page' artist=album.artist.slug album=album.slug %}"><button type="Button">Cancel</button></a>
             </form>
         </div>
@@ -37,7 +38,18 @@
 $('textarea').each(function() {
     $( this ).attr('cols', 30).attr('rows', 2);
 });
-
+var csrftoken = $   ("[name=csrfmiddlewaretoken]").val();
+function csrfSafeMethod(method) {
+// these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+});
 function fillCurrentDate() {
     var today = new Date();
     var dd = today.getDate();
@@ -54,6 +66,12 @@ function fillCurrentDate() {
 
     today = yyyy + '-' + mm + '-' + dd;
     $('#id_date_finished').val(today);
+}
+
+function updateAlbum() {
+    var album_name = $('#id_name').val();
+    var album_artist = $('#id_artist').val();
+    $.post("{% url 'update_album_info' %}", {'album_name' : album_name, 'album_artist' : album_artist });
 }
 </script>
 

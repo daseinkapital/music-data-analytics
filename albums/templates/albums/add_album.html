@@ -13,7 +13,7 @@
 <div class="bootstrap-iso">
     <div class="container-fluid">
         <div class="row form-div">
-            <form action="{% url 'add-album' %}" method=POST class="center">
+            <form id="new-album" action="{% url 'add-album' %}" method=POST class="center">
                 {% csrf_token %}
                 {% for field in form %}
                 <div class="row">
@@ -37,6 +37,8 @@
 $('textarea').each(function() {
     $( this ).attr('cols', 30).attr('rows', 2);
 });
+
+
 </script>
 
 {% endblock %}
