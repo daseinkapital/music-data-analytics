@@ -21,15 +21,34 @@ def main(request):
     context = {}
     albums = Album.objects.exclude(date_finished=None)
     albums, search, order_post, direction = search_albums(request.POST, albums)
-    
+    albums = albums[:50]
     context.update({'albums': albums})
     context.update({
         'search' : search,
         'order' : order_post,
         'direction' : direction,
-        'home' : 'active'
+        'home' : 'active',
+        'total_albums' : Album.objects.exclude(date_finished=None).count()
     })
     return render(request, 'albums/renders/main.html', context)
+
+def load_more_albums(request):
+    context = {}
+    start = int(request.POST.get('start'))
+    end = int(request.POST.get('end'))
+    albums = Album.objects.exclude(date_finished=None)
+    albums, search, order_post, direction = search_albums(request.POST, albums)
+    albums = albums[start:end]
+
+    context.update({'albums': albums})
+    context.update({
+        'search' : search,
+        'order' : order_post,
+        'direction' : direction,
+        'home' : 'active',
+        'total_albums' : Album.objects.exclude(date_finished=None).count()
+    })
+    return render(request, 'albums/insert/render.html', context)
 
 def album_page(request, artist, album):
     album = Album.objects.filter(slug=album).filter(artist__slug=artist).first()

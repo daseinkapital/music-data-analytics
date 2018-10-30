@@ -24,8 +24,9 @@
         </div>
     </div>
 </section>
+<div id="all-the-albums">
 {% include "albums/render_albums.html" %}
-
+</div>
 <footer>
     <script>
 $( document ).ready(function(){
@@ -48,6 +49,41 @@ function hideImages () {
     });   
 };
 
+var total_albums = {{total_albums}};
+var albums_loaded = 50;
+var last_album = albums_loaded;
+
+var csrftoken = $   ("[name=csrfmiddlewaretoken]").val();
+function csrfSafeMethod(method) {
+// these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+});
+
+$(window).scroll(function() {
+   if($(window).scrollTop() + $(window).height() == $(document).height()) {
+
+       var additional_albums = last_album + 50;
+
+       if (additional_albums == total_albums) {
+           return
+       } else if (additional_albums > total_albums) {
+           additional_albums = total_albums;
+       }
+       $.post("{% url 'load_more_albums' %}", {'start' : last_album, 'end' : additional_albums, 'search' : $('#search-bar').val(), 'order' : $("select[name='order']").val(), 'direction' : $("select[name='direction']").val()}, function(data) {appendAlbums(data);});
+       last_album = additional_albums;
+
+   }
+});
+function appendAlbums(data) {
+    $('#all-the-albums').append(data);
+}
 $("#search-bar").on("input", function(e) {
     hideImages();
 });

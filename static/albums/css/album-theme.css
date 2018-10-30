@@ -11,9 +11,9 @@
 }
 
 .img-main-page {
-    max-height: 100px;
-    max-width: 100px;
-    width: 100px;
+    max-height: 150px;
+    max-width: 150px;
+    width: 150px;
     display: inline-block;
     margin-left: auto;
     margin-right: auto;
@@ -40,8 +40,8 @@
 /*Album flip css */
 #album-container {
     position: relative;
-    width: 100px;
-    height: 100px;
+    width: 200px;
+    height: 200px;
     margin: 1px;
     z-index: 1;
     float:left;
