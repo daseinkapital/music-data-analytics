@@ -28,12 +28,13 @@
 {% include "albums/render_albums.html" %}
 </div>
 <footer>
-    <script>
+<script>
 $( document ).ready(function(){
     $("#search-bar").val("{{search}}")
     $("select[name='order']").val("{{order}}")
     $("select[name='direction']").val("{{direction}}")
     hideImages();
+    loadAllAlbums();
 });
 
 function hideImages () {
@@ -49,9 +50,6 @@ function hideImages () {
     });   
 };
 
-var total_albums = {{total_albums}};
-var albums_loaded = 50;
-var last_album = albums_loaded;
 
 var csrftoken = $   ("[name=csrfmiddlewaretoken]").val();
 function csrfSafeMethod(method) {
@@ -66,23 +64,33 @@ $.ajaxSetup({
     }
 });
 
-$(window).scroll(function() {
-   if($(window).scrollTop() + $(window).height() == $(document).height()) {
+function loadAllAlbums() {
+    var totalAlbums = {{total_albums}};
+    var albumsLoaded = 50;
+    var lastAlbum = albumsLoaded;
+    var additionalAlbums = 0;
+    var total = Math.round(totalAlbums/albumsLoaded);
+    var i = 0;
+    while(i < total) {
+        (function(i) {
+            setTimeout( function() {
+                additionalAlbums = lastAlbum + 50;
+                console.log(additionalAlbums);
 
-       var additional_albums = last_album + 50;
+                if (additionalAlbums == totalAlbums) {
+                    return
+                } else if (additionalAlbums > totalAlbums) {
+                    additionalAlbums = totalAlbums;
+                }
+                $.post("{% url 'load_more_albums' %}", {'start' : lastAlbum, 'end' : additionalAlbums, 'search' : $('#search-bar').val(), 'order' : $("select[name='order']").val(), 'direction' : $("select[name='direction']").val()}, function(data) {appendAlbums(data);});
+                lastAlbum = additionalAlbums;
+            }, 500*i)
+        })(i++)
+    };
+};
 
-       if (additional_albums == total_albums) {
-           return
-       } else if (additional_albums > total_albums) {
-           additional_albums = total_albums;
-       }
-       $.post("{% url 'load_more_albums' %}", {'start' : last_album, 'end' : additional_albums, 'search' : $('#search-bar').val(), 'order' : $("select[name='order']").val(), 'direction' : $("select[name='direction']").val()}, function(data) {appendAlbums(data);});
-       last_album = additional_albums;
-
-   }
-});
 function appendAlbums(data) {
-    $('#all-the-albums').append(data);
+    $('#albums').append(data);
 }
 $("#search-bar").on("input", function(e) {
     hideImages();
