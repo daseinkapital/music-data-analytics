@@ -536,11 +536,7 @@ def search_albums(request, albums):
             }
 
             order_term = add + orders[order_post]
-
-            if order_term == 'date_finished':
-                albums = albums.order_by(order_term, add + 'order', 'name')
-            else:
-                albums = albums.order_by(order_term, add + 'order', 'name')
+            albums = albums.order_by(order_term, add + 'order', 'name')
     else:
         search = ''
         order_post = ''
