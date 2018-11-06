@@ -17,6 +17,7 @@
                 {% csrf_token %}
                 {% for field in form %}
                 <div class="row">
+                    {% if 'Subgenre' in field.label_tag %}<div class="col-12">Current Subgenres: {% for genre in album.subgenres.all %}{{genre.subgenre}} | {% endfor %}</div><br>{% endif %}
                     <span class="col-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 form-label">{{field.label_tag}}{% if field.field.required %}<span class="help-text">*</span>{% endif %}</span>
                     <span class="col-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 form-label">{{field}}{% if 'Date finished' in field.label_tag  %}<button type="button" onclick="fillCurrentDate();">Current Date</button>{% endif %}</span>
                 </div>
