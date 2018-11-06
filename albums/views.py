@@ -23,11 +23,13 @@ def main(request):
     albums, search, order_post, direction = search_albums(request.POST, albums)
     albums = albums[:50]
     context.update({'albums': albums})
+    loved = Rating.objects.filter(score__gte=8).order_by('-id').first().album
     context.update({
         'search' : search,
         'order' : order_post,
         'direction' : direction,
         'home' : 'active',
+        'loved': loved,
         'total_albums' : Album.objects.exclude(date_finished=None).count()
     })
     return render(request, 'albums/renders/main.html', context)
@@ -335,7 +337,7 @@ def edit_album(request, artist, album):
             if not AlbumArtist.objects.filter(artist=form.cleaned_data['artist'], album=album).first():
                 AlbumArtist.objects.create(
                     album=album,
-                    artist=artist
+                    artist=form.cleaned_data['artist']
                 )
             
             album.save()
@@ -476,7 +478,7 @@ def accept_recc(request, recc_id):
     recc.save()
     reccs = Recommendation.objects.filter(accepted=False)
     context = {'reccs' : reccs}
-    return render(request, 'albums/recommendation-review.html', context)
+    return render(request, 'albums/recommendation_review.html', context)
 
 @login_required
 def accept_and_add_recc(request, recc_id):
@@ -499,7 +501,7 @@ def accept_and_add_recc(request, recc_id):
         )
     reccs = Recommendation.objects.filter(accepted=False)
     context = {'reccs' : reccs}
-    return render(request, 'albums/recommendation-review.html', context)
+    return render(request, 'albums/recommendation_review.html', context)
 ########## FUNCTIONS THAT THEN REDIRECT ###########
 @login_required
 def delete_album(request, album, artist):

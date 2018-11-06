@@ -26,7 +26,7 @@
                 <br>
                 {% endfor %}
                 <hr/>   
-                <input type="submit" value="Submit">
+                <input type="submit" value="Save">
                 <input type="button" onclick="updateAlbum();" value="Update">
                 <a href="{% url 'album-page' artist=album.artist.slug album=album.slug %}"><button type="Button">Cancel</button></a>
             </form>

@@ -1,0 +1,12 @@
+<div class="center banner">
+    <b><div style="display: inline-block; font-size: xx-large;">
+        Check out:
+        <br>
+        <div class="row">
+            <div class="col-6"><a href="{% url 'album-page' album=loved.slug artist=loved.artist.slug %}">Recently Loved</a></div>
+            <div class="col-6"><a href="{% url 'statistics' %}">Statistics</a></div>
+            <div class="col-6"><a href="{% url 'suggestion' %}">Recommend An Album</a></div>
+            <div class="col-6"><a href="{% url 'game' %}">Play A Game</a></div>
+        </div>
+    </div></b>
+</div>

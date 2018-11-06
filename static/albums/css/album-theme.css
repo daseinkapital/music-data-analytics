@@ -11,9 +11,9 @@
 }
 
 .img-main-page {
-    max-height: 150px;
-    max-width: 150px;
-    width: 150px;
+    max-height: 200px;
+    max-width: 200px;
+    width: 200px;
     display: inline-block;
     margin-left: auto;
     margin-right: auto;
@@ -36,15 +36,35 @@
     color: red;
 }
 
+.banner {
+    position: relative;
+    background-color: #1f2532;
+    color: white;
+    height:170px;
+    width: 100%;
+}
+
+.banner a {
+    color: red;
+}
+
+.banner:first-child {
+    margin-top: 5%;
+}
+
+body {
+    background-color:aliceblue;
+}
 
 /*Album flip css */
 #album-container {
-    position: relative;
+    display: flex;
+    justify-content: space-evenly;
     width: 200px;
     height: 200px;
-    margin: 1px;
     z-index: 1;
-    float:left;
+    display:inline-block;
+    margin: 10px;
 }
 
 #album-card {

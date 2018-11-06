@@ -5,6 +5,8 @@
 <div class="center">
     <h1 style="padding-top:40px;">Album Matching Game (Beta)</h1>
     <h4>Match the album cover with its name.</h4>
+    <h4>The cover will start off blurry and slowly get clearer.</h4>
+    <h4>The faster you answer, the more points you get. Answer wrong and you'll lose points.</h4>
     <form action={% url 'game' %} method="POST">
         {% csrf_token %}
         <input name="attempts" value=0 hidden>
