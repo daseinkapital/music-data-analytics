@@ -1,14 +1,14 @@
 {% for album in albums %}
-    <div id="album-container">
-        <div id="album-card">
-            <div class="front face">
-                <div class="strategy">
-                    <a href="{% url 'album-page' artist=album.artist.slug album=album.slug %}"><img src="{{album.album_art}}" name="{{album.slug}}" onerror="javascript:this.src='https://static1.squarespace.com/static/55a57011e4b09934ba12fd1a/5612b784e4b07c6a02988249/5612dd98e4b0e75bc4a61cc7/1444076954414/record.png?format=500w'" class="img-main-page" title="{{album}}"></a>
-                </div>
-            </div>
-            <div class="back face album-link">
-                <a href="{% url 'album-page' artist=album.artist.slug album=album.slug %}"><p>{{album}}</p></a>
+<div id="album-container">
+    <div id="album-card">
+        <div class="front face">
+            <div class="strategy">
+                <a href="{% url 'album-page' artist=album.artist.slug album=album.slug %}"><img src="{{album.album_art}}" name="{{album.slug}}" onerror="javascript:this.src='https://static1.squarespace.com/static/55a57011e4b09934ba12fd1a/5612b784e4b07c6a02988249/5612dd98e4b0e75bc4a61cc7/1444076954414/record.png?format=500w'" class="img-main-page" title="{{album}}"></a>
             </div>
         </div>
+        <div class="back face album-link">
+            <a href="{% url 'album-page' artist=album.artist.slug album=album.slug %}"><p style="font-size: x-large">{{album}}</p></a>
+        </div>
     </div>
+</div>
 {% endfor %}

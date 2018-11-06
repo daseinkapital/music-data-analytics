@@ -92,6 +92,7 @@ function loadAllAlbums() {
 
 function appendAlbums(data) {
     $('#albums').append(data);
+    hideImages();
 }
 $("#search-bar").on("input", function(e) {
     hideImages();
