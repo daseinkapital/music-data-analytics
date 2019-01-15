@@ -28,6 +28,8 @@
 <div id="all-the-albums" style="width: 90%; margin-left: auto; margin-right: auto; position: relative;">
 {% include "albums/render_albums.html" %}
 </div>
+<br>
+<img src="{% static 'albums/img/Loading_icon.gif' %}" style="display: block; margin: 0 auto; height: 50px;" id="loading">
 <footer>
 <script>
 $( document ).ready(function(){
@@ -87,6 +89,9 @@ function loadAllAlbums() {
             }, 500*i)
         })(i++)
     };
+    setTimeout( function() {
+        $('#loading').hide();
+    }, 500*i);
 };
 
 function appendAlbums(data) {
