@@ -218,7 +218,6 @@ def suggest(request):
             }
 
             message = "{0} has just recommended you listen to {1} by {2}.".format(form.cleaned_data['recc_name'], form.cleaned_data['album_name'], form.cleaned_data['artist_name'])
-            sendemail(message)
             return render(request, 'albums/thanks.html', context)
     else:
         form = ReccForm()
@@ -552,19 +551,21 @@ def search_albums(request, albums):
         direction = 'up'
     return albums, search, order_post, direction
 
-def sendemail(message):
-    frm = 'senderofthenotification@gmail.com'
-    to = 'drewbaer@vt.edu'
-    msg = message
-    user = frm
-    pswd = os.environ['EMAIL_PASS']
-    send_mail(
-        'New Album Recommendation',
-        msg,
-        frm,
-        [to]
-    )
-    return 'Success'
+# def sendemail(message):
+
+#     frm = 'senderofthenotification@gmail.com'
+#     to = 'drewbaer@vt.edu'
+#     msg = message
+#     user = 'senderofthenotification'
+#     pswd = os.environ['EMAIL_PASS']
+
+#     send_mail(
+#         'New Album Recommendation',
+#         msg,
+#         frm,
+#         [to]
+#     )
+#     return 'Success'
 
 def report(request):
     problem = request.POST.get('problem')
