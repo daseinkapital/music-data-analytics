@@ -17,6 +17,7 @@ class AlbumForm(ModelForm):
     youtube_url = forms.CharField(label="YouTube URL", required=False)
     soundcloud_url = forms.CharField(label="SoundCloud URL", required=False)
     spotify_url = forms.CharField(label="Spotify URL", required=False)
+    before_album = forms.BooleanField(label="Album Before Project", required=False)
 
     class Meta:
         model = Album
@@ -42,7 +43,8 @@ class AlbumForm(ModelForm):
             'rating',
             'subgenres',
             'personally_checked',
-            'note'
+            'note',
+            "before_album"
         ]
 
 #OTHER FORMS

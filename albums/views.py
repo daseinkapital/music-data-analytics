@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
+from django.core.mail import send_mail
 
 from albums.models import *
 from albums.forms import AlbumForm, ReccForm, consolidateSubgenreForm
@@ -13,7 +14,7 @@ from .management.commands.updatealbumart import update_art
 
 import datetime as dt
 
-import random
+import random, os, smtplib
 
 
 # Create your views here.
@@ -215,6 +216,9 @@ def suggest(request):
             context = {
                 'album' : form.cleaned_data['album_name']
             }
+
+            message = "{0} has just recommended you listen to {1} by {2}.".format(form.cleaned_data['recc_name'], form.cleaned_data['album_name'], form.cleaned_data['artist_name'])
+            sendemail(message)
             return render(request, 'albums/thanks.html', context)
     else:
         form = ReccForm()
@@ -407,6 +411,11 @@ def add_album(request):
                 note = form.cleaned_data['note']
             )
 
+            if form.cleaned_data['before_album']:
+                album.order = 0
+                album.row = 0
+                album.chart = 0
+
             if form.cleaned_data['subgenres']:
                 subgenres = form.cleaned_data['subgenres'].split(',')
                 for genre in subgenres:
@@ -542,6 +551,20 @@ def search_albums(request, albums):
         order_post = ''
         direction = 'up'
     return albums, search, order_post, direction
+
+def sendemail(message):
+    frm = 'senderofthenotification@gmail.com'
+    to = 'drewbaer@vt.edu'
+    msg = message
+    user = frm
+    pswd = os.environ['EMAIL_PASS']
+    send_mail(
+        'New Album Recommendation',
+        msg,
+        frm,
+        [to]
+    )
+    return 'Success'
 
 def report(request):
     problem = request.POST.get('problem')

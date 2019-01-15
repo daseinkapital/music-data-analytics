@@ -16,6 +16,7 @@
             <form id="new-album" action="{% url 'add-album' %}" method=POST class="center">
                 {% csrf_token %}
                 {% for field in form %}
+                {% if 'Name' in field.label_tag %}
                 <div class="row">
                     <span class="col-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 form-label">{{field.label_tag}}{% if field.field.required %}<span class="help-text">*</span>{% endif %}</span>
                     <span class="col-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 form-label">{{field}}</span>
@@ -24,7 +25,27 @@
                     <small><span class="col-4 help-text">{{field.help_text}}</span></small>
                 </div>
                 <br>
+                {% elif 'Artist' in field.label_tag %}
+                <div class="row">
+                    <span class="col-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 form-label">{{field.label_tag}}{% if field.field.required %}<span class="help-text">*</span>{% endif %}</span>
+                    <span class="col-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 form-label">{{field}}</span>
+                </div>
+                <div class="row">    
+                    <small><span class="col-4 help-text">{{field.help_text}}</span></small>
+                </div>
+                <br>
+                {% else %}
+                <div class="row" hidden>
+                    <span class="col-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 form-label">{{field.label_tag}}{% if field.field.required %}<span class="help-text">*</span>{% endif %}</span>
+                    <span class="col-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 form-label">{{field}}</span>
+                </div>
+                <div class="row" hidden>    
+                    <small><span class="col-4 help-text">{{field.help_text}}</span></small>
+                </div>
+                <br>
+                {% endif %}
                 {% endfor %}
+                <a href="#" onclick="unHide();"><h6>See More...</h6></a>
                 <hr/>   
                 <input type="submit" value="Submit">
                 <input type="reset" value="Reset">
@@ -37,6 +58,13 @@
 $('textarea').each(function() {
     $( this ).attr('cols', 30).attr('rows', 2);
 });
+
+function unHide() {
+    $(':hidden').each(function() {
+        $( this ).removeAttr('hidden');
+    });
+};
+
 
 
 </script>

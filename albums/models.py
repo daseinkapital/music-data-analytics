@@ -199,6 +199,11 @@ class Album(models.Model):
         blank=True,
     )
 
+    date_added = models.DateField(
+        blank=True,
+        null=True
+    )
+
     date_finished = models.DateField(
         blank=True,
         null=True,
@@ -206,6 +211,14 @@ class Album(models.Model):
 
     primary_genre = models.ForeignKey(
         to='PrimaryGenre',
+        related_name='albums',
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+    )
+
+    album_type = models.ForeignKey(
+        to='AlbumType',
         related_name='albums',
         blank=True,
         null=True,
@@ -453,6 +466,13 @@ class Album(models.Model):
 
     class Meta:
         ordering = ['name', 'artist']
+
+class AlbumType(models.Model):
+    name = models.CharField(
+        max_length=100,
+        blank=False,
+        null=False
+    )
 
 class Group(models.Model):
     name = models.CharField(

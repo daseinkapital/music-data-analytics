@@ -36,7 +36,7 @@ def generate_genre_table(albums):
             denominator = count - 1
             for album in albums.filter(primary_genre=genre).exclude(current_rating=None):
                 numerator += (float(album.current_rating) - avg_rating)**2
-            stddev = (numerator/denominator)**(0.5)
+            stddev = round((numerator/denominator)**(0.5), 4)
         else:
             stddev = "N/A"
 
@@ -61,10 +61,11 @@ def average_listen_time_per_day(query):
     return format_sum_time(music_per_day)
 
 def queue_completion_time(albums, queue):
-    music_since_start = albums.exclude(chart=0)
-    music_since_start_listened = music_since_start.exclude(date_finished=None)
-    total_time = time_total_no_format(music_since_start_listened)
-    days_delta = date.today() - date(2017, 1, 1)
+    music_from_last_month = Album.objects.filter(date_finished__gte=(date.today() - dt.timedelta(days=31)))
+    if len(music_from_last_month) == 0:
+        return "A lot of"
+    total_time = time_total_no_format(music_from_last_month)
+    days_delta = date.today() - (date.today() - dt.timedelta(days=31))
     days_since_start = days_delta.days
     music_per_day = total_time/days_since_start
     total_time = time_total_no_format(queue)
