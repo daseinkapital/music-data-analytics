@@ -1,2 +1,2 @@
 # music-data-analytics
-Live site can be found [here](https://music.andrewsamuelson.dev).
+Live site can be found [here](music.andrewsamuelson.dev).
