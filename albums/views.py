@@ -545,6 +545,13 @@ def search_albums(request, albums):
 
             order_term = add + orders[order_post]
             albums = albums.order_by(order_term, add + 'order', 'name')
+            
+            if orders[order_post] == 'time_length':
+                albums.exclude(time_length=None)
+            elif orders[order_post] == 'current_rating':
+                albums.exclude(current_rating=None)
+            elif orders[order_post] == 'release_date':
+                albums.exclude(release_date=None)
     else:
         search = ''
         order_post = ''
