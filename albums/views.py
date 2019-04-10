@@ -414,6 +414,7 @@ def add_album(request):
                 album.order = 0
                 album.row = 0
                 album.chart = 0
+                album.date_finished = datetime.date(2016, 1, 1)
 
             if form.cleaned_data['subgenres']:
                 subgenres = form.cleaned_data['subgenres'].split(',')
