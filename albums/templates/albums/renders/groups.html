@@ -27,7 +27,11 @@
     </div>
 </section>
 <section>
-    <h1 class="center">{{group.capitalize}}</h1>
+    {% if group != "cassette" and group != "vinyl" and group != "queue" %}
+        <h1 class="center">{{group}}</h1>
+    {% else %}
+        <h1 class="center">{{group.capitalize}}</h1>
+    {% endif %}
 </section>
 {% include "albums/render_albums.html" %}
 <footer>

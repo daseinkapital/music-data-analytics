@@ -1,7 +1,7 @@
 from django.forms import ModelForm
 from django import forms
 
-from albums.models import Album, SubGenre
+from albums.models import Album, SubGenre, AlbumGroup, Group
 
 
 #MODEL CLASSES
@@ -45,6 +45,21 @@ class AlbumForm(ModelForm):
             'personally_checked',
             'note',
             "before_album"
+        ]
+
+class AlbumGroupForm(forms.Form):
+    album = forms.ModelChoiceField(queryset=Album.objects.all(), label='Album', empty_label="----------", required=True)
+    group = forms.ModelChoiceField(queryset=Group.objects.all(), label='Group', empty_label="----------", required=True)
+
+    class Meta:
+        fields = [
+            'album',
+            'group'
+        ]
+
+        fields_required = [
+            'album',
+            'group'
         ]
 
 #OTHER FORMS

@@ -489,6 +489,9 @@ class Group(models.Model):
     class Meta:
         ordering = ['name']
 
+    def __str__(self):
+        return self.name
+
 class AlbumGroup(models.Model):
     album = models.ForeignKey(
         to='Album',

@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.core.mail import send_mail
 
 from albums.models import *
-from albums.forms import AlbumForm, ReccForm, consolidateSubgenreForm
+from albums.forms import AlbumForm, ReccForm, consolidateSubgenreForm, AlbumGroupForm
 from albums.functions.stats import *
 
 from .management.commands.scrape import scrape
@@ -171,7 +171,11 @@ def consolidate_subgenre(request):
         context.update({'form': consolidateSubgenreForm()})
     
     return render(request, 'albums/consolidate_subgenre.html', context)
-                
+
+def lists(request):
+    lists = Group.objects.all()
+    context = {'groups' : lists}
+    return render(request, 'albums/landing/list.html', context)   
 
 def group(request, group):
     if group == "queue":
@@ -180,8 +184,10 @@ def group(request, group):
         albums = Album.objects.filter(vinyl=True).order_by('order')
     elif group == "cassette":
         albums = Album.objects.filter(cassette=True).order_by('order')
+    elif group == "Albums I've Loved":
+        albums = Album.objects.filter(current_rating__gte=8).order_by('current_rating')
     else:
-        albums = Album.objects.filter(groups__group__name__iexact=group)
+        albums = Album.objects.filter(lists__group__name__iexact=group)
     albums, search, order_post, direction = search_albums(request.POST, albums)
     context = {'group' : group, 'albums' : albums}
     context.update({'search' : search, 'order' : order_post, 'direction' : direction})
@@ -373,6 +379,27 @@ def update_information(request):
         update_art(album)
     album.save()
     return render(request, 'albums/base.html')
+
+@login_required
+def add_album_to_group(request):
+    saved = None
+    if request.POST:
+        form = request.POST
+        album = Album.objects.filter(id=form['album']).first()
+        group = Group.objects.filter(id=form['group']).first()
+        if AlbumGroup.objects.filter(album=album, group=group).count() == 0:
+            albumgroup = AlbumGroup.objects.create(
+                album = album,
+                group = group
+            )
+
+            albumgroup.save()
+            saved = True
+
+    form = AlbumGroupForm()
+
+    context = {'saved': saved, 'form': form}
+    return render(request, 'albums/add_to_group.html', context)
 
 @login_required
 def add_album(request):

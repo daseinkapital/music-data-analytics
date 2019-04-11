@@ -1,0 +1,11 @@
+{% extends 'albums/base.html' %}
+
+{% block body_block %}
+
+<h1><a href="{% url 'group' group='queue' %}">Queue</a></h1>
+<h1><a href="{% url 'group' group='vinyl' %}">Vinyl</a></h1>
+<h1><a href="{% url 'group' group='cassette' %}">Cassettes</a></h1>
+{% for group in groups %}
+    <h1><a href="{% url 'group' group=group %}">{{group}}</a></h1>
+{% endfor %}
+{% endblock %}
