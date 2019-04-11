@@ -342,7 +342,7 @@ class Album(models.Model):
 
             latest_album = Album.objects.exclude(order=None).order_by('-order').first()
             chart = latest_album.chart
-            album_row_count = Album.objects.filter(chart=latest_album.chart, row=latest_album.row).count
+            album_row_count = Album.objects.filter(chart=latest_album.chart, row=latest_album.row).count()
             if album_row_count == 10:
                 if latest_album.row == 10:
                     row = 1

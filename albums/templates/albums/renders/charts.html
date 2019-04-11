@@ -27,7 +27,7 @@
 <section>
         <div id="albums" class="center">
         {% for album in albums %}
-            {% if album.chart < 4 %}
+            {% if album.chart <= 4 %}
                 {% if forloop.counter0|divisibleby:12 %}
                 <br/>
                 {% endif %}
