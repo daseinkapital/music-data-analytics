@@ -1,0 +1,53 @@
+{% extends 'albums/base.html' %}
+
+{% block body_block %}
+<div class="container" style="top: 40px; position: relative;">
+    <div class="row" style="display: flex; justify-content: space-around; flex-wrap: wrap; text-align: center;">
+        <div class="card col col-md-5">
+            <div class="card-body">
+                <h1 class="card-title" style="text-align: center;">Update Queue</h1>
+                <button onclick="updateQueue();">Update Queue</button>        
+            </div>
+        </div>
+        <div class="card col col-md-5">
+            <div class="card-body">
+                <h1>Add</h1>
+                <ul>
+                    <li><a href="{% url 'add-album' %}">Add Albums</a></li>
+                    <li><a href="{% url 'add-album-to-group' %}">Add Albums to Groups</a></li>
+                    <li><a href='#'>Add Groups (Coming Soon)</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="card col col-md-5">
+            <div class="card-body">
+                <h1>Recommendations</h1>
+            </div>
+        </div>
+        <div class="card col col-md-5">
+            <div class="card-body">
+                <h1>Issues</h1>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+var csrftoken = $   ("[name=csrfmiddlewaretoken]").val();
+function csrfSafeMethod(method) {
+// these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+});
+function updateQueue() {
+    $.get("{% url 'update-album-queue' %}");
+}
+</script>
+{% endblock %}

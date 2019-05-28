@@ -11,6 +11,7 @@ from albums.functions.stats import *
 from .management.commands.scrape import scrape
 from .management.commands.checkurls import check_urls
 from .management.commands.updatealbumart import update_art
+from .management.commands.updatequeue import update_queue
 
 import datetime as dt
 
@@ -286,6 +287,15 @@ def about(request):
     context = {'about' : 'active'}
     return render(request, 'albums/about.html', context)
 
+@login_required
+def admin_panel(request):
+    context = {'admin' : 'active'}
+    return render(request, 'albums/admin/main.html', context)
+
+@login_required
+def update_album_queue(request):
+    update_queue()
+    return render(request, 'albums/base.html')
 
 @login_required
 def edit_album(request, artist, album):

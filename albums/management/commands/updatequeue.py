@@ -18,40 +18,43 @@ class Command(BaseCommand):
     help = 'Check my spotify playlist of music to listen to and determine if there have been new songs added.'
 
     def handle(self, *args, **options):
-        scope = 'user-library-read'
-        spotify_username = os.environ['SPOTIFY_USERNAME']
-        client_id = os.environ['SPOTIFY_CLIENT_ID']
-        client_secret = os.environ['SPOTIFY_CLIENT_SECRET']
-        redirect_uri = 'http://localhost:8000/'
-        token = util.prompt_for_user_token(spotify_username, scope, client_id, client_secret, redirect_uri)
-
-        if token:
-            sp = spotipy.Spotify(auth=token)
-            queue_playlist = sp.user_playlist(spotify_username, playlist_id='spotify:playlist:6j3ksyq3Kp74CUpvymYciF')
-            
-            # create cutoff date because spotify api currently has a glitch
-            # where it will show songs that were removed from spotify but
-            # once in your playlist as still in your playlist 
-            cutoff_date = dt.datetime(2019,3,1)
-            all_songs = get_all_relevant_song_info(sp, queue_playlist, cutoff_date)
-            
-            albums_in_queue = get_list_of_all_albums_in_queue(all_songs)
-
-            most_recent_album = get_most_recent_queue_album()
-
-            unadded_albums = get_unadded_album(albums_in_queue, most_recent_album)
-            
-            for album in unadded_albums:
-                str_album = "{0} by {1}".format(album['album'], album['artist'])
-                print("Adding " + str_album)
-                create_and_scrape_album(album)
-
-        else:
-            print("Can't get token for", spotify_username)
+        print("Updating queue")
+        update_queue()
+        print("Queue is fully updated")
 
 
 
+def update_queue():
+    scope = 'user-library-read'
+    spotify_username = os.environ['SPOTIFY_USERNAME']
+    client_id = os.environ['SPOTIFY_CLIENT_ID']
+    client_secret = os.environ['SPOTIFY_CLIENT_SECRET']
+    redirect_uri = 'http://localhost:8000/'
+    token = util.prompt_for_user_token(spotify_username, scope, client_id, client_secret, redirect_uri)
 
+    if token:
+        sp = spotipy.Spotify(auth=token)
+        queue_playlist = sp.user_playlist(spotify_username, playlist_id='spotify:playlist:6j3ksyq3Kp74CUpvymYciF')
+        
+        # create cutoff date because spotify api currently has a glitch
+        # where it will show songs that were removed from spotify but
+        # once in your playlist as still in your playlist 
+        cutoff_date = dt.datetime(2019,3,1)
+        all_songs = get_all_relevant_song_info(sp, queue_playlist, cutoff_date)
+        
+        albums_in_queue = get_list_of_all_albums_in_queue(all_songs)
+
+        most_recent_album = get_most_recent_queue_album()
+
+        unadded_albums = get_unadded_album(albums_in_queue, most_recent_album)
+        
+        for album in unadded_albums:
+            str_album = "{0} by {1}".format(album['album'], album['artist'])
+            print("Adding " + str_album)
+            create_and_scrape_album(album)
+
+    else:
+        print("Can't get token for", spotify_username)
 
 def get_all_relevant_song_info(spotify_player, playlist, cutoff_date):
     all_songs = []
