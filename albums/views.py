@@ -475,6 +475,7 @@ def add_album(request):
             )
 
             album.save()
+            check_urls(album)
             scrape(album, search_for_urls=True)
 
             saved = True
