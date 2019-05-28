@@ -475,7 +475,7 @@ def add_album(request):
             )
 
             album.save()
-            scrape(album)
+            scrape(album, search_for_urls=True)
 
             saved = True
         else:

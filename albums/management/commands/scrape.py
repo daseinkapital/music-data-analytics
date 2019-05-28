@@ -26,44 +26,59 @@ def find_urls(album):
     artist_name = album.artist.name
     query = album_name + " " + artist_name
 
-    urls = {
-        'wiki' : None,
-        'bc' : None,
-        'amazon' : None,
-        'discogs' : None,
-        'spotify' : None,
-        'itunes' : None
-    }
+    urls = {}
+
+    if not album.wiki_url:
+        urls.update({'wiki': None})
+    if not album.bc_url:
+        urls.update({'bc': None})
+    if not album.amazon_url:
+        urls.update({'amazon': None})
+    if not album.discogs_url:
+        urls.update({'discogs': None})
+    if not album.spotify_url:
+        urls.update({'spotify': None})
+    if not album.itunes_url:
+        urls.update({'itunes': None})
 
     for result in search(query, num=10, stop=10, pause=2):
-        if 'wikipedia.org' in result:
-            if 'song' not in result:
-                if urls['wiki'] == None:
-                    urls.update({'wiki' : result})
-        if 'bandcamp.com' in result:
-            if 'album' in result:
-                if urls['bc'] == None:
-                    urls.update({'bc' : result})
-        if 'amazon.com' in result:
-            if urls['amazon'] == None:
-                urls.update({'amazon' : result})
-        if 'discogs.com' in result:
-            if urls['discogs'] == None:
-                urls.update({'discogs' : result})
-        if 'spotify.com' in result:
-            if urls['spotify'] == None:
-                urls.update({'spotify' : result})
-        if 'itunes.apple.com' in result:
-            if urls['itunes'] == None:
-                urls.update({'itunes' : result})
+        if 'wiki' in urls:
+            if 'wikipedia.org' in result:
+                if 'song' not in result:
+                    if urls['wiki'] == None:
+                        urls.update({'wiki' : result})
+        if 'bc' in urls:
+            if 'bandcamp.com' in result:
+                if 'album' in result:
+                    if urls['bc'] == None:
+                        urls.update({'bc' : result})
+        if 'amazon' in urls:
+            if 'amazon.com' in result:
+                if urls['amazon'] == None:
+                    urls.update({'amazon' : result})
+        if 'discogs' in urls:
+            if 'discogs.com' in result:
+                if urls['discogs'] == None:
+                    urls.update({'discogs' : result})
+        if 'spotify' in urls:
+            if 'spotify.com' in result:
+                if 'artist' not in result:
+                    if urls['spotify'] == None:
+                        urls.update({'spotify' : result})
+        if 'itunes' in urls:
+            if 'itunes.apple.com' in result:
+                if 'artist' not in result:
+                    if urls['itunes'] == None:
+                        urls.update({'itunes' : result})
     
-    if (urls['wiki'] == None) and (urls['bc'] == None):
-        query = query + " wikipedia bandcamp"
-        for result in search(query, num=10, stop=10, pause=2):
-            if 'wikipedia' in result:
-                urls.update({'wiki' : result})
-            if 'bandcamp' in result:
-                urls.update({'bc' : result})
+    if 'wiki' in urls and 'bc' in urls:
+        if (urls['wiki'] == None) and (urls['bc'] == None):
+            query = query + " wikipedia bandcamp"
+            for result in search(query, num=10, stop=10, pause=2):
+                if 'wikipedia' in result:
+                    urls.update({'wiki' : result})
+                if 'bandcamp' in result:
+                    urls.update({'bc' : result})
     
     return urls
 
@@ -533,40 +548,44 @@ def scrape_soundcloud(album):
     return album
     
 
-def scrape(album):
+def scrape(album, search_for_urls=False):
     screw_the_rules()
 
     if album.all_info_found():
         return
 
-    if album.has_url():
-        if album.amazon_url:
-            album = scrape_amazon(album)
-            album.save()
-    else:
+    if search_for_urls:
         sleep(5)
         urls = find_urls(album)
-        if urls['wiki']:
-            album.wiki_url = urls['wiki']
-        if urls['bc']:
-            album.bc_url = urls['bc']
-        if urls['amazon']:
-            album.amazon_url = urls['amazon']
-        if urls['discogs']:
-            album.discogs_url = urls['discogs']
-        if urls['spotify']:
-            album.spotify_url = urls['spotify']
-        if urls['itunes']:
-            album.itunes_url = urls['itunes']
+        if 'wiki' in urls:
+            if urls['wiki']:
+                album.wiki_url = urls['wiki']
+        if 'bc' in urls:
+            if urls['bc']:
+                album.bc_url = urls['bc']
+        if 'amazon' in urls:
+            if urls['amazon']:
+                album.amazon_url = urls['amazon']
+        if 'discogs' in urls:
+            if urls['discogs']:
+                album.discogs_url = urls['discogs']
+        if 'spotify' in urls:
+            if urls['spotify']:
+                album.spotify_url = urls['spotify']
+        if 'itunes' in urls:
+            if urls['itunes']:
+                album.itunes_url = urls['itunes']
         try:
             album.save()
         except(DataError):
             album.album_art = None
             album.save()
         
-        if album.amazon_url:
-            album = scrape_amazon(album)
-            album.save()
+    if album.all_info_found():
+        return
+    else:
+        album = scrape_amazon(album)
+        album.save()
 
 
     if album.all_info_found():
