@@ -526,16 +526,18 @@ def accept_and_add_recc(request, recc_id):
     if not artist:
         artist = Artist.objects.create(name=recc.artist_name)
     if recc.amazon_referral_url:
-        Album.objects.create(
+        album = Album.objects.create(
             name = recc.album_name,
             artist = artist,
             amazon_url = recc.amazon_referral_url
         )
     else:
-        Album.objects.create(
+        album = Album.objects.create(
             name = recc.album_name,
             artist = artist
         )
+    check_urls(album)
+    scrape(album, search_for_urls=True)
     reccs = Recommendation.objects.filter(accepted=False)
     context = {'reccs' : reccs}
     return render(request, 'albums/recommendation_review.html', context)
