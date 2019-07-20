@@ -36,6 +36,7 @@ elif dev_env == "prod":
     CSRF_COOKIE_SECURE = True
     SECURE_BROWSER_XSS_FILTER = True
     ALLOWED_HOSTS = [os.environ['ALLOWED_HOST']]
+    
 
 
 
