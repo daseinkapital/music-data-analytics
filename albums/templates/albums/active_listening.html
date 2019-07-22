@@ -1,0 +1,11 @@
+{% extends 'albums/base.html' %}
+
+{% block body_block %}
+<h1 class="center">Welcome</h1>
+{% if loginBtn %}
+{{loginBtn | safe}}
+{% else %}
+<p class="center">Hello, {{user.display_name}}</p>
+<p class="center">I see you're listening to {{current_track.item.name}}</p>
+{% endif %}
+{% endblock %}

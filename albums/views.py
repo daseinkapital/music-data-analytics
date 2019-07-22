@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.urls import reverse
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
@@ -551,6 +552,7 @@ def accept_and_add_recc(request, recc_id):
     reccs = Recommendation.objects.filter(accepted=False)
     context = {'reccs' : reccs}
     return render(request, 'albums/recommendation_review.html', context)
+
 ########## FUNCTIONS THAT THEN REDIRECT ###########
 @login_required
 def delete_album(request, album, artist):

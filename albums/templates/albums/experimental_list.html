@@ -1,0 +1,24 @@
+{% extends 'albums/base.html' %}
+
+{% block body_block %}
+<div class="container" style="top: 40px; position: relative;">
+    <div class="row">
+        {% for feature in features%}
+        <div class="card col col-md-5">
+            <div class="card-body">
+                <div class="card-title">
+                    <h1>{{feature.name}}</h1>
+                </div>
+                <div class="card-text">
+                    <p>{{feature.description}}</p>
+                </div>
+                <div class="btn btn-warning">
+                    <a href='{{feature.url}}'>View Feature</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}        
+    </div>
+</div>
+
+{% endblock %}
