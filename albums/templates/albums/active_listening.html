@@ -6,6 +6,22 @@
 {{loginBtn | safe}}
 {% else %}
 <p class="center">Hello, {{user.display_name}}</p>
-<p class="center">I see you're listening to {{current_track.item.name}}</p>
+<p class="center">I see you're listening to {{current_track.item.name}}.</p>
 {% endif %}
+
+<script>
+$('document').ready(function(){
+    window.addEventListener("storage",function(event){
+        if (event.key == "accessToken"){
+            var spAccessToken = event.newValue;
+            console.log("ACCESS TOKEN", spAccessToken);
+        }
+    });
+});
+
+function getCurrentTrack() {
+    let token = localStorage.getItem('accessToken');
+    
+}
+</script>
 {% endblock %}

@@ -1,0 +1,20 @@
+<h3>Logging in. One second.</h3>
+<script
+src="https://code.jquery.com/jquery-3.3.1.min.js"
+integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+crossorigin="anonymous">
+</script>
+<script>
+$('document').ready(function(){
+    //i leave 'parseHash()' as an exercise for the reader, all it does is take the uri string(see above ex of what this looks like) and get the access_token from it
+    var spotifyAccessToken = parseHash(String(window.location.hash));
+    //you must clear localStorage for main page listener to trigger on all(including duplicate) entries
+    localStorage.clear();
+    localStorage.setItem('accessToken', spotifyAccessToken);
+    window.close();
+});
+
+function parseHash(url) {
+    return url.split("=")[1].split("&")[0]
+}
+</script>

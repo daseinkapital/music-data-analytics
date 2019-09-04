@@ -27,6 +27,7 @@ urlpatterns = [
     path('admin-panel/delete-album/<album>/<artist>/', views.delete_album, name='delete-album'),
     path('admin-panel/update_album_artist/', views.update_information, name='update_album_info'),
     path('list/', views.lists, name='group-main'),
+    path('spotify-login/', spotifyviews.spotifyLoginPage, name='spot-login'),
     path('features/', spotifyviews.experimental_features, name='experimental-features'),
     path('features/active-listening', spotifyviews.active_listening, name='active-listening'),
     path('list/<group>/', views.group, name='group'),

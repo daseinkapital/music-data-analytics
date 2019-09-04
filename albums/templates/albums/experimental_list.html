@@ -13,12 +13,24 @@
                     <p>{{feature.description}}</p>
                 </div>
                 <div class="btn btn-warning">
-                    <a href='{{feature.url}}'>View Feature</a>
+                    <a onclick="loginSpotify('{{feature.url}}', '{{feature.scope}}')">View Feature</a>
                 </div>
             </div>
         </div>
         {% endfor %}        
     </div>
 </div>
+
+<script>
+function loginSpotify(url, scope){
+        var SPOTIPY_CLIENT_ID = "{{sp_creds.id}}";
+        var SPOTIPY_REDIRECT_URI = "{{sp_creds.login}}";
+        var spotifyScope = scope;
+        var spotifyAuthEndpoint = "https://accounts.spotify.com/authorize?"+"client_id="+SPOTIPY_CLIENT_ID+"&redirect_uri="+SPOTIPY_REDIRECT_URI+"&scope="+spotifyScope+"&response_type=token&state=123";
+        window.open(spotifyAuthEndpoint,'callBackWindow','height=500,width=400');
+        window.location.href = url;
+
+    }
+</script>
 
 {% endblock %}

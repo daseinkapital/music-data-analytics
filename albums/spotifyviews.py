@@ -15,7 +15,8 @@ def current_user_playing_track(self):
     '''
     return self._get('me/player/currently-playing')
 
-
+def spotifyLoginPage(request):
+    return render(request, 'albums/spotify/login.html', {})
 
 def experimental_features(request):
     context = {}
@@ -24,9 +25,10 @@ def experimental_features(request):
     else:
         url_base = 'music.andrewsamuelson.dev'
     features = [
-        {'name': 'Active Listening', 'description': 'I have tried to implement a machine learning model that will look at your current playlist and try to override the random shuffling to create custom suggested track songs based on your active listening habits. This will work best with large playlists.', 'url': url_base + reverse('active-listening')},
+        {'name': 'Active Listening','url': url_base + reverse('active-listening'), 'scope': 'user-read-currently-playing', 'description': 'I have tried to implement a machine learning model that will look at your current playlist and try to override the random shuffling to create custom suggested track songs based on your active listening habits. This will work best with large playlists.'},
     ]
-    context.update({'features': features})
+    sp_creds = {'id': os.environ['SPOTIFY_CLIENT_ID'], 'secret': os.environ['SPOTIFY_CLIENT_SECRET'], 'login': url_base + reverse('spot-login')}
+    context.update({'features': features, 'sp_creds': sp_creds})
     return render(request, 'albums/experimental_list.html', context)
 
 def get_sp_auth(page):
@@ -42,14 +44,20 @@ def get_sp_auth(page):
 
 def active_listening(request):
     setattr(spotipy.Spotify, 'current_user_playing_track', current_user_playing_track)
-    print("REQUEST", request.path_info)
+    print("REQUEST", request.GET.get('code'))
     context = {}
     access_token = ""
 
     sp_oauth = get_sp_auth('active-listening')
     token_info = sp_oauth.get_cached_token()
+    print("TOKEN INFO", token_info)
 
-    if token_info:
+
+    if request.GET.get('code'):
+        token_info = sp_oauth.get_access_token(request.GET.get('code').split("&")[0])
+        access_token = token_info['access_token']
+
+    if token_info and not access_token:
         print("Found cached token!")
         access_token = token_info['access_token']
     else:
@@ -66,7 +74,6 @@ def active_listening(request):
         sp = spotipy.Spotify(access_token)
         user = sp.current_user()
         method_list = [func for func in dir(sp) if callable(getattr(sp, func))]
-        print("METHODS", method_list)
         # current_track = sp.next()
         current_track = sp.current_user_playing_track()
         #sp.current_track()
