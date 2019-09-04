@@ -182,6 +182,17 @@ p {
                     No 
                     {% endif %}
                 </p>
+                {% if album.playlists %}
+                <h5>Playlists Featuring Songs From This Album</h5>
+                <ul>
+                {% for playlist in playlists %}
+                    <li>
+                        <a href="{{playlist.url}}" target="_blank">{{playlist.playlist_name}}</a>
+                    </li>
+                {% endfor %}
+                </ul>
+                <br>
+                {% endif %}
                 {% if has_url or other_urls %}
                 <h5>Learn More/Listen:</h5>
                 <div class="row" >
@@ -225,8 +236,8 @@ p {
                         <a href="{{album.youtube_url}}" title="YouTube" class="listen-logo" target="_blank"><i class="fab fa-2x fa-youtube" aria-hidden="true" style="color: #e52D27;"></i></a>
                     </div>
                     {% endif %}
-                {% endif %}
                 </div>
+                {% endif %}
             </div>
         </div>
     </div>

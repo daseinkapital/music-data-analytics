@@ -37,6 +37,7 @@ figure {
 
 a {
   transition: all .3s ease-in 0s;
+  color: #f0326b;
 }
 
 iframe {

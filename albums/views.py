@@ -12,10 +12,11 @@ from .management.commands.scrape import scrape
 from .management.commands.checkurls import check_urls
 from .management.commands.updatealbumart import update_art
 from .management.commands.updatequeue import update_queue
+from .management.commands.getallalbumplaylists import find_album_in_playlist
 
 import datetime as dt
 
-import random, os, smtplib
+import random, os, smtplib, json
 
 
 # Create your views here.
@@ -58,6 +59,11 @@ def album_page(request, artist, album):
     album = Album.objects.filter(slug=album).filter(artist__slug=artist).first()
     album_has_url = album.has_url()
     context = {'album' : album, 'has_url' : album_has_url}
+    
+    playlists = find_album_in_playlist(album)
+    if playlists:
+        context.update({'playlists': json.loads(playlists)})
+    print(context)
     return render(request, 'albums/album_page.html', context)
 
 def artist_page(request, artist):

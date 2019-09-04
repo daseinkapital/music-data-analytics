@@ -225,6 +225,11 @@ class Album(models.Model):
         on_delete=models.SET_NULL,
     )
 
+    playlists = models.TextField(
+        null=True,
+        blank=True,
+    )
+
     wiki_url = models.TextField(
         null=True,
         blank=True,
