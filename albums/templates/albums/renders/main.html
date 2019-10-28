@@ -32,6 +32,12 @@
 <img src="{% static 'albums/img/Loading_icon.gif' %}" style="display: block; margin: 0 auto; height: 50px;" id="loading">
 <footer>
 <script>
+
+let start = 0;
+let qty = 50;
+let albums = [];
+let currentAlbumDisplay = [];
+
 $( document ).ready(function(){
     $("#search-bar").val("{{search}}")
     $("select[name='order']").val("{{order}}")
@@ -95,6 +101,7 @@ function loadAllAlbums() {
 };
 
 function appendAlbums(data) {
+    console.log("Albums", data)
     $('#albums').append(data);
     hideImages();
 }
