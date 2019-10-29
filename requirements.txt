@@ -4,3 +4,6 @@ BeautifulSoup4
 google==2.0.1
 spotipy
 django-heroku
+pandas
+numpy
+sklearn
