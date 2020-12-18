@@ -1,4 +1,7 @@
 from albums.models import *
+from django.urls import reverse
+
+import pandas as pd
 
 #aggregations
 from django.db.models import Avg, Sum
@@ -15,18 +18,19 @@ def generate_genre_table(albums):
         #average rating of genre
         album_genre = albums.filter(primary_genre=genre)
         avg_rating = average_rating(album_genre)
+        avg_rating = float(avg_rating)
 
         #minimum of genre
         min_album = albums.filter(primary_genre=genre).exclude(current_rating=None).order_by('current_rating').first()
         if min_album:
-            min_rating = round(min_album.current_rating, 1)
+            min_rating = float(round(min_album.current_rating, 1))
         else:
             min_rating = "N/A"
 
         #maximum of genre
         max_album = albums.filter(primary_genre=genre).exclude(current_rating=None).order_by('-current_rating').first()
         if max_album:
-            max_rating = round(max_album.current_rating, 1)
+            max_rating = float(round(max_album.current_rating, 1))
         else:
             max_rating = "N/A"
 
@@ -35,20 +39,23 @@ def generate_genre_table(albums):
             numerator = 0
             denominator = count - 1
             for album in albums.filter(primary_genre=genre).exclude(current_rating=None):
-                numerator += (float(album.current_rating) - avg_rating)**2
-            stddev = round((numerator/denominator)**(0.5), 4)
+                numerator += (float(album.current_rating) - float(avg_rating))**2
+            stddev = float(round((numerator/denominator)**(0.5), 4))
         else:
             stddev = "N/A"
 
         genre_table.append({
-            'genre' : genre,
-            'count': count,
+            'genre' : genre.name,
+            'spotify_playlist': genre.spotify_playlist,
+            'genre_playlist': reverse('primary-genre', args=[genre]),
+            'count': int(count),
             'avg_rating' : avg_rating,
             'min_rating' : min_rating,
             'max_rating' : max_rating,
             'stddev' : stddev
         })
-    return genre_table
+        # print(pd.DataFrame(genre_table).to_json(orient='records'))
+    return pd.DataFrame(genre_table).to_json(orient='records')
 
 #finds the average amount of new music I've listened to per day since the start of this project
 def average_listen_time_per_day(query):

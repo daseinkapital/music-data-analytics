@@ -1,0 +1,4 @@
+- Convert frontend to React
+- Add Grid view of all albums
+- Paginate front page 
+- Add year end metrics
