@@ -28,6 +28,11 @@
             <li><b>Total Time Listened:</b> {{year_stats.time_listened}} minutes</li>
             
         </ul>
+        <h5>Monthly Breakdown</h5>
+        <div id="monthly-breakdown-sandchart" style="width: 50%; height: 500px; display: inline-flex;"></div>
+        <div id="monthly-breakdown-table" style="width:40%; margin: 0px auto; display:inline-grid" class="ag-theme-alpine"></div>
+
+        <h5>The Albums of {{year_stats.year}}</h5>
         
         <div id="year-stats-table" style="width:90%; margin: 0px auto;" class="ag-theme-alpine"></div>
         <!-- <div id="genre-table" style="width:90%; margin: 0px auto;" class="ag-theme-alpine"></div> -->
@@ -35,8 +40,12 @@
 
 </body>
 
+<script src="https://cdn.amcharts.com/lib/4/core.js"></script>
+<script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
+<script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
 
 <script>
+    // GENRE TABLE
     var genreColumnDefs = [
         {
             headerName: "Genre",
@@ -47,7 +56,8 @@
         },
         {
             headerName: "# of Albums",
-            field: "count"},
+            field: "count"
+        },
         {
             headerName: "Average Rating",
             field: "avg_rating"
@@ -101,6 +111,136 @@
     });
 
 
+    // MONTHLY STACKED CHART
+    // Themes begin
+    am4core.useTheme(am4themes_animated);
+    // Themes end
+
+    var chart = am4core.create("monthly-breakdown-sandchart", am4charts.XYChart);
+    chart.data = JSON.parse('{{ year_stats.sand_chart_data }}'.replace(/&quot;/g,'"'));
+
+    chart.dateFormatter.inputDateFormat = "MMMM";
+    var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+    dateAxis.renderer.minGridDistance = 60;
+    dateAxis.startLocation = 0.5;
+    dateAxis.endLocation = 0.5;
+    // dateAxis.baseInterval = {
+    // timeUnit: "month",
+    // count: 1
+    // }
+
+    var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+    valueAxis.tooltip.disabled = true;
+
+    var series = chart.series.push(new am4charts.LineSeries());
+    series.dataFields.dateX = "month";
+    series.name = "Bad (0-4)";
+    series.dataFields.valueY = "bad";
+    series.tooltipText = "[#000]{valueY.value}[/]";
+    series.tooltip.background.fill = am4core.color("#FFF");
+    series.tooltip.getStrokeFromObject = true;
+    series.tooltip.background.strokeWidth = 3;
+    series.tooltip.getFillFromObject = false;
+    series.fillOpacity = 0.6;
+    series.strokeWidth = 2;
+    series.stacked = true;
+
+    var series2 = chart.series.push(new am4charts.LineSeries());
+    series2.name = "Meh (4-6)";
+    series2.dataFields.dateX = "month";
+    series2.dataFields.valueY = "meh";
+    series2.tooltipText = "[#000]{valueY.value}[/]";
+    series2.tooltip.background.fill = am4core.color("#FFF");
+    series2.tooltip.getFillFromObject = false;
+    series2.tooltip.getStrokeFromObject = true;
+    series2.tooltip.background.strokeWidth = 3;
+    series2.sequencedInterpolation = true;
+    series2.fillOpacity = 0.6;
+    series2.stacked = true;
+    series2.strokeWidth = 2;
+
+    var series3 = chart.series.push(new am4charts.LineSeries());
+    series3.name = "Good (6-8)";
+    series3.dataFields.dateX = "month";
+    series3.dataFields.valueY = "good";
+    series3.tooltipText = "[#000]{valueY.value}[/]";
+    series3.tooltip.background.fill = am4core.color("#FFF");
+    series3.tooltip.getFillFromObject = false;
+    series3.tooltip.getStrokeFromObject = true;
+    series3.tooltip.background.strokeWidth = 3;
+    series3.sequencedInterpolation = true;
+    series3.fillOpacity = 0.6;
+    series3.defaultState.transitionDuration = 1000;
+    series3.stacked = true;
+    series3.strokeWidth = 2;
+
+    var series4 = chart.series.push(new am4charts.LineSeries());
+    series4.name = "Amazing (8+)";
+    series4.dataFields.dateX = "month";
+    series4.dataFields.valueY = "amazing";
+    series4.tooltipText = "[#000]{valueY.value}[/]";
+    series4.tooltip.background.fill = am4core.color("#FFF");
+    series4.tooltip.getFillFromObject = false;
+    series4.tooltip.getStrokeFromObject = true;
+    series4.tooltip.background.strokeWidth = 3;
+    series4.sequencedInterpolation = true;
+    series4.fillOpacity = 0.6;
+    series4.defaultState.transitionDuration = 1000;
+    series4.stacked = true;
+    series4.strokeWidth = 2;
+
+    chart.cursor = new am4charts.XYCursor();
+    chart.cursor.xAxis = dateAxis;
+    chart.scrollbarX = new am4core.Scrollbar();
+
+    // Add a legend
+    chart.legend = new am4charts.Legend();
+    chart.legend.position = "top";
+
+
+    // MONTHLY BREAKDOWN TABLE
+    var monthlyColumnDefs = [
+        {
+            headerName: "Month",
+            field: "month"
+        },
+        {
+            headerName: "Albums Listened",
+            field: "album_qty"
+        },
+        {
+            headerName: "Avg Rating",
+            field: "avg_rating"
+        }
+    ]
+
+    var monthlyRowData = JSON.parse('{{ year_stats.monthly_table_data }}'.replace(/&quot;/g,'"'));
+    console.log(monthlyRowData)
+    var monthlyGridOptions = {
+        defaultColDef: {
+            sortable: true,
+            filterable: true,
+            resizable: true
+        },
+        columnDefs: monthlyColumnDefs,
+        rowData: monthlyRowData,
+        domLayout: 'autoHeight',
+        onFirstDataRendered: (params) => {
+            params.api.sizeColumnsToFit()
+        },
+        onGridReady: (params) => {
+            params.api.sizeColumnsToFit()
+        }
+    }
+
+    // setup the grid after the page has finished loading
+    document.addEventListener('DOMContentLoaded', function() {
+        var gridDiv = document.querySelector('#monthly-breakdown-table');
+        new agGrid.Grid(gridDiv, monthlyGridOptions);
+    });
+
+
+    // YEARLY ALBUMS TABLE
     var yearStatsColumnDefs = [
         {
             headerName: "Album",
@@ -133,15 +273,16 @@
             field: "date_finished"
         }, 
         {
+            headerName: "Release Date",
+            field: "release_date"
+        }, 
+        {
             headerName: "Rating",
             field: "current_rating"
         }
     ];
 
     // specify the data
-    console.log($('<textarea />').html('{{ year_stats.albums }}').text())
-    console.log($('<textarea />').html('{{ year_stats.albums }}').text().substring(6871-20, 6871+20))
-    console.log($('<textarea />').html('{{ year_stats.albums }}').text().substring(6871, 6871))
     var yearStatsRowData = JSON.parse($('<textarea />').html('{{ year_stats.albums }}').text());
      
     // let the grid know which columns and what data to use

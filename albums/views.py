@@ -118,6 +118,8 @@ def statistics(request):
     year_stats['album_qty'] = review_stats.album_qty
     year_stats['time_listened'] = review_stats.time_listened
     year_stats['albums'] = review_stats.json_albums
+    year_stats['sand_chart_data'] = review_stats.create_sand_chart_data()
+    year_stats['monthly_table_data'] = review_stats.create_monthly_table_data()
 
     #collect all the statistics
     context.update({
