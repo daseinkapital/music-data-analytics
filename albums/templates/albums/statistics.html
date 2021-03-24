@@ -20,114 +20,156 @@
         </ul>
         <hr>
         <h3>Primary Genre Statistics</h3>
+        <div id="genre-table" style="width:90%; margin: 0px auto;" class="ag-theme-alpine"></div>
+        <hr>
+        <h3>{{year_stats.year}} Statistics for New Music</h3>
+        <ul>
+            <li><b>Total Albums Listened to in {{year_stats.year}}:</b> {{year_stats.album_qty}}</li>
+            <li><b>Total Time Listened:</b> {{year_stats.time_listened}} minutes</li>
+            
+        </ul>
+        
+        <div id="year-stats-table" style="width:90%; margin: 0px auto;" class="ag-theme-alpine"></div>
+        <!-- <div id="genre-table" style="width:90%; margin: 0px auto;" class="ag-theme-alpine"></div> -->
     </div>
 
-    <table id="genreTable">
-        <thead>
-            <tr>
-                <th onclick="sortTable(0)" style="cursor: pointer;">Genre</th>
-                <th onclick="sortTable(1)" style="cursor: pointer;"># of Albums</th>
-                <th onclick="sortTable(2)" style="cursor: pointer;">Average Rating (of Rated Albums)</th>
-                <th>Minimum Album Rating</th>
-                <th>Maximum Album Rating</th>
-                <th>Standard Deviation of Album Rating</th>
-            </tr>
-        </thead>
-        <tbody>
-    {% for item in genre_count %}
-            <tr>
-                <td><a href="{% url 'primary-genre' genre=item.genre %}">{{item.genre}}</a></td>
-                <td>{{item.count}}</td>
-                <td>{{item.avg_rating}}</td>
-                <td>{{item.min_rating}}</td>
-                <td>{{item.max_rating}}</td>
-                <td>{{item.stddev}}</td>
-            </tr>
-    {% endfor %}
-        </tbody>
-    </table>
 </body>
 
 
 <script>
-    function sortTable(n) {
-        var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
-        table = document.getElementById("genreTable");
-        switching = true;
-        // Set the sorting direction to ascending:
-        dir = "asc"; 
-        /* Make a loop that will continue until
-        no switching has been done: */
-        while (switching) {
-        // Start by saying: no switching is done:
-        switching = false;
-        rows = table.rows;
-        /* Loop through all table rows (except the
-        first, which contains table headers): */
-        for (i = 1; i < (rows.length - 1); i++) {
-            // Start by saying there should be no switching:
-            shouldSwitch = false;
-            /* Get the two elements you want to compare,
-            one from current row and one from the next: */
-            x = rows[i].getElementsByTagName("TD")[n];
-            y = rows[i + 1].getElementsByTagName("TD")[n];
-            /* Check if the two rows should switch place,
-            based on the direction, asc or desc: */
-            if (dir == "asc") {
-                if (n == 0) {
-                    x = x.innerHTML;
-                    y = y.innerHTML;
-                };
-                if (n == 1) {
-                    x = parseInt(x.innerHTML);
-                    y = parseInt(y.innerHTML);
-                };
-                if (n == 2) {
-                    x = parseFloat(x.innerHTML);
-                    y = parseFloat(y.innerHTML);
-                };
-                if (x > y) {
-                    // If so, mark as a switch and break the loop:
-                    shouldSwitch = true;
-                    break;
-                }
-            } else if (dir == "desc") {
-                if (n == 0) {
-                    x = x.innerHTML;
-                    y = y.innerHTML;
-                };
-                if (n == 1) {
-                    x = parseInt(x.innerHTML);
-                    y = parseInt(y.innerHTML);
-                };
-                if (n == 2) {
-                    x = parseFloat(x.innerHTML);
-                    y = parseFloat(y.innerHTML);
-                };
-                if (x < y) {
-                    // If so, mark as a switch and break the loop:
-                    shouldSwitch = true;
-                    break;
-                }
+    var genreColumnDefs = [
+        {
+            headerName: "Genre",
+            field: "genre",
+            cellRenderer: (params) => {
+                return "<a target='_blank' href=" + params.data.genre_playlist + ">" + params.value + "</a>"
+            }
+        },
+        {
+            headerName: "# of Albums",
+            field: "count"},
+        {
+            headerName: "Average Rating",
+            field: "avg_rating"
+        },
+        {
+            headerName: "Min Album Rating",
+            field: "min_rating"
+        },
+        {
+            headerName: "Max Album Rating",
+            field: "max_rating"
+        },
+        {
+            headerName: "Std. Dev. of Album Ratings",
+            field: "stddev"
+        },
+        {
+            headerName: "Spotify",
+            field: "spotify_playlist",
+            cellRenderer: (params) => {
+                return "<a href=" + params.data.spotify_playlist + "><i class='fab fa-2x fa-spotify' aria-hidden='true' style='color:#8bb601'></i></a>"
             }
         }
-        if (shouldSwitch) {
-            /* If a switch has been marked, make the switch
-            and mark that a switch has been done: */
-            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-            switching = true;
-            // Each time a switch is done, increase this count by 1:
-            switchcount ++; 
-        } else {
-            /* If no switching has been done AND the direction is "asc",
-            set the direction to "desc" and run the while loop again. */
-            if (switchcount == 0 && dir == "asc") {
-            dir = "desc";
-            switching = true;
+    ];
+        
+    // specify the data
+    var genreRowData = JSON.parse('{{ genre_count }}'.replace(/&quot;/g,'"'));
+     
+    // let the grid know which columns and what data to use
+    var genreGridOptions = {
+        defaultColDef: {
+            sortable: true,
+            filterable: true,
+            resizable: true
+        },
+        columnDefs: genreColumnDefs,
+        rowData: genreRowData,
+        domLayout: 'autoHeight',
+        onFirstDataRendered: (params) => {
+            params.api.sizeColumnsToFit()
+        },
+        onGridReady: (params) => {
+            params.api.sizeColumnsToFit()
+        }
+    };
+
+    // setup the grid after the page has finished loading
+    document.addEventListener('DOMContentLoaded', function() {
+        var gridDiv = document.querySelector('#genre-table');
+        new agGrid.Grid(gridDiv, genreGridOptions);
+    });
+
+
+    var yearStatsColumnDefs = [
+        {
+            headerName: "Album",
+            field: "name",
+            cellRenderer: (params) => {
+                var text = '<div>'
+                if (params.data.album_url) {
+                    text += "<a target='_blank' href=" + params.data.album_url + ">" + params.value + "</a></div>"
+                } else {
+                    text += params.value + "</div>"
+                }
+                return text
             }
+        },
+        {
+            headerName: "Artist",
+            field: "artist",
+            cellRenderer: (params) => {
+                var text = '<div>'
+                if (params.data.artist_url) {
+                    text += "<a target='_blank' href=" + params.data.artist_url + ">" + params.value + "</a></div>"
+                } else {
+                    text += params.value + "</div>"
+                }
+                return text
+            }
+        },
+        {
+            headerName: "Listen Date",
+            field: "date_finished"
+        }, 
+        {
+            headerName: "Rating",
+            field: "current_rating"
         }
+    ];
+
+    // specify the data
+    console.log($('<textarea />').html('{{ year_stats.albums }}').text())
+    console.log($('<textarea />').html('{{ year_stats.albums }}').text().substring(6871-20, 6871+20))
+    console.log($('<textarea />').html('{{ year_stats.albums }}').text().substring(6871, 6871))
+    var yearStatsRowData = JSON.parse($('<textarea />').html('{{ year_stats.albums }}').text());
+     
+    // let the grid know which columns and what data to use
+    var yearStatsGridOptions = {
+        defaultColDef: {
+            sortable: true,
+            filterable: true,
+            resizable: true
+        },
+        columnDefs: yearStatsColumnDefs,
+        rowData: yearStatsRowData,
+        domLayout: 'autoHeight',
+        onFirstDataRendered: (params) => {
+            params.api.sizeColumnsToFit()
+        },
+        onGridReady: (params) => {
+            params.api.sizeColumnsToFit()
         }
-    }
+    };
+
+    // setup the grid after the page has finished loading
+    document.addEventListener('DOMContentLoaded', function() {
+        var gridDiv = document.querySelector('#year-stats-table');
+        new agGrid.Grid(gridDiv, yearStatsGridOptions);
+    });
+
+
+
 </script>
 
 {% endblock %}

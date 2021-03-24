@@ -7,6 +7,7 @@ from django.core.mail import send_mail
 from albums.models import *
 from albums.forms import AlbumForm, ReccForm, consolidateSubgenreForm, AlbumGroupForm
 from albums.functions.stats import *
+from albums.functions.year_in_review import YearStats
 
 from .management.commands.scrape import scrape
 from .management.commands.checkurls import check_urls
@@ -111,6 +112,12 @@ def statistics(request):
     #estimated queue completion time
     queue_completion = queue_completion_time(albums, queue)
 
+    year_stats = {}
+    review_stats = YearStats()
+    year_stats['year'] = review_stats.year
+    year_stats['album_qty'] = review_stats.album_qty
+    year_stats['time_listened'] = review_stats.time_listened
+    year_stats['albums'] = review_stats.json_albums
 
     #collect all the statistics
     context.update({
@@ -123,10 +130,11 @@ def statistics(request):
         'queue_length' : queue_length,
         'queue_time' : queue_time,
         'queue_completion' : queue_completion,
-        'stat' : 'active'
+        'stat' : 'active',
+        'year_stats': year_stats
     })
 
-    return render(request, 'albums/statistics.html', context)
+    return render(request, 'albums/statistics.html', context, content_type="text/html; charset=utf-8")
 
 def primary_genre(request, genre):
     primary_genre = PrimaryGenre.objects.filter(name__iexact=genre).first()
