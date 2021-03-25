@@ -27,11 +27,10 @@ SECRET_KEY = os.environ['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 dev_env = os.environ['ENVIRON_SETTING']
+DEBUG = os.environ['DEBUG']
 if dev_env == "dev":
-    DEBUG = True
     ALLOWED_HOSTS = ['*']
 elif dev_env == "prod":
-    DEBUG = False
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     SECURE_BROWSER_XSS_FILTER = True
