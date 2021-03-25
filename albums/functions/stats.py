@@ -40,11 +40,7 @@ def generate_genre_table(albums):
             denominator = count - 1
             for album in albums.filter(primary_genre=genre).exclude(current_rating=None):
                 numerator += (float(album.current_rating) - float(avg_rating))**2
-<<<<<<< HEAD
-            stddev = round((numerator/denominator)**(0.5), 4)
-=======
             stddev = float(round((numerator/denominator)**(0.5), 4))
->>>>>>> master
         else:
             stddev = "N/A"
 

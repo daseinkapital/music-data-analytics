@@ -19,7 +19,7 @@ class YearStats:
 
         # if it's before march, continue to show last year's stats
         if date.today().month < 4:
-            year -= year
+            year -= 1
 
         return year 
 
