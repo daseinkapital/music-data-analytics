@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 
 import os
 # import django_heroku
-import dj_database_url
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -94,8 +93,6 @@ if dev_env == "dev":
             'PORT': os.environ['DB_PORT'],
         }
 
-# elif dev_env == "prod":
-#     db_settings = dj_database_url.config(os.environ['DATABASE_URL'])
 
 DATABASES = {
     'default' : db_settings
