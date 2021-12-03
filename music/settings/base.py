@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
-import django_heroku
+# import django_heroku
 import dj_database_url
 
 
@@ -85,7 +85,6 @@ WSGI_APPLICATION = 'music.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
-
 if dev_env == "dev":
     db_settings = {
             'ENGINE': 'django.db.backends.postgresql',
@@ -95,8 +94,8 @@ if dev_env == "dev":
             'PORT': os.environ['DB_PORT'],
         }
 
-elif dev_env == "prod":
-    db_settings = dj_database_url.config(os.environ['DATABASE_URL'])
+# elif dev_env == "prod":
+#     db_settings = dj_database_url.config(os.environ['DATABASE_URL'])
 
 DATABASES = {
     'default' : db_settings
@@ -146,4 +145,4 @@ STATICFILES_DIRS = [
 ]
 
 # Activate Django-Heroku.
-django_heroku.settings(locals())
+# django_heroku.settings(locals())

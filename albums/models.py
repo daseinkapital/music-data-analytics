@@ -403,8 +403,8 @@ class Album(models.Model):
     def __str__(self):
         return "{} by {}".format(self.name, self.artist.name)
  
-    def __eq__(self, other):
-        return self.__dict__ == other.__dict__
+    # def __eq__(self, other):
+    #     return self.__dict__ == other.__dict__
 
     def time_check(self):
         if self.time_length:
